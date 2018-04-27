@@ -1,0 +1,438 @@
+﻿
+@{
+    Layout = "_AdminLayout";
+}
+
+<!--Company-->
+<link href="~/css/Company.css" rel="stylesheet" />
+<link href="~/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+<div class="container">
+    <div class="row">
+        <section>
+            <div class="wizard">
+                <div class="wizard-inner">
+                    <div class="connecting-line"></div>
+                    <ul id="tabList" class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active">
+                            <a href="#step1" id="tab_profile" data-toggle="tab" aria-controls="step1" role="tab" title="Step 1">
+                                <span class="round-tab">
+                                    <i class="glyphicon glyphicon-folder-open"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#step2" id="tab_directDeposite" data-toggle="tab" aria-controls="step2" role="tab" title="Step 2">
+                                <span class="round-tab">
+                                    <i class="glyphicon glyphicon-pencil"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#step3" id="tab_voluntary" data-toggle="tab" aria-controls="step3" role="tab" title="Step 3">
+                                <span class="round-tab">
+                                    <i class="glyphicon glyphicon-picture"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#step4" id="tab_w4" data-toggle="tab" aria-controls="step3" role="tab" title="Step 4">
+                                <span class="round-tab">
+                                    <i class="glyphicon glyphicon-picture"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#step5" id="tab_i9" data-toggle="tab" aria-controls="step3" role="tab" title="Step 5">
+                                <span class="round-tab">
+                                    <i class="glyphicon glyphicon-picture"></i>
+                                </span>
+                            </a>
+                        </li>
+                        <li role="presentation" class="disabled" id="lastTabId">
+                            <a href="#complete" id="tab_sign" data-toggle="tab" aria-controls="complete" role="tab" title="Complete">
+                                <span class="round-tab">
+                                    <i class="glyphicon glyphicon-ok"></i>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="row">
+                            <ul class="nav" role="tablist" style="left: 5%;position: relative;">
+                                <li class="col-sm-2" style="width:16.3%" role="presentation"><a>Company</a></li>
+                                <li class="col-sm-2" style="width:16.3%" role="presentation"><a>Branch</a></li>
+                                <li class="col-sm-2" style="width:16.3%" role="presentation"><a>Employee</a></li>
+                                <li class="col-sm-2" style="width:16.3%" role="presentation"><a>Station</a></li>
+                                <li class="col-sm-2" style="width:16.3%" role="presentation"><a>Location</a></li>
+                                <li class="col-sm-2" style="width:16.3%" role="presentation"><a>Complete</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <form id="formId">
+                    <div class="tab-content">
+                        <div class="tab-pane active" role="tabpanel" id="step1">
+                            <div class="row">
+                                <div class="col-sm-11">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">Company Profile</h3>
+                                            <div class="panel-controls">
+                                                <ul class="list-inline pull-right">
+                                                    <li><button id="directDepositDataTop" type="button" class="btn btn-primary next-step pageNext">Next</button></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="panel-body">
+                                                <div class="container-fluid">
+                                                    <div class="form-horizontal">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label">Company Name <i class="fa fa-asterisk" style="color:red" aria-hidden="true"></i></label>
+                                                            <div class="col-sm-8">
+                                                                <input type="text" class="form-control flat-control" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-horizontal">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label">Type<i class="fa fa-asterisk" style="color:red" aria-hidden="true"></i></label>
+                                                            <div class="col-sm-8">
+                                                                <input type="text" class="form-control flat-control" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-horizontal">
+                                                        <div class="form-group">
+                                                            <label class="col-sm-2 control-label">Url<i class="fa fa-asterisk" style="color:red" aria-hidden="true"></i></label>
+                                                            <div class="col-sm-8">
+                                                                <input type="text" class="form-control flat-control" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <ul class="list-inline pull-right">
+                                        <li><button id="profileDataBottom" type="button" class="btn btn-primary next-step pageNext">NEXT</button></li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="tab-pane" role="tabpanel" id="step2">
+                            <div class="row">
+                                <div class="col-sm-11">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">Branch</h3>
+                                            <div class="panel-controls">
+                                                <ul class="list-inline pull-right">
+                                                    <li><button type="button" class="btn btn-default prev-step">Previous</button></li>
+                                                    <li><button id="directDepositDataTop" type="button" class="btn btn-primary next-step pageNext">Next</button></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="container-fluid">
+                                                <div class="form-horizontal">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">Branch Name <i class="fa fa-asterisk" style="color:red" aria-hidden="true"></i></label>
+                                                        <div class="col-sm-8">
+                                                            <input type="text" class="form-control flat-control" />
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-horizontal">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">Location<i class="fa fa-asterisk" style="color:red" aria-hidden="true"></i></label>
+                                                        <div class="col-sm-8">
+                                                            <input type="text" class="form-control flat-control" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-horizontal">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">Address<i class="fa fa-asterisk" style="color:red" aria-hidden="true"></i></label>
+                                                        <div class="col-sm-8">
+                                                            <input type="text" class="form-control flat-control" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-horizontal">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">Phone<i class="fa fa-asterisk" style="color:red" aria-hidden="true"></i></label>
+                                                        <div class="col-sm-8">
+                                                            <input type="text" class="form-control flat-control" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-horizontal">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">Email<i class="fa fa-asterisk" style="color:red" aria-hidden="true"></i></label>
+                                                        <div class="col-sm-8">
+                                                            <input type="text" class="form-control flat-control" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <ul class="list-inline pull-right">
+                                        <li><button type="button" class="btn btn-default prev-step">Previous</button></li>
+                                        <li><button id="directDepositDataBottom" type="button" class="btn btn-primary next-step pageNext">Next</button></li>
+                                    </ul>
+                                </div>
+                            </div>
+                           
+                        </div>
+                        <div class="tab-pane" role="tabpanel" id="step3">
+                            <div class="row">
+                                <div class="col-sm-11">
+                                    <!-- panel Edit Employee Info-->
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">Employee</h3>
+                                            <div class="panel-controls">
+                                                <ul class="list-inline pull-right">
+                                                    <li><button type="button" class="btn btn-default prev-step">Previous</button></li>
+                                                    <li><button id="voluntaryDataTop" class="btn btn-primary next-step pageNext" type="button">Next</button></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="container-fluid">
+                                                <div class="form-horizontal">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">Employee Name <i class="fa fa-asterisk" style="color:red" aria-hidden="true"></i></label>
+                                                        <div class="col-sm-8">
+                                                            <input type="text" class="form-control flat-control" />
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-horizontal">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">Designation<i class="fa fa-asterisk" style="color:red" aria-hidden="true"></i></label>
+                                                        <div class="col-sm-8">
+                                                            <input type="text" class="form-control flat-control" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-horizontal">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">Phone<i class="fa fa-asterisk" style="color:red" aria-hidden="true"></i></label>
+                                                        <div class="col-sm-8">
+                                                            <input type="text" class="form-control flat-control" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-horizontal">
+                                                    <div class="form-group">
+                                                        <label class="col-sm-2 control-label">Email<i class="fa fa-asterisk" style="color:red" aria-hidden="true"></i></label>
+                                                        <div class="col-sm-8">
+                                                            <input type="text" class="form-control flat-control" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--end panel Edit Employee Info-->
+                                    <ul class="list-inline pull-right">
+                                        <li><button type="button" class="btn btn-default prev-step">Previous</button></li>
+                                        <li><button id="voluntaryDataBottom" type="button" class="btn btn-default next-step pageNext">Next</button></li>
+                                    </ul>
+                                </div>
+                            </div>
+                           
+                        </div>
+                        <div class="tab-pane" role="tabpanel" id="step4">
+                            <div class="row">
+                                <div class="col-sm-11">
+                                    <!-- panel Edit Employee Info-->
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">Location</h3>
+                                            <div class="panel-controls">
+                                                <ul class="list-inline pull-right">
+                                                    <li><button type="button" class="btn btn-default prev-step">Previous</button></li>
+                                                    <li><button id="w4DataTop" class="btn btn-primary next-step pageNext" type="button">Next</button></li>
+
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="panel-body">
+                                           
+                                        </div>
+                                    </div>
+                                    <!--end panel Edit Employee Info-->
+                                    <ul class="list-inline pull-right">
+                                        <li><button type="button" class="btn btn-default prev-step">Previous</button></li>
+
+                                        <li><button id="w4DataBottom" type="button" class="btn btn-default next-step pageNext">Next</button></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" role="tabpanel" id="step5">
+                            <div class="row">
+                                <div class="col-sm-11">
+                                    <!-- panel Edit Employee Info-->
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h3 class="panel-title">Station</h3>
+                                            <div class="panel-controls">
+                                                <ul class="list-inline pull-right">
+                                                    <li><button type="button" class="btn btn-default prev-step">Previous</button></li>
+
+                                                    <li><button id="i9DataTop" class="btn btn-primary next-step pageNext" type="button">Next</button></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="panel-body">
+
+                                        </div>
+                                    </div>
+                                    <!--end panel Edit Employee Info-->
+                                    <ul class="list-inline pull-right">
+                                        <li><button type="button" class="btn btn-default prev-step">Previous</button></li>
+
+                                        <li><button id="i9DataBottom" type="button" class="btn btn-default next-step pageNext">Next</button></li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="tab-pane" role="tabpanel" id="complete">
+                            <div class="row">
+                                <div class="col-sm-9 col-xs-6">
+                                </div>
+                                <div class="col-sm-9 col-xs-6">
+                                    <button type="button" class="btn btn-default" id="SignDocumentById">Sign Document</button>
+                                </div>
+
+                            </div>
+                            <table class="table table-responsive table-hover table-striped table-bordered text-center">
+                                <thead>
+                                    <tr>
+                                        <th>EmployeeProfile</th>
+                                        <th>Direct Deposit</th>
+                                        <th>Affirmative Action</th>
+                                        <th>I9</th>
+                                    </tr>
+                                </thead>
+                                <tr>
+                                    <td>
+                                        <span name="employeeProfileStatus" id="employeeProfileStatusId">
+                                            <i name="employeeProfileStatus"></i>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span name="directDeposit" id="directDepositId">
+                                            <i name="directDeposit"></i>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span name="employeeVoluntary" id="employeeVoluntaryId">
+                                            <i name="employeeVoluntary"></i>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span name="i9" id="i9Id">
+                                            <i name="i9"></i>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span name="w4" id="w4Id">
+                                            <i name="w4"></i>
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+        //Initialize tooltips
+        $('.nav-tabs > li a[title]').tooltip();
+
+        //Wizard
+        $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
+
+            var $target = $(e.target);
+
+            if ($target.parent().hasClass('disabled')) {
+                return false;
+            }
+        });
+
+        $(".next-step").click(function (e) {
+
+            var $active = $('.wizard .nav-tabs li.active');
+            $active.next().removeClass('disabled');
+            nextTab($active);
+
+        });
+        $(".prev-step").click(function (e) {
+
+            var $active = $('.wizard .nav-tabs li.active');
+            prevTab($active);
+
+        });
+    });
+
+    function nextTab(elem) {
+        $(elem).next().find('a[data-toggle="tab"]').click();
+    }
+    function prevTab(elem) {
+        $(elem).prev().find('a[data-toggle="tab"]').click();
+    }
+
+
+    //according menu
+
+    $(document).ready(function () {
+        //Add Inactive Class To All Accordion Headers
+        $('.accordion-header').toggleClass('inactive-header');
+
+        //Set The Accordion Content Width
+        var contentwidth = $('.accordion-header').width();
+        $('.accordion-content').css({});
+
+        //Open The First Accordion Section When Page Loads
+        $('.accordion-header').first().toggleClass('active-header').toggleClass('inactive-header');
+        $('.accordion-content').first().slideDown().toggleClass('open-content');
+
+        // The Accordion Effect
+        $('.accordion-header').click(function () {
+            if ($(this).is('.inactive-header')) {
+                $('.active-header').toggleClass('active-header').toggleClass('inactive-header').next().slideToggle().toggleClass('open-content');
+                $(this).toggleClass('active-header').toggleClass('inactive-header');
+                $(this).next().slideToggle().toggleClass('open-content');
+            }
+
+            else {
+                $(this).toggleClass('active-header').toggleClass('inactive-header');
+                $(this).next().slideToggle().toggleClass('open-content');
+            }
+        });
+
+        return false;
+    });
+</script>

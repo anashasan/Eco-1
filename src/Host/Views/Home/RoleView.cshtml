@@ -1,0 +1,15 @@
+﻿@model  Host.Models.AccountViewModels.RolesModel;
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "RoleView";
+}
+
+<form asp-controller="Account" asp-action="CreateRoles" method="post">
+    <div>
+        <label>RoleName</label>
+        <input type="text" asp-for="Name" />
+        <button type="submit">Add</button>
+    </div>
+</form>
+
+

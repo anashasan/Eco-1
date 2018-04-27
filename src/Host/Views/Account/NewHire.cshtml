@@ -1,0 +1,98 @@
+﻿@model Host.Models.AccountViewModels.UserInfoModel
+@{
+    Layout = "_AdminLayout";
+}
+<div class="page-header">
+    <div class="row">
+        <div class="col-sm-9 col-xs-6">
+            <h1>New User</h1>
+        </div>
+    </div>
+</div>
+
+<div class="main-contents">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <form asp-controller="Account" asp-action="CreateUser" class="form-horizontal" method="post">
+                                <input type="hidden" data-val="true" data-val-required="The UserId field is required." id="UserId" name="UserId" value="00000000-0000-0000-0000-000000000000">
+                                <input type="hidden" data-val="true" data-val-required="The SiteId field is required." id="SiteId" name="SiteId" value="a9d9c0b8-1930-4059-a58c-e52648bee1ba">
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label" for="Email">Email</label>
+                                    <div class="col-md-10">
+                                        <input class="form-control" type="email" asp-for="Email">
+                                        <span class="text-danger field-validation-valid" data-valmsg-for="Email" data-valmsg-replace="true"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label" asp-for="UserName">Username</label>
+                                    <div class="col-md-10">
+                                        <input class="form-control" type="text" data-val="true" data-val-remote="Username not available, please try another value" data-val-remote-additionalfields="*.Username,*.UserId" data-val-remote-type="Post" data-val-remote-url="/account/usernameavailable" data-val-required="Username is required." id="Username" name="Username" value="">
+                                        <span class="text-danger field-validation-valid" data-valmsg-for="Username" data-valmsg-replace="true"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label">Display Name</label>
+                                    <div class="col-md-10">
+                                        <input class="form-control" type="text" asp-for="NormalizeUserName">
+                                        <span class="text-danger field-validation-valid" data-valmsg-for="DisplayName" data-valmsg-replace="true"></span>
+                                    </div>
+                                </div>
+                                @*<div class="form-group">
+                        <label class="col-md-2 control-label">First Name</label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" asp-for="" id="FirstName" name="FirstName" value="">
+                        </div>
+                    </div>*@
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label" for="Role">Role</label>
+                                    <div class="col-md-10">
+                                        <select class="form-control" asp-items="@Model.Roles" asp-for="RoleId" placeholder="Select Business Name..."></select>
+                                    </div>
+                                </div>
+                                @*<div class="form-group">
+                        <label class="col-md-2 control-label" for="LastName">Last Name</label>
+                        <div class="col-md-10">
+                            <input class="form-control" type="text" id="LastName" name="LastName" value="">
+                        </div>
+                    </div>*@
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label" for="Password">Password</label>
+                                    <div class="col-md-10">
+                                        <input type="password" asp-for="Password" class="form-control">
+                                        <span class="text-danger field-validation-valid" data-valmsg-for="Password" data-valmsg-replace="true"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label" for="ConfirmPassword">Confirm Password</label>
+                                    <div class="col-md-10">
+                                        <input type="password" asp-for="ConfrimedPassword" class="form-control" data-val="true" data-val-equalto="Confirm password doesn't match password" data-val-equalto-other="*.Password" id="ConfirmPassword" name="ConfirmPassword">
+                                        <span class="text-danger field-validation-valid" data-valmsg-for="ConfirmPassword" data-valmsg-replace="true"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label" for="DateOfBirth">Date of Birth</label>
+                                    <div class="col-md-10">
+                                        <input name="DateOfBirth" value="" class="form-control" data-bs-datepicker="true" data-bs-datepicker-debug="false" data-bs-datepicker-keepopen="false" data-bs-datepicker-allowinputtoggle="true" data-bs-datepicker-format="L" data-bs-datepicker-viewmode="years" data-bs-datepicker-usecurrent="false" data-bs-datepicker-mindate="1898-04-19T13:10:23.2287647Z" data-bs-datepicker-maxdate="2008-04-19T13:10:23.2287771Z" data-bs-datepicker-viewdate="2008-04-19T13:10:23.2287796Z" data-cs-datepicker-timeformat="">
+                                        <span class="text-danger field-validation-valid" data-valmsg-for="DateOfBirth" data-valmsg-replace="true"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-offset-2 col-md-10">
+                                        <input type="submit" class="btn btn-default" value="Save">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

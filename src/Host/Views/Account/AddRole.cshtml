@@ -1,0 +1,49 @@
+﻿@model  Host.Models.AccountViewModels.RolesModel;
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<div class="page-header">
+    <div class="row">
+        <div class="col-sm-9 col-xs-6">
+            <h1>New Role</h1>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="container-fluid">
+                    <form asp-controller="Account" asp-action="CreateRoles" method="post" novalidate="novalidate">
+                        <input type="hidden" asp-for="RoleId" data-val="true" data-val-required="The Id field is required.">
+                        <input type="hidden" data-val="true" data-val-required="The SiteId field is required." id="SiteId" name="SiteId" value="a9d9c0b8-1930-4059-a58c-e52648bee1ba">
+                        <input type="hidden" asp-for="NormalizedName" name="NormalizedRoleName" value="">
+                        <div class="form-horizontal">
+                            <div class="text-danger validation-summary-valid" data-valmsg-summary="true">
+                                <ul>
+                                    <li style="display:none"></li>
+                                </ul>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label" for="RoleName">Role Name</label>
+                                <div class="col-md-10">
+                                    <input class="form-control"  type="text" asp-for="Name" >
+                                    <span class="text-danger field-validation-valid" data-valmsg-for="RoleName" data-valmsg-replace="true"></span>
+                                    <span class="field-validation-valid text-danger" data-valmsg-for="roleerror" data-valmsg-replace="true"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-10">
+                                    <button name="submit" type="submit" class="btn btn-default">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

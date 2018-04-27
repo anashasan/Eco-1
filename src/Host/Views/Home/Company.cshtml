@@ -1,0 +1,18 @@
+﻿@model Host.DataModel.CompanyDto;
+@{
+    ViewData["Title"] = "Company";
+}
+
+<h2>Company</h2>
+<form asp-controller="Company" asp-action="AddCompany" method="post">
+    <div>
+        <label>Company Name</label>
+        <input type="text" asp-for="Name" />
+        <label>Type</label>
+        <input type="text" asp-for="Type" />
+        <label>Url</label>
+        <input type="text" asp-for="Url" />
+        <input type="submit" value="Next" name="Next"/>
+    </div>
+</form>
+

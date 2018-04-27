@@ -1,0 +1,52 @@
+﻿@model System.Collections.Generic.List<Host.Models.AccountViewModels.RolesModel>;
+@{
+    Layout = "_AdminLayout";
+}
+
+
+<div class="col-xs-8">
+    <div class="box">
+
+        <div class="box-header">
+
+            <h2>Role Management</h2>
+            <p>
+                <a href="@Url.Action("AddRole","Account")" class="btn btn-sm btn-default">New Role</a>
+            </p>
+            @foreach (var s in Model)
+            {
+                <div>
+
+
+                    <ul class="btn-group list-group">
+                        <li class="list-group-item">
+                            <span>
+                                <label>@s.Name</label>
+                            </span>
+                            <div class="btn-group pull-right" role="group">
+                                <form class="form-inline" action="/roleadmin/roledelete" method="post">
+                                    <input name="SiteId" value="a9d9c0b8-1930-4059-a58c-e52648bee1ba" type="hidden">
+                                    <input id="roleId" name="roleId" type="hidden" value="d0d10d57-6455-4d93-9c97-dc2cacbcf962">
+                                    <span class="btn btn-default btn-xs">
+                                        <a href="/roleadmin/rolemembers?siteId=a9d9c0b8-1930-4059-a58c-e52648bee1ba&amp;roleId=d0d10d57-6455-4d93-9c97-dc2cacbcf962">Members</a>
+                                        <span class="badge">1</span>
+                                    </span>
+                                    <a class="btn btn-xs btn-default" href="/roleadmin/roleedit?siteId=a9d9c0b8-1930-4059-a58c-e52648bee1ba&amp;roleId=d0d10d57-6455-4d93-9c97-dc2cacbcf962">Edit</a>
+                                    <button type="submit" onclick="javascript: return confirm('Are you sure you want to delete Administrators?');" class="btn btn-default btn-xs">
+                                        Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </li>
+                    </ul>
+
+                </div>
+            }
+
+            <div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
