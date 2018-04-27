@@ -230,12 +230,15 @@
     const postActivity = async () => {
         var employeeData = [];
         var stationId = document.getElementById("editStationId").value;
+        employeeData.push({ stationId: stationId });
         var dataArray = $("#formActivity")
             .serializeArray();
         for (var i in dataArray) {
             employeeData.push({ name: dataArray[i].value });
         };
-        console.log(employeeData);
+
+        var jsonModel = JSON.stringify(employeeData);
+        console.log(jsonModel);
         //$("#formActivity")
         //    .serializeArray()
         //    .map(function (x) {
