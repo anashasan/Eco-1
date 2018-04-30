@@ -13,8 +13,8 @@ namespace Host.DataContext
             AspNetUserLogins = new HashSet<AspNetUserLogins>();
             AspNetUserRoles = new HashSet<AspNetUserRoles>();
             Company = new HashSet<Company>();
-            EmployeeProfileFkInitiatedBy = new HashSet<EmployeeProfile>();
-            EmployeeProfileFkUser = new HashSet<EmployeeProfile>();
+            EmployeeProfileFkInitiatedBy = new HashSet<IEmployeeProfile>();
+            EmployeeProfileFkUser = new HashSet<IEmployeeProfile>();
         }
 
         public string Id { get; set; }
@@ -46,8 +46,8 @@ namespace Host.DataContext
         [InverseProperty("FkUser")]
         public ICollection<Company> Company { get; set; }
         [InverseProperty("FkInitiatedBy")]
-        public ICollection<EmployeeProfile> EmployeeProfileFkInitiatedBy { get; set; }
+        public ICollection<IEmployeeProfile> EmployeeProfileFkInitiatedBy { get; set; }
         [InverseProperty("FkUser")]
-        public ICollection<EmployeeProfile> EmployeeProfileFkUser { get; set; }
+        public ICollection<IEmployeeProfile> EmployeeProfileFkUser { get; set; }
     }
 }

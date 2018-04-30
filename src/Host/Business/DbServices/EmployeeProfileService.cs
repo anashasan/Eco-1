@@ -31,7 +31,7 @@ namespace Host.Business.DbServices
         {
             try
             {
-                var employeeProfile = new EmployeeProfile
+                var employeeProfile = new IEmployeeProfile
                 {
                     FirstName = requestDto.FirstName,
                     LastName = requestDto.LastName,
@@ -119,6 +119,44 @@ namespace Host.Business.DbServices
                        FkUserId = p.FkUserId
                    }).Single();
 
+        public EmployeeProfileDto GetEmployeeProfileByUserId(string UserId)
+        {
+            try
+            {
+                var employeeProfileModel = _context.EmployeeProfile
+                                           .AsNoTracking()
+                                           .Where(i => i.FkUserId == UserId)
+                                           .Select(p => new EmployeeProfileDto
+                                           {
+                                               EmployeeProfileId = p.PkEmployeeProfileId,
+                                               CellPhone = p.CellPhone,
+                                               City = p.City,
+                                               ZipCode = p.ZipCode,
+                                               DateOfBirth = p.DateOfBirth,
+                                               CreatedOn = p.CreatedOn,
+                                               HomePhone = p.HomePhone,
+                                               FirstName = p.FirstName,
+                                               GenderId = p.FkGenderId,
+                                               JobTitle = p.JobTitle,
+                                               MiddleInitial = p.MiddleInitial,
+                                               State = p.State,
+                                               LastName = p.LastName,
+                                               StreetAddress = p.StreetAddress,
+                                               WorkEmail = p.WorkEmail,
+                                               FkInitiatedById = p.FkInitiatedById,
+                                               FkUserId = p.FkUserId
+
+
+                                           }).Single();
+                return employeeProfileModel;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -128,7 +166,7 @@ namespace Host.Business.DbServices
         {
             try
             {
-                var employeeProfile = new EmployeeProfile
+                var employeeProfile = new IEmployeeProfile
                 {
                     PkEmployeeProfileId = requestDto.EmployeeProfileId,
                     FirstName = requestDto.FirstName,
