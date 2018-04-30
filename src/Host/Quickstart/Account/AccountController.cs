@@ -27,12 +27,13 @@ using Host.Models.AccountViewModels;
 using Host.Controllers;
 using Host.Business.IDbServices;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Host.DataModel;
 
 namespace IdentityServer4.Quickstart.UI
 {
     [SecurityHeaders]
     [Authorize]
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
@@ -42,6 +43,7 @@ namespace IdentityServer4.Quickstart.UI
         private readonly IEventService _events;
         private readonly IServiceProvider _serviceProvider;
         private readonly IRoleService _roleService;
+        private readonly IEmployeeProfileService _employeeProfileService;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
@@ -51,7 +53,8 @@ namespace IdentityServer4.Quickstart.UI
             IAuthenticationSchemeProvider schemeProvider,
             IEventService events,
             IServiceProvider serviceProvider,
-            IRoleService roleService)
+            IRoleService roleService,
+            IEmployeeProfileService employeeProfileService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -61,6 +64,7 @@ namespace IdentityServer4.Quickstart.UI
             _events = events;
             _serviceProvider = serviceProvider;
             _roleService = roleService;
+            _employeeProfileService = employeeProfileService;
         }
 
         /// <summary>
@@ -107,6 +111,19 @@ namespace IdentityServer4.Quickstart.UI
                     _roleService.AddUserRole(userName.Id, user.RoleId);
                     
                     Console.WriteLine("User Created");
+                    var employeProfile = new EmployeeProfileDto
+                    {
+                        FirstName = user.UserName,
+                        FkInitiatedById = GetUserid().ToString(),
+                        FkUserId = userName.Id,
+                        CreatedOn = DateTime.Now,
+                        WorkEmail = user.Email
+                        
+
+                    };
+
+                    _employeeProfileService.AddEmployeeProfile(employeProfile);
+
                     return RedirectToAction("EmployeeProfile", "Employee");
                 }
                 return View();

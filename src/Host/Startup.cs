@@ -45,6 +45,7 @@ namespace Host
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IEmployeesService, EmployeesService>();
             services.AddScoped<IStationService, StationService>();
+            services.AddScoped<IEmployeeProfileService, EmployeeProfileService>();
 
             services.AddMvc();
 
