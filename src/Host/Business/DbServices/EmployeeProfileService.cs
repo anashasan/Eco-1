@@ -119,6 +119,44 @@ namespace Host.Business.DbServices
                        FkUserId = p.FkUserId
                    }).Single();
 
+        public EmployeeProfileDto GetEmployeeProfileByUserId(string UserId)
+        {
+            try
+            {
+                var employeeProfileModel = _context.EmployeeProfile
+                                           .AsNoTracking()
+                                           .Where(i => i.FkUserId == UserId)
+                                           .Select(p => new EmployeeProfileDto
+                                           {
+                                               EmployeeProfileId = p.PkEmployeeProfileId,
+                                               CellPhone = p.CellPhone,
+                                               City = p.City,
+                                               ZipCode = p.ZipCode,
+                                               DateOfBirth = p.DateOfBirth,
+                                               CreatedOn = p.CreatedOn,
+                                               HomePhone = p.HomePhone,
+                                               FirstName = p.FirstName,
+                                               GenderId = p.FkGenderId,
+                                               JobTitle = p.JobTitle,
+                                               MiddleInitial = p.MiddleInitial,
+                                               State = p.State,
+                                               LastName = p.LastName,
+                                               StreetAddress = p.StreetAddress,
+                                               WorkEmail = p.WorkEmail,
+                                               FkInitiatedById = p.FkInitiatedById,
+                                               FkUserId = p.FkUserId
+
+
+                                           }).SingleOrDefault();
+                return employeeProfileModel;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -128,29 +166,21 @@ namespace Host.Business.DbServices
         {
             try
             {
-                var employeeProfile = new EmployeeProfile
-                {
-                    PkEmployeeProfileId = requestDto.EmployeeProfileId,
-                    FirstName = requestDto.FirstName,
-                    LastName = requestDto.LastName,
-                    CellPhone = requestDto.CellPhone,
-                    City = requestDto.City,
-                    DateOfBirth = requestDto.DateOfBirth,
-                    HomePhone = requestDto.HomePhone,
-                    MiddleInitial = requestDto.MiddleInitial,
-                    JobTitle = requestDto.JobTitle,
-                    State = requestDto.State,
-                    StreetAddress = requestDto.StreetAddress,
-                    FkInitiatedById = requestDto.FkInitiatedById,
-                    WorkEmail = requestDto.WorkEmail,
-                    ZipCode = requestDto.ZipCode,
-                    FkGenderId = requestDto.GenderId,
-                    FkUserId = requestDto.FkUserId,
-                    UpdatedOn = DateTime.Now,
-                };
-                _context.EmployeeProfile.Update(employeeProfile);
+                var employeeModel = _context.EmployeeProfile.Find(requestDto.EmployeeProfileId);
+
+                employeeModel.LastName = requestDto.LastName;
+                employeeModel.CellPhone = requestDto.CellPhone;
+                employeeModel.City = requestDto.City;
+                employeeModel.HomePhone = requestDto.HomePhone;
+                employeeModel.MiddleInitial = requestDto.MiddleInitial;
+                employeeModel.JobTitle = requestDto.JobTitle;
+                employeeModel.StreetAddress = requestDto.StreetAddress;
+                employeeModel.UpdatedOn = DateTime.Now;
+                
+               
+                _context.EmployeeProfile.Update(employeeModel);
                 _context.SaveChanges();
-                return await Task.FromResult(employeeProfile.PkEmployeeProfileId);
+                return await Task.FromResult(employeeModel.PkEmployeeProfileId);
 
             }
             catch (Exception e)

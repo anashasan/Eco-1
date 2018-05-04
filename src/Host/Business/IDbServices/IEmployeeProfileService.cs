@@ -12,5 +12,6 @@ namespace Host.Business.IDbServices
         Task<int> UpdateEmployeeProfile(EmployeeProfileDto requestDto);
         EmployeeProfileDto GetEmployeeProfileById(int id);
         List<EmployeeProfileDto> GetAllEmployeeProfile();
+        EmployeeProfileDto GetEmployeeProfileByUserId(string UserId);
     }
 }

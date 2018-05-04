@@ -61,8 +61,8 @@ namespace Host.Controllers
 
         public ActionResult Station()
         {
-             var stations = _stationService.GetAllStation();
-            return View("Station",stations);
+            var stations = _stationService.GetAllStation();
+            return View("Station", stations);
         }
 
         [HttpPost("Company/AddStation")]
@@ -70,10 +70,10 @@ namespace Host.Controllers
         {
             if (!ModelState.IsValid)
                 return RedirectToAction("Station");
-            var station =await _stationService.AddStation(requestDto);
-            return  RedirectToAction("Station");
+            var station = await _stationService.AddStation(requestDto);
+            return RedirectToAction("Station");
         }
-        
+
         public async Task<IActionResult> DeleteStation(int id)
         {
             await _stationService.DeleteStation(id);
@@ -90,7 +90,7 @@ namespace Host.Controllers
         [HttpPost("Company/AddActivity")]
         public async Task<IActionResult> AddActivity([FromBody] StationActivityDto requestDto)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
                 return RedirectToAction("Station");
 
             await _activityService.AddActivity(requestDto);
@@ -115,6 +115,31 @@ namespace Host.Controllers
         public IActionResult AllCompanyView()
         {
             return View("AllCompanyView");
+        }
+
+        public IActionResult CompanyCreation()
+        {
+            return View("CompanyCreation");
+        }
+        public IActionResult AddCompany()
+        {
+            return View("AddCompany");
+        }
+        public IActionResult Branch()
+        {
+            return View("BranchCreation");
+        }
+        public IActionResult AddBranch()
+        {
+            return View("AddBranch");
+        }
+        public IActionResult BranchEmployee()
+        {
+            return View("BranchEmployee");
+        }
+        public IActionResult AddBranchEmployee()
+        {
+            return View("AddBranchEmployee");
         }
 
     }
