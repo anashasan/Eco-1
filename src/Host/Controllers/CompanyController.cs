@@ -55,7 +55,8 @@ namespace Host.Controllers
 
         public ActionResult ViewCompany()
         {
-            return View("CompanyView");
+            var companies = _companyService.GetCompanyList();
+            return View("CompanyView", companies);
         }
 
         public ActionResult Station()
@@ -94,6 +95,26 @@ namespace Host.Controllers
 
             await _activityService.AddActivity(requestDto);
             return RedirectToAction("Station");
+        }
+
+        [HttpGet("Company/GetActivityByStationId/id/{id}")]
+        public IActionResult GetActivityByStationId([FromRoute] int id)
+        {
+            try
+            {
+                var activities = _activityService.GetActivityByStationId(id);
+                return Json(activities);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public IActionResult AllCompanyView()
+        {
+            return View("AllCompanyView");
         }
 
     }

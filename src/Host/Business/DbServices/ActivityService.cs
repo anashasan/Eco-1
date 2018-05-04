@@ -35,20 +35,32 @@ namespace Host.Business.DbServices
         {
             try
             {
+                //foreach(var activity in requestDto.Activities)
+                //{
+                //    var activities = _
+                //}
                 var activities = requestDto.Activities.Select(i => new Activity
                 {
+                    PkActivityId = i.ActivityId,
                     Name = i.Name,
                     Description = i.Description,
-                    CreateOn = DateTime.Now
+                    CreateOn = DateTime.Now,
+                    StationActivity = new List<StationActivity>
+                    {
+                        new StationActivity
+                        {
+                            FkStationId = requestDto.StationId
+                        }
+                    }
                 });
 
                 _context.Activity.AddRange(activities);
-                _context.SaveChanges();
-                _context.StationActivity.AddRange(activities.Select(p => new StationActivity
-                {
-                    FkActivityId = p.PkActivityId,
-                    FkStationId = requestDto.StationId
-                }));
+               await _context.SaveChangesAsync();
+                //_context.StationActivity.AddRange(activities.Select(p => new StationActivity
+                //{
+                //    FkActivityId = p.PkActivityId,
+                //    FkStationId = requestDto.StationId
+                //}));
                 return await Task.FromResult(_context.SaveChanges());
             }
             catch (Exception e)
@@ -74,6 +86,33 @@ namespace Host.Business.DbServices
                       Name = p.Name,
                       Description = p.Description
                    }).Single();
+        }
+
+        public GetStationActivityDto GetActivityByStationId(int id)
+        {
+            try
+            {
+                var activities = _context.Station
+                                 .AsNoTracking()
+                                 .Where(i => i.PkStationId == id)
+                                 .Select(p => new GetStationActivityDto
+                                 {
+                                     StationId = p.PkStationId,
+                                     StationName = p.Name,
+                                     Activities = p.StationActivity.Select(i => new ActivityDto
+                                     {
+                                         ActivityId = i.FkActivityId,
+                                         Description = i.FkActivity.Description,
+                                         Name = i.FkActivity.Name
+                                     }).ToList()
+                                 }).Single();
+                return activities;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         /// <summary>
@@ -117,5 +156,7 @@ namespace Host.Business.DbServices
                 throw;
             }
         }
+
+
     }
 }

@@ -52,18 +52,26 @@
                             <td>@s.Description</td>
                             @if (@s.Activities != null)
                             {
-                                <th class="label label-danger ">@s.Activities</th>
+                                @foreach (var a in s.Activities)
+                                {
+                                    <th class="label label-danger ">@a</th>
+                                }
+                                <td>
+                                <button type="button" class="btn  btn-primary glyphicon glyphicon-edit " onclick="editModel(@s.StationId)" style="width:16%"></button>
+                                <a href="DeleteStation/id/@s.StationId" class="btn  btn-primary glyphicon glyphicon-trash " id="edit" style="width:16%"></a>
+                            </td>
                             }
                             else
                             {
                                 <td class="label label-danger "></td>
+                                <td>
+                                    <button type="button" class="btn  btn-primary glyphicon glyphicon-edit " onclick="editModel(@s.StationId)" style="width:16%"></button>
+                                    <a href="DeleteStation/id/@s.StationId" class="btn  btn-primary glyphicon glyphicon-trash " id="edit" style="width:16%"></a>
+                                </td>
 
                             }
-                            
-                            <td>
-                                <button type="button" class="btn  btn-primary glyphicon glyphicon-edit " onclick="editModel(@s.StationId)" style="width:16%"></button>
-                                <a href="DeleteStation/id/@s.StationId" class="btn  btn-primary glyphicon glyphicon-trash " id="edit" style="width:16%"></a>
-                            </td>
+
+
                         </tr>
                     }
             </table>
@@ -143,131 +151,5 @@
         </div>
     </div>
 </form>
-
-<script type="text/javascript">
-
-    const addModel = () => {
-        $(document).ready(function () {
-
-            $("#myModal").modal();
-        });
-    };
-
-    const editModel = (id) => {
-
-        getStationById(id);
-        $(document).ready(function () {
-            $("#editModal").modal();
-        });
-
-    };
-
-    const changeIt = () => {
-        var i = 1;
-        my_div.innerHTML = my_div.innerHTML + "</br><input type='text' name='mytext'+ i>"
-
-    };
-
-
-    const GetDynamicTextBox = (value) => {
-        return '<input name="DynamicTextBox" class="form-control col-sm-5" type="text" placeholder="Activity Name" value="' + value + '" /> ' +
-            '<a onclick="RemoveTextBox(this)"><span class="glyphicon glyphicon-remove" ></span></a >'
-    };
-
-    const AddTextBox = () => {
-        var div = document.createElement('DIV');
-        div.className = "form-group";
-        div.innerHTML = GetDynamicTextBox("");
-        document.getElementById("TextBoxContainer").appendChild(div);
-    };
-
-    function RemoveTextBox(div) {
-        document.getElementById("TextBoxContainer").removeChild(div.parentNode);
-    }
-
-    const RecreateDynamicTextboxes = () => {
-        var values = eval('<%=Values%>');
-        if (values != null) {
-            var html = "";
-            for (var i = 0; i < values.length; i++) {
-                html += "<div>" + GetDynamicTextBox(values[i]) + "</div>";
-            }
-            document.getElementById("TextBoxContainer").innerHTML = html;
-        }
-    };
-    //window.onload = RecreateDynamicTextboxes;
-
-    const postStation = async () => {
-
-        var stationName = document.getElementById("stationName").value;
-        var stationDescription = document.getElementById("stationDescription").value;
-
-        const stationModel = {
-            Name: stationName,
-            Description: stationDescription,
-            StationId: 0
-        };
-
-        const headers = new Headers();
-        headers.append("Accept", "application/json");
-        headers.append("Content-Type", "application/json");
-
-        const profileUrl = "/Company/AddStation";
-
-        const res = await fetch(profileUrl, {
-            credentials: "same-origin",
-            headers: headers,
-            method: "POST",
-            body: JSON.stringify(stationModel)
-        });
-        if (res.ok) {
-            window.location.reload();
-            return;
-        }
-    };
-
-
-    const postActivity = async () => {
-        var employeeData = [];
-        var stationId = document.getElementById("editStationId").value;
-        employeeData.push({ stationId: stationId });
-        var dataArray = $("#formActivity")
-            .serializeArray();
-        for (var i in dataArray) {
-            employeeData.push({ name: dataArray[i].value });
-        };
-
-        var jsonModel = JSON.stringify(employeeData);
-        console.log(jsonModel);
-       
-    };
-
-
-
-
-    const getStationById = (id) => {
-
-        const stationData = {}
-        const headers = new Headers();
-        headers.append("Accept", "application/json");
-        headers.append("Content-Type", "application/json");
-        fetch(`/Company/GetStationById/id/${id}`, {
-            credentials: "same-origin",
-            headers: headers,
-            method: "GET"
-        })
-            .then(function (response) {
-                if (response.ok) {
-                    response.json().then(data => {
-                        document.getElementById("editUserName").value = data.name;
-                        document.getElementById("editStationId").value = data.stationId;
-                    }).catch(ex => {
-                    });
-                };
-            })
-            .catch(ex => {
-            });
-    };
-
-</script>
+<script src="~/dist/js/Station.js"></script>
 

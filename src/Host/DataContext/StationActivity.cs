@@ -11,6 +11,9 @@ namespace Host.DataContext
         public int PkStationActivityId { get; set; }
         public int FkStationId { get; set; }
         public int FkActivityId { get; set; }
+        [Column("QRCode")]
+        [StringLength(500)]
+        public string Qrcode { get; set; }
 
         [ForeignKey("FkActivityId")]
         [InverseProperty("StationActivity")]

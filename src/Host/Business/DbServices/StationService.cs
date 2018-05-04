@@ -69,7 +69,8 @@ namespace Host.Business.DbServices
                    {
                        Name = i.Name,
                        StationId = i.PkStationId,
-                       Description = i.Description
+                       Description = i.Description,
+                       Activities = i.StationActivity.Select(p => p.FkActivity.Name).ToList()
                    }).ToList();
         }
 

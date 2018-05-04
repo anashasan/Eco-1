@@ -44,6 +44,7 @@ namespace IdentityServer4.Quickstart.UI
         private readonly IServiceProvider _serviceProvider;
         private readonly IRoleService _roleService;
         private readonly IEmployeeProfileService _employeeProfileService;
+        private readonly ICompanyService _companyService;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
@@ -54,7 +55,8 @@ namespace IdentityServer4.Quickstart.UI
             IEventService events,
             IServiceProvider serviceProvider,
             IRoleService roleService,
-            IEmployeeProfileService employeeProfileService)
+            IEmployeeProfileService employeeProfileService,
+            ICompanyService companyService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -65,6 +67,7 @@ namespace IdentityServer4.Quickstart.UI
             _serviceProvider = serviceProvider;
             _roleService = roleService;
             _employeeProfileService = employeeProfileService;
+            _companyService = companyService;
         }
 
         /// <summary>
@@ -72,7 +75,6 @@ namespace IdentityServer4.Quickstart.UI
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> CreateUser(Host.Models.AccountViewModels.UserInfoModel user)
         {
@@ -122,7 +124,17 @@ namespace IdentityServer4.Quickstart.UI
 
                     };
 
-                    _employeeProfileService.AddEmployeeProfile(employeProfile);
+                   await _employeeProfileService.AddEmployeeProfile(employeProfile);
+
+                    if(user.RoleId == "cd149620-3f5c-4081-94d1-f24b2408aa72")
+                    {
+                        var company = new CompanyDto
+                        {
+                            Name = user.UserName,
+                            UserId = userName.Id
+                        };
+                        await _companyService.AddCompany(company);
+                    }
 
                     return RedirectToAction("EmployeeProfile", "Employee");
                 }

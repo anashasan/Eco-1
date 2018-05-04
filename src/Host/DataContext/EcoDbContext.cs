@@ -21,6 +21,7 @@ namespace Host.DataContext
         public virtual DbSet<Branch> Branch { get; set; }
         public virtual DbSet<BranchEmployee> BranchEmployee { get; set; }
         public virtual DbSet<BranchLocation> BranchLocation { get; set; }
+        public virtual DbSet<CheckBoxType> CheckBoxType { get; set; }
         public virtual DbSet<Company> Company { get; set; }
         public virtual DbSet<CompanyBranch> CompanyBranch { get; set; }
         public virtual DbSet<EmployeeProfile> EmployeeProfile { get; set; }
@@ -32,6 +33,7 @@ namespace Host.DataContext
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

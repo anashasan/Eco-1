@@ -1,4 +1,4 @@
-﻿
+﻿@model List<Host.DataModel.GetCompanyViewDto>
 @{
     Layout = "_AdminLayout";
 }
@@ -8,9 +8,8 @@
         <div class="col-sm-12">
             <div class="panel">
                 <div class="panel-heading">
-                    <a asp-action="" asp-controller="">
                         <h3 class="panel-title">All Company</h3>
-                    </a>
+                    
                     <div class="panel-controls">
                     </div>
                 </div>
@@ -36,34 +35,38 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @foreach (var s in Model)
+                                {
                                     <tr>
-                                        <td style="text-align: left">
+                                        <td style="text-align: center">@s.CompanyName
                                             <a class="text-primary"></a>
                                         </td>
-                                        <td>
+                                        <td style="text-align: center">@s.BranchName
                                             <span>
                                                 <i class='zmdi large-size'></i>
                                             </span>
                                         </td>
-                                        <td>
+                                        <td style="text-align: center">@s.EmployeeName
                                             <span>
-                                                <i class='zmdi  large-size'></i> 
+                                                <i class='zmdi  large-size'></i>
                                             </span>
                                         </td>
-                                        <td>
+                                        <td style="text-align: center">
                                             <span>
-                                                <i class='zmdi large-size'></i> 
+                                                <i class='zmdi large-size'></i>
                                             </span>
-                                        </td>
-                                        <td>
+                                        </td>   
+                                        <td style="text-align: center">
                                             <span>
                                                 <i class='zmdi large-size'></i>
                                             </span>
                                         </td>
-                                        <td>
-                                            <a class="btn btn-default" asp-controller="Company" asp-action="CompanyWizard" >Open</a>
+                                        <td style="text-align: center">
+                                            <a class="btn btn-default" asp-controller="Company" asp-action="CompanyWizard">Open</a>
                                         </td>
                                     </tr>
+                                }
+
                             </tbody>
                         </table>
                     </div>

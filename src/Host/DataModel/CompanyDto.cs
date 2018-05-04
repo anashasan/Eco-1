@@ -13,5 +13,6 @@ namespace Host.DataModel
         public string Url { get; set; }
         public DateTime CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }
+        public string UserId { get; set; }
     }
 }

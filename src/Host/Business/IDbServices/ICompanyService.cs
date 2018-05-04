@@ -12,6 +12,7 @@ namespace Host.Business.IDbServices
         Task<int> UpdateCompany(CompanyDto requestDto);
         CompanyDto GetCompanyById(int id);
         Task<List<CompanyDto>> GetAllCompany();
+        List<GetCompanyViewDto> GetCompanyList();
 
     }
 }

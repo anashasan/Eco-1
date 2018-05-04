@@ -7,7 +7,9 @@
 
 
   <ItemGroup>
+    <PackageReference Include="ConnectCodeBarcodeFontsLibrary.dll" Version="1.0.1" />
     <PackageReference Include="IdentityServer4" Version="2.1.3" />
+    <PackageReference Include="LamedaL.System.Drawing" Version="1.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.1" PrivateAssets="All" />
@@ -18,6 +20,8 @@
     <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.2" />
     <PackageReference Include="Serilog.Sinks.File" Version="4.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="2.4.0" />
+    <PackageReference Include="System.Drawing-dotnet-core" Version="1.2.3" />
+    <PackageReference Include="ZXing.Net" Version="0.16.4" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,6 +38,10 @@
     <Content Update="Views\Shared\_Layout.cshtml">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="System\Drawing\Imaging\" />
   </ItemGroup>
 
 </Project>

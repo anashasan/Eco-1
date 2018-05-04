@@ -24,14 +24,14 @@ namespace Host.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddActivity(StationActivityDto requestDto)
+        public async Task<IActionResult> AddActivity([FromBody]StationActivityDto requestDto)
         {
             try
             {
                 if (!ModelState.IsValid)
-                    return RedirectToAction("Home/SignUp");
+                    return RedirectToAction("Station","Company");
                 await _activityService.AddActivity(requestDto);
-                return View("Home/SignUp");
+                return RedirectToAction("Station", "Company");
             }
             catch (Exception e)
             {

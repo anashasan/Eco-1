@@ -39,7 +39,8 @@ namespace Host.Business.DbServices
                     Name= requestDto.Name,
                     Type = requestDto.Type,
                     Url = requestDto.Url,
-                    CreatedOn = DateTime.Now
+                    CreatedOn = DateTime.Now,
+                    FkUserId = requestDto.UserId
                 };
 
                 _context.Company.Add(company);
@@ -100,6 +101,30 @@ namespace Host.Business.DbServices
                            Type = p.Type,
                            Url = p.Url
                        }).Single();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public List<GetCompanyViewDto> GetCompanyList()
+        {
+            try
+            {
+                var companies = _context.Company
+                                .AsNoTracking()
+                                .Select(i => new GetCompanyViewDto
+                                {
+                                    CompanyId = i.PkCompanyId,
+                                    CompanyName = i.Name,
+                                    BranchId = i.CompanyBranch.Select(p => p.FkBranchId).SingleOrDefault(),
+                                    BranchName = i.CompanyBranch.Select(p => p.FkBranch.Name).SingleOrDefault(),
+                                    EmployeeName = i.CompanyBranch.Select(p => p.FkBranch.BranchEmployee.Select(x => x.EmployeeName).SingleOrDefault()).SingleOrDefault(),
+                                    
+                                }).ToList();
+                return companies;
             }
             catch (Exception e)
             {
