@@ -23,7 +23,7 @@ namespace Host.DataContext
         public virtual DbSet<BranchLocation> BranchLocation { get; set; }
         public virtual DbSet<Company> Company { get; set; }
         public virtual DbSet<CompanyBranch> CompanyBranch { get; set; }
-        public virtual DbSet<IEmployeeProfile> EmployeeProfile { get; set; }
+        public virtual DbSet<EmployeeProfile> EmployeeProfile { get; set; }
         public virtual DbSet<Gender> Gender { get; set; }
         public virtual DbSet<Location> Location { get; set; }
         public virtual DbSet<Station> Station { get; set; }
@@ -135,7 +135,7 @@ namespace Host.DataContext
                     .HasConstraintName("Fk_CompanyBranch_Company_FkCompanyId");
             });
 
-            modelBuilder.Entity<IEmployeeProfile>(entity =>
+            modelBuilder.Entity<EmployeeProfile>(entity =>
             {
                 entity.Property(e => e.CreatedOn).HasDefaultValueSql("(getdate())");
 

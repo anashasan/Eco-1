@@ -1,0 +1,89 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@model Host.DataModel.EmployeeProfileDto
+@{
+    Layout = "_ClientDashboard";
+}
+
+<section class="main-contents">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default table-panel">
+                <div class="panel-title">
+
+                    <div class="panel-controls">
+
+                    </div>
+                    <h3 class="panel-heading">
+                        Edit Basic information<span class="badge" style="background-color: #6765da; margin-left: 2em"></span>
+                        
+
+                    </h3>
+
+                </div>
+                <div class="panel-body no-padding">
+                    <div class="table-responsive">
+                        <input data-val="true" data-val-required="The EmployeeProfileId field is required." id="EmployeeProfileId" name="EmployeeProfileId" type="hidden" value="b7051ad3-a242-48b4-9857-105cdde9a695">
+                        <form role="form" asp-controller="Client" asp-action="UpdateEmployee" method="post">
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <input type="hidden" asp-for="EmployeeProfileId" />
+                                    <label for="exampleInputEmail1">First Name</label>
+                                    <input type="text" class="form-control" asp-for="FirstName" id="exampleInputEmail1" placeholder="Enter email">
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputPassword1">Last Name</label>
+                                    <input type="text" class="form-control" asp-for="LastName" id="exampleInputPassword1" placeholder="Last Name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputFile">Address</label>
+                                    <input type="text" class="form-control" asp-for="StreetAddress" id="exampleInputPassword1" placeholder="Address">
+
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputFile">Gender</label>
+                                    <input type="text" class="form-control" asp-for="GenderId" id="exampleInputPassword1" placeholder="Gender">
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputFile">City</label>
+                                    <input type="text" class="form-control" asp-for="City" id="exampleInputPassword1" placeholder="City">
+
+
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputFile">Date Of Birth</label>
+                                    <input type="text" class="form-control" asp-for="DateOfBirth" id="exampleInputPassword1" placeholder="DOB">
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputFile">Phone No</label>
+                                    <input type="text" class="form-control" asp-for="CellPhone" id="exampleInputPassword1" placeholder="Phone No">
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputFile">Work Email</label>
+                                    <input type="text" class="form-control" asp-for="WorkEmail" id="exampleInputPassword1" placeholder="Work Email">
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputFile">Job Title</label>
+                                    <input type="text" class="form-control" asp-for="JobTitle" id="exampleInputPassword1" placeholder="Job Title">
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputFile">Zip Code</label>
+                                    <input type="text" class="form-control" asp-for="ZipCode" id="exampleInputPassword1" placeholder="ZipCode">
+                                </div>
+                            </div>
+                            <!-- /.box-body -->
+
+                            <div class="box-footer">
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

@@ -31,7 +31,7 @@ namespace Host.Business.DbServices
         {
             try
             {
-                var employeeProfile = new IEmployeeProfile
+                var employeeProfile = new EmployeeProfile
                 {
                     FirstName = requestDto.FirstName,
                     LastName = requestDto.LastName,
@@ -147,7 +147,7 @@ namespace Host.Business.DbServices
                                                FkUserId = p.FkUserId
 
 
-                                           }).Single();
+                                           }).SingleOrDefault();
                 return employeeProfileModel;
             }
             catch (Exception e)
@@ -166,29 +166,21 @@ namespace Host.Business.DbServices
         {
             try
             {
-                var employeeProfile = new IEmployeeProfile
-                {
-                    PkEmployeeProfileId = requestDto.EmployeeProfileId,
-                    FirstName = requestDto.FirstName,
-                    LastName = requestDto.LastName,
-                    CellPhone = requestDto.CellPhone,
-                    City = requestDto.City,
-                    DateOfBirth = requestDto.DateOfBirth,
-                    HomePhone = requestDto.HomePhone,
-                    MiddleInitial = requestDto.MiddleInitial,
-                    JobTitle = requestDto.JobTitle,
-                    State = requestDto.State,
-                    StreetAddress = requestDto.StreetAddress,
-                    FkInitiatedById = requestDto.FkInitiatedById,
-                    WorkEmail = requestDto.WorkEmail,
-                    ZipCode = requestDto.ZipCode,
-                    FkGenderId = requestDto.GenderId,
-                    FkUserId = requestDto.FkUserId,
-                    UpdatedOn = DateTime.Now,
-                };
-                _context.EmployeeProfile.Update(employeeProfile);
+                var employeeModel = _context.EmployeeProfile.Find(requestDto.EmployeeProfileId);
+
+                employeeModel.LastName = requestDto.LastName;
+                employeeModel.CellPhone = requestDto.CellPhone;
+                employeeModel.City = requestDto.City;
+                employeeModel.HomePhone = requestDto.HomePhone;
+                employeeModel.MiddleInitial = requestDto.MiddleInitial;
+                employeeModel.JobTitle = requestDto.JobTitle;
+                employeeModel.StreetAddress = requestDto.StreetAddress;
+                employeeModel.UpdatedOn = DateTime.Now;
+                
+               
+                _context.EmployeeProfile.Update(employeeModel);
                 _context.SaveChanges();
-                return await Task.FromResult(employeeProfile.PkEmployeeProfileId);
+                return await Task.FromResult(employeeModel.PkEmployeeProfileId);
 
             }
             catch (Exception e)

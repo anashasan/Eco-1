@@ -349,14 +349,7 @@
                             </span>
                         </a>
                     </li>
-                    <li class="active treeview">
-                        <a href="#">
-                            <i class="fa fa-dashboard"></i> <span>Employee Profile</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </span>
-                        </a>
-                    </li>
+                    <li><a href="@Url.Action("Employee","Client")"><i class="fa fa-dashboard"></i> Cient Profile</a></li>
 
                     <form asp-controller="Account" asp-action="Logout" method="post">
                         <input type="submit" name="Logout" value="Logout" />

@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Host.DataContext
 {
-    public partial class IEmployeeProfile
+    public partial class EmployeeProfile
     {
         [Key]
         public int PkEmployeeProfileId { get; set; }

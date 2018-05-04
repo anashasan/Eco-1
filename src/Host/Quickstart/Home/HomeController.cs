@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using Host;
 using Host.Business.IDbServices;
 using Host.Controllers;
 using Host.Models;
@@ -82,6 +83,16 @@ namespace IdentityServer4.Quickstart.UI
             }
 
             return View("Error", vm);
+        }
+
+        public IActionResult GetQrCode()
+        {
+            //var qrcode = new QRCodeTagHelper();
+           
+            
+
+
+            return View("QRcode");
         }
 
 

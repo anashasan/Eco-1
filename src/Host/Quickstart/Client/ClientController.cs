@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Host.Business.IDbServices;
 using Host.Controllers;
 using Host.DataContext;
+using Host.DataModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,9 +31,38 @@ namespace Host.Quickstart.Client
             var employeeModel = _employeeProfileService.GetEmployeeProfileByUserId(userId);
             if(employeeModel == null)
             {
-                return View("Employee");
+                var model = new EmployeeProfileDto();
+                return View("Employee", model);
             }
             return View("Employee", employeeModel);
+        }
+        public IActionResult EditEmployee()
+        {
+            var userId = GetUserid().ToString();
+            var employeeModel = _employeeProfileService.GetEmployeeProfileByUserId(userId);
+            if (employeeModel == null)
+            {
+                return View("EditEmployee");
+            }
+
+            return View("EditEmployee",employeeModel);
+        }
+        
+        [HttpPost]
+        public IActionResult UpdateEmployee(EmployeeProfileDto requestDto)
+        {
+            try
+            {
+                _employeeProfileService.UpdateEmployeeProfile(requestDto);
+                return RedirectToAction("Employee");
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Host.DataContext
     {
         public Gender()
         {
-            EmployeeProfile = new HashSet<IEmployeeProfile>();
+            EmployeeProfile = new HashSet<EmployeeProfile>();
         }
 
         [Key]
@@ -19,6 +19,6 @@ namespace Host.DataContext
         public string Name { get; set; }
 
         [InverseProperty("FkGender")]
-        public ICollection<IEmployeeProfile> EmployeeProfile { get; set; }
+        public ICollection<EmployeeProfile> EmployeeProfile { get; set; }
     }
 }
