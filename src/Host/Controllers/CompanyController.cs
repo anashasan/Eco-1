@@ -94,7 +94,31 @@ namespace Host.Controllers
 
             await _activityService.AddActivity(requestDto);
             return RedirectToAction("Station");
-        }
+        }           
 
+       public IActionResult CompanyCreation()
+        {
+            return View("CompanyCreation");
+        }
+        public IActionResult AddCompany()
+        {
+            return View("AddCompany");
+        }
+        public IActionResult Branch()
+        {
+            return View("BranchCreation");
+        }
+        public IActionResult AddBranch()
+        {
+            return View("AddBranch");
+        }
+        public IActionResult BranchEmployee()
+        {
+            return View("BranchEmployee");
+        }
+        public IActionResult AddBranchEmployee()
+        {
+            return View("AddBranchEmployee");
+        }
     }
 }

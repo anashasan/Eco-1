@@ -1,0 +1,45 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<div class="col-xs-12">
+    <div class="box">
+        <div class="box-header">
+            <h3 class="box-title">Branch Employee Data Table</h3></br>
+            </br>
+            <!-- Trigger the modal with a button -->
+
+            <a class="btn  btn-primary " href="@Url.Action("AddBranchEmployee", "Company")">Add</a>
+
+        </div>
+
+        <!-- /.box-header -->
+        <div class="box-body">
+            <table id="example2" class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Branch Employee ID</th>
+                        <th>Employee Name</th>
+                        <th>Company Name</th>
+                        <th>Branch Name</th>
+                        <th>Designation</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr></tr>
+
+            </table>
+        </div>
+        <!-- /.box-body -->
+    </div>
+</div>
+
+

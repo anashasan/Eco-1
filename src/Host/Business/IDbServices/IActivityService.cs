@@ -12,5 +12,6 @@ namespace Host.Business.IDbServices
         Task<int> UpdateActivity(ActivityDto requestDto);
         ActivityDto GetActivityById(int id);
         List<ActivityDto> GetAllActivity();
+        
     }
 }

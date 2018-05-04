@@ -111,7 +111,7 @@
                 <!-- sidebar menu: : style can be found in sidebar.less -->
                 <ul class="sidebar-menu" data-widget="tree">
                     <li class="header">MAIN NAVIGATION</li>
-                    <li class="active treeview">
+                    <li class=" treeview">
                         <a href="#">
                             <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                             <span class="pull-right-container">
@@ -143,6 +143,25 @@
                     <li class="treeview">
                         <a href="#">
                             <i class="fa fa-files-o"></i>
+                            <span>Company Creation</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+
+                                <span class="label label-primary pull-right"></span>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a asp-controller="Company" asp-action="CompanyCreation"><i class="fa fa-circle-o"></i> Company</a></li>
+                            <li><a asp-controller="Company" asp-action="Branch"><i class="fa fa-circle-o"></i> Branch</a></li>
+                            <li><a asp-controller="Company" asp-action="BranchEmployee"><i class="fa fa-circle-o"></i> Branch Employee</a></li>
+                            <li><a href="pages/layout/boxed.html"><i class="fa fa-circle-o"></i> Company Account</a></li>
+
+                        </ul>
+                        <ul class="treeview-menu"></ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-files-o"></i>
                             <span>Administration</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-left pull-right"></i>
@@ -166,6 +185,9 @@
                             </span>
                         </a>
                     </li>
+
+                    <li><a href="@Url.Action("Employee","Client")"><i class="fa fa-dashboard"></i> Profile</a></li>
+
                     <li class="treeview">
                         <a href="#">
                             <i class="fa fa-pie-chart"></i>
@@ -187,7 +209,7 @@
                         </form>
                     </li>
 
-            </section>
+</section>
             <!-- /.sidebar -->
         </aside>
         <!-- Content Wrapper. Contains page content -->
