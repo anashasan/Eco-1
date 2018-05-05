@@ -6,6 +6,7 @@ using Host.Business.IDbServices;
 using Host.DataModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Host.Controllers
 {
@@ -31,22 +32,22 @@ namespace Host.Controllers
             return View();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddCompany(CompanyDto requestDto)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                    return null;
-                await _companyService.AddCompany(requestDto);
-                return RedirectToAction("index", "Home");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-        }
+        //[HttpPost]
+        //public async Task<IActionResult> AddCompany(CompanyDto requestDto)
+        //{
+        //    try
+        //    {
+        //        if (!ModelState.IsValid)
+        //            return null;
+        //        await _companyService.AddCompany(requestDto);
+        //        return RedirectToAction("index", "Home");
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Console.WriteLine(e);
+        //        throw;
+        //    }
+        //}
 
         public ActionResult CompanyWizard()
         {
@@ -117,9 +118,56 @@ namespace Host.Controllers
             return View("AllCompanyView");
         }
 
-        public IActionResult CompanyCreation()
+
+        [HttpPost]
+        public  IActionResult AddCompany(CompanyDto requestDto)
         {
-            return View("CompanyCreation");
+            try
+            {
+                var userId = GetUserid().ToString();
+                requestDto.UserId = userId;
+                if (!ModelState.IsValid)
+                    return RedirectToAction("CompanyCreation");
+                if(requestDto.CompanyId.HasValue && requestDto.CompanyId != 0)
+                {
+                    _companyService.UpdateCompany(requestDto);
+                    return RedirectToAction("CompanyCreation");
+                }
+                var company = _companyService.AddCompany(requestDto);
+                return RedirectToAction("CompanyCreation");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+       [HttpGet]
+       public IActionResult GetCompanyById(int id)
+        {
+            try
+            {
+                var companies = _companyService.GetCompanyById(id);
+                return View("AddCompany", companies);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public async Task<IActionResult> CompanyCreation()
+        {
+            var allCompany =await _companyService.GetAllCompany();
+            if(allCompany == null)
+            {
+                var model = new CompanyDto();
+                return View("CompanyCreation", model);
+            }
+
+            return View("CompanyCreation",allCompany);
         }
         public IActionResult AddCompany()
         {
@@ -129,9 +177,15 @@ namespace Host.Controllers
         {
             return View("BranchCreation");
         }
-        public IActionResult AddBranch()
+        public async Task<IActionResult> AddBranch()
         {
-            return View("AddBranch");
+            var companiesList =await _companyService.GetAllCompany();
+            var brancModel = new BranchDto
+            {
+                Companies = new SelectList(companiesList,"CompanyId", "Name")
+            };
+
+            return View("AddBranch",brancModel);
         }
         public IActionResult BranchEmployee()
         {

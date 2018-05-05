@@ -144,11 +144,12 @@ namespace Host.Business.DbServices
             {
                 var company = new Company
                 {
-                    PkCompanyId = requestDto.CompanyId,
+                    PkCompanyId = requestDto.CompanyId.Value,
                     Name = requestDto.Name,
                     Type = requestDto.Type,
                     Url = requestDto.Url,
-                    CreatedOn = DateTime.Now
+                    CreatedOn = DateTime.Now,
+                    FkUserId = requestDto.UserId
                 };
 
                 _context.Company.Update(company);

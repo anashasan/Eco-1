@@ -1,6 +1,4 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model List<Host.DataModel.CompanyDto>
 
 @{
     Layout = "_AdminLayout";
@@ -13,8 +11,6 @@
             </br>
             <!-- Trigger the modal with a button -->
             <a class="btn  btn-primary " href="@Url.Action("AddCompany", "Company")">Add</a>
-
-
         </div>
 
         <!-- /.box-header -->
@@ -22,22 +18,39 @@
             <table id="example2" class="table table-bordered table-hover">
                 <thead>
                     <tr>
-                        <th>Company ID</th>
                         <th>Company Name</th>
                         <th>Type</th>
                         <th>URL</th>
-                        
+                        <th>Options</th>
                     </tr>
                 </thead>
                 <tbody>
+                    @foreach (var s in Model)
+                    {
+                      
+                        <tr>
+                            <td style="text-align: center">
+                                @s.Name
+                                <a class="text-primary"></a>
+                            </td>
+                            <td style="text-align: center">
+                                @s.Type
+                                <span>
+                                    <i class='zmdi large-size'></i>
+                                </span>
+                            </td>
 
-                    <tr>
-                       
-
-
-
-                    </tr>
-
+                            <td style="text-align: center">
+                                @s.Url
+                                <span>
+                                    <i class='zmdi large-size'></i>
+                                </span>
+                            </td>
+                            <td>
+                                <button class="btn btn-default" onClick='@($"window.location.href='/Company/GetCompanyById?id={s.CompanyId}'")'>Edit</button>
+                            </td>
+                        </tr>
+                    }
             </table>
         </div>
         <!-- /.box-body -->

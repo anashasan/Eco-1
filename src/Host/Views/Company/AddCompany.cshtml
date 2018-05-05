@@ -1,6 +1,4 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model Host.DataModel.CompanyDto
 @{
     Layout = "_AdminLayout";
 }
@@ -21,36 +19,27 @@
                 <div class="box-header">
                     <div class="panel panel-default">
                         <div class="panel-body">
-                            <form class="form-horizontal" method="post" >
-                                <input type="hidden" data-val="true" data-val-required="The UserId field is required." id="UserId" name="UserId" value="00000000-0000-0000-0000-000000000000">
-                                <input type="hidden" data-val="true" data-val-required="The SiteId field is required." id="SiteId" name="SiteId" value="a9d9c0b8-1930-4059-a58c-e52648bee1ba">
+                            <form class="form-horizontal" asp-controller="Company" asp-action="AddCompany" method="post" >
+                                <input type="hidden" asp-for="CompanyId">
                                 <div class="form-group">
-                                    <label class="col-md-2 control-label" for="Email">Company Name</label>
+                                    <label class="col-md-2 control-label">Company Name</label>
                                     <div class="col-md-10">
-                                        <input class="form-control" type="email" id="Email" name="Email" value="">
-                                        <span class="text-danger field-validation-valid" data-valmsg-for="Email" data-valmsg-replace="true"></span>
+                                        <input class="form-control" type="text" asp-for="Name">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-md-2 control-label" for="UserName">Type</label>
+                                    <label class="col-md-2 control-label">Type</label>
                                     <div class="col-md-10">
-                                        <input class="form-control" type="text" data-val="true" data-val-remote="Username not available, please try another value" data-val-remote-additionalfields="*.Username,*.UserId" data-val-remote-type="Post" data-val-remote-url="/account/usernameavailable" data-val-required="Username is required." id="Username" name="Username" value="">
-                                        <span class="text-danger field-validation-valid" data-valmsg-for="Username" data-valmsg-replace="true"></span>
+                                        <input class="form-control" type="text" asp-for="Type">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-md-2 control-label">URL</label>
                                     <div class="col-md-10">
-                                        <input class="form-control" type="text" id="NormalizeUserName" name="NormalizeUserName" value="">
-                                        <span class="text-danger field-validation-valid" data-valmsg-for="DisplayName" data-valmsg-replace="true"></span>
+                                        <input class="form-control" type="text" asp-for="Url">
                                     </div>
                                 </div>
-                                
-                                
-                                
-                                
-                                
-                                <input name="__RequestVerificationToken" type="hidden" value="CfDJ8DdiBRNIYHdKro7lMkKcfcV2Oqczq8cjBcn7wLE-qv58T_QSI1AVUEyJTlbOhZ6aGEs9kRAJnfWZjRcpTlLYuattvkBxPZo3_3GNuKM_1o90CCRPaNlnZ0AEPX66HdtTYg5y6E7LU_568ekoxg3RdtphQeXjUxKuo37ChTTa0LCR0i53fsspWKPCB2tn5Nf7sw" />
+                                <button type="submit" class="btn-primary top-right">Add</button>
                             </form>
                         </div>
                     </div>
