@@ -16,13 +16,16 @@ namespace Host.Controllers
         private readonly ICompanyService _companyService;
         private readonly IStationService _stationService;
         private readonly IActivityService _activityService;
+        private readonly IBranchService _branchService;
 
 
         public CompanyController(ICompanyService companyService,
+                                 IBranchService branchService,
                                  IStationService stationService,
                                  IActivityService activityService)
         {
             _companyService = companyService;
+            _branchService = branchService;
             _stationService = stationService;
             _activityService = activityService;
         }
@@ -194,6 +197,28 @@ namespace Host.Controllers
         public IActionResult AddBranchEmployee()
         {
             return View("AddBranchEmployee");
+        }
+        [HttpPost]
+        public IActionResult AddBranch (BranchDto requestDto) 
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return RedirectToAction("BranchCreation");
+                var branch = _branchService.AddBranch(requestDto);
+                return RedirectToAction("Branch");
+
+
+
+
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+                    
+            }
+
         }
 
     }

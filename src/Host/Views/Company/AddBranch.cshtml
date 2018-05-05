@@ -19,10 +19,10 @@
                 <div class="box-header">
                     <div class="panel panel-default">
                         <div class="panel-body">
-                            <form class="form-horizontal" method="post">
-                                <input type="hidden">
+                            <form class="form-horizontal" asp-controller="Company" asp-action="AddBranch" method="post">
+                                <input type="hidden" asp-for="BranchId">
                                 <div class="form-group">
-                                    <label class="col-md-2 control-label" for="Company">Company Name</label>
+                                    <label class="col-md-2 control-label">Company Name</label>
                                     <div class="col-md-10">
                                         <select class="form-control" asp-items="@Model.Companies" asp-for="CompanyId" placeholder="Select Business Name..."></select>
                                     </div>
@@ -30,39 +30,36 @@
                                 <div class="form-group">
                                     <label class="col-md-2 control-label">Branch Name</label>
                                     <div class="col-md-10">
-                                        <input class="form-control" type="text" >
-                                        <span class="text-danger field-validation-valid"></span>
+                                        <input class="form-control" type="text" asp-for="Name">
+
                                     </div>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <label class="col-md-2 control-label">Location</label>
                                     <div class="col-md-10">
-                                        <input class="form-control" type="text">
-                                        <span class="text-danger field-validation-valid"></span>
+                                        <input class="form-control" type="text" asp-for="Location">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-md-2 control-label">Address</label>
                                     <div class="col-md-10">
-                                        <input class="form-control" type="text">
-                                        <span class="text-danger field-validation-valid"></span>
+                                        <input class="form-control" type="text" asp-for="Address">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-md-2 control-label">Phone</label>
                                     <div class="col-md-10">
-                                        <input class="form-control" type="text">
-                                        <span class="text-danger field-validation-valid"></span>
+                                        <input class="form-control" type="text" asp-for="Phone">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-md-2 control-label">Email</label>
                                     <div class="col-md-10">
-                                        <input class="form-control" type="text">
-                                        <span class="text-danger field-validation-valid"></span>
+                                        <input class="form-control" type="text" asp-for="Email">
                                     </div>
                                 </div>
+                                <button type="submit" class="btn-primary top-right">Add</button>
                             </form>
                         </div>
                     </div>
