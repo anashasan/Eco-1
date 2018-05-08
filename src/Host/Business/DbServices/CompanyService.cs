@@ -72,7 +72,9 @@ namespace Host.Business.DbServices
                            Name = p.Name,
                            Type = p.Type,
                            Url = p.Url
-                       }).ToList());
+                       })
+                       .OrderBy(i => i.Name)
+                       .ToList());
             }
             catch (Exception e)
             {

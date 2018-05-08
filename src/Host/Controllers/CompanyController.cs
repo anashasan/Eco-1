@@ -16,15 +16,18 @@ namespace Host.Controllers
         private readonly ICompanyService _companyService;
         private readonly IStationService _stationService;
         private readonly IActivityService _activityService;
+        private readonly IBranchService _branchService;
 
 
         public CompanyController(ICompanyService companyService,
                                  IStationService stationService,
-                                 IActivityService activityService)
+                                 IActivityService activityService,
+                                 IBranchService branchService)
         {
             _companyService = companyService;
             _stationService = stationService;
             _activityService = activityService;
+            _branchService = branchService;
         }
 
         public IActionResult Index()
@@ -169,14 +172,23 @@ namespace Host.Controllers
 
             return View("CompanyCreation",allCompany);
         }
+
         public IActionResult AddCompany()
         {
             return View("AddCompany");
         }
+
         public IActionResult Branch()
         {
-            return View("BranchCreation");
+            var branchModel = _branchService.GetAllBranch();
+            if(branchModel == null)
+            {
+                var model = new BranchDto();
+                return View("BranchCreation", model);
+            }
+            return View("BranchCreation", branchModel);
         }
+
         public async Task<IActionResult> AddBranch()
         {
             var companiesList =await _companyService.GetAllCompany();
@@ -187,13 +199,79 @@ namespace Host.Controllers
 
             return View("AddBranch",brancModel);
         }
+
         public IActionResult BranchEmployee()
         {
             return View("BranchEmployee");
         }
-        public IActionResult AddBranchEmployee()
+
+        public async Task<IActionResult> AddBranchEmployee()
         {
-            return View("AddBranchEmployee");
+            var companiesList = await _companyService.GetAllCompany();
+            var branchEmployeeModel = new BranchEmployeeDto
+            {
+                Companies = new SelectList(companiesList, "CompanyId", "Name")
+            };
+            return View("AddBranchEmployee", branchEmployeeModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddBranch(BranchDto requestDto)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return RedirectToAction("Branch");
+                if(requestDto.BranchId != 0)
+                {
+                    await _branchService.UpdateBranch(requestDto);
+                    return RedirectToAction("Branch");
+                }
+                await _branchService.AddBranch(requestDto);
+                return RedirectToAction("Branch");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetBranchById(int id)
+        {
+            try
+            {
+                var companiesList = await _companyService.GetAllCompany();
+                var branch = _branchService.GetBranchById(id);
+                var branchModel = new BranchDto
+                {
+                    Companies = new SelectList(companiesList, "CompanyId", "Name")
+                };
+                branch.Companies = branchModel.Companies;
+                return View("AddBranch", branch);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);    
+                throw;
+            }
+        }
+
+        [HttpGet("Company/GetBranchByCompanyId/Id/{id}")]
+        public  IActionResult GetBranchByCompanyId([FromRoute] int id)
+        {
+            try
+            {
+                var branchModel = _branchService.GetBranchByCompanyId(id);
+
+                return Json(branchModel);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);    
+                throw;
+            }
         }
 
     }

@@ -12,5 +12,6 @@ namespace Host.Business.IDbServices
         Task<int> UpdateBranch(BranchDto requestDto);
         BranchDto GetBranchById(int id);
         List<BranchDto> GetAllBranch();
+        List<CompanyBranchDto> GetBranchByCompanyId(int id);
     }
 }
