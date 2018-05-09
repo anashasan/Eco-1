@@ -1,6 +1,7 @@
 ﻿using Host.Business.IDbServices;
 using Host.DataContext;
 using Host.DataModel;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -45,9 +46,9 @@ namespace Host.Business.DbServices
                         {
                              FkCompanyId = requestDto.CompanyId
                         }
-                       
+
                     }
-                    
+
                 };
                 _context.Branch.Add(branch);
                 _context.SaveChanges();
@@ -82,7 +83,7 @@ namespace Host.Business.DbServices
                            Name = i.Name,
                            Phone = i.Phone,
                            CompanyName = i.CompanyBranch.Select(p => p.FkCompany.Name).Single()
-                         
+
                        })
                        .OrderBy(i => i.CompanyName)
                        .ToList();
@@ -94,7 +95,7 @@ namespace Host.Business.DbServices
             }
         }
 
-        public List<CompanyBranchDto> GetBranchByCompanyId(int id)
+        public SelectList GetBranchByCompanyId(int id)
         {
             try
             {
@@ -107,7 +108,7 @@ namespace Host.Business.DbServices
                                 BranchName = p.FkBranch.Name
                             }).ToList();
 
-                return model;
+                return new SelectList(model, "BranchId", "BranchName");
             }
             catch (Exception e)
             {
@@ -162,7 +163,7 @@ namespace Host.Business.DbServices
                     Name = requestDto.Name,
                     Address = requestDto.Address,
                     Email = requestDto.Email,
-                    Location= requestDto.Location,
+                    Location = requestDto.Location,
                     Phone = requestDto.Phone,
                     CreatedOn = DateTime.Now,
                     CompanyBranch = new List<CompanyBranch>

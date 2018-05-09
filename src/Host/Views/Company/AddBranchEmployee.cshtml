@@ -19,18 +19,22 @@
                 <div class="box-header">
                     <div class="panel panel-default">
                         <div class="panel-body">
-                            <form class="form-horizontal" method="post">
+                            <form class="form-horizontal" asp-controller="Company" asp-action="AddBrancEmployee" method="post">
                                 <input type="hidden" data-val="true">
                                 <div class="form-group">
                                     <label class="col-md-2 control-label" for="Company">Company Name</label>
                                     <div class="col-md-10">
-                                            <select class="form-control" placeholder="Select Business Name..." onchange="getBranchDropdownById(CompanyId.value)" asp-items="@Model.Companies" asp-for="CompanyId"></select>
-                                        </div>
+                                        <select class="form-control" onchange="getBranchDropdownById(CompanyId.value)" asp-items="@Model.Companies" asp-for="CompanyId">
+                                            <option disabled="disabled" selected="selected">Select Company Name...</option>
+                                        </select>
                                     </div>
+                                </div>
                                 <div class="form-group">
                                     <label class="col-md-2 control-label" for="Company">Branch Name</label>
                                     <div class="col-md-10">
-                                        <select class="form-control" asp-for="BranchId"  placeholder="Select Business Name..."></select>
+                                        <select class="form-control" asp-for="BranchId">
+                                            <option disabled="disabled" selected="selected">Select Branch Name</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -57,9 +61,10 @@
                                 <div class="form-group">
                                     <label class="col-md-2 control-label">Email</label>
                                     <div class="col-md-10">
-                                        <input class="form-control" type="text" asp-for="Email" >
+                                        <input class="form-control" type="text" asp-for="Email">
                                     </div>
                                 </div>
+                                <button type="submit">Add</button>
                             </form>
                         </div>
                     </div>

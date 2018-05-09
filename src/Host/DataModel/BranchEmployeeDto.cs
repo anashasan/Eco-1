@@ -12,6 +12,8 @@ namespace Host.DataModel
         public string EmployeeName { get; set; }
         public string Designation { get; set; }
         public string Email { get; set; }
+        public string CompanyName { get; set; }
+        public string BranchName { get; set; }
         public string Phone { get; set; }
         public SelectList Companies { get; set; }
         public int CompanyId { get; set; }
