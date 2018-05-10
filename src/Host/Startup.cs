@@ -12,6 +12,7 @@ using Host.Business.IDbServices;
 using Host.Business.DbServices;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
+using Host.Helper;
 
 namespace Host
 {
@@ -47,6 +48,7 @@ namespace Host
             services.AddScoped<IStationService, StationService>();
             services.AddScoped<IEmployeeProfileService, EmployeeProfileService>();
             services.AddScoped<IBranchService, BranchService>();
+            services.AddScoped<QRCodeGenerator>();
             services.AddScoped<IBranchEmployeeService, BranchEmployeeService>();
 
             services.AddMvc();

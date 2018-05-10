@@ -151,7 +151,7 @@ const getStationById = (id) => {
                     }
                     else {
                         var elem = document.getElementById("TextBoxContainer");
-                        elem.parentNode.removeChild(elem);
+                        elem.removeAttribute();
                     }
                 }).catch(ex => {
                 });

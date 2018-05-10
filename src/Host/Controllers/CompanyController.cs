@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Host.Business.IDbServices;
 using Host.DataModel;
+using Host.Helper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -21,6 +22,7 @@ namespace Host.Controllers
         private readonly IActivityService _activityService;
         private readonly IBranchService _branchService;
         private readonly IBranchEmployeeService _branchEmployeeService;
+        private readonly QRCodeGenerator _qRCodeGenerator;
 
 
         /// <summary>
@@ -35,13 +37,15 @@ namespace Host.Controllers
                                  IStationService stationService,
                                  IActivityService activityService,
                                  IBranchService branchService,
-                                 IBranchEmployeeService branchEmployeeService)
+                                 IBranchEmployeeService branchEmployeeService,
+                                 QRCodeGenerator qRCodeGenerator)
         {
             _companyService = companyService;
             _stationService = stationService;
             _activityService = activityService;
             _branchService = branchService;
             _branchEmployeeService = branchEmployeeService;
+            _qRCodeGenerator = qRCodeGenerator;
         }
         /// <summary>
         /// 
@@ -179,6 +183,7 @@ namespace Host.Controllers
             return View("AllCompanyView");
         }
 
+        #region Company
 
         /// <summary>
         /// 
@@ -254,6 +259,8 @@ namespace Host.Controllers
             return View("AddCompany");
         }
 
+        #endregion
+
         /// <summary>
         /// 
         /// </summary>
@@ -272,6 +279,33 @@ namespace Host.Controllers
         /// <summary>
         /// 
         /// </summary>
+        /// <param name="requestDto"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public async Task<IActionResult> AddBranch(BranchDto requestDto)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return RedirectToAction("Branch");
+                if (requestDto.BranchId != 0)
+                {
+                    await _branchService.UpdateBranch(requestDto);
+                    return RedirectToAction("Branch");
+                }
+                await _branchService.AddBranch(requestDto);
+                return RedirectToAction("Branch");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <returns></returns>
         public async Task<IActionResult> AddBranch()
         {
@@ -283,6 +317,36 @@ namespace Host.Controllers
 
             return View("AddBranch",brancModel);
         }
+
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<IActionResult> GetBranchById(int id)
+        {
+            try
+            {
+                var companiesList = await _companyService.GetAllCompany();
+                var branch = _branchService.GetBranchById(id);
+                var branchModel = new BranchDto
+                {
+                    Companies = new SelectList(companiesList, "CompanyId", "Name")
+                };
+                branch.Companies = branchModel.Companies;
+                return View("AddBranch", branch);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        #region BranchEmployee
 
         /// <summary>
         /// 
@@ -313,58 +377,7 @@ namespace Host.Controllers
             return View("AddBranchEmployee", branchEmployeeModel);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="requestDto"></param>
-        /// <returns></returns>
-        [HttpPost]
-        public async Task<IActionResult> AddBranch(BranchDto requestDto)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                    return RedirectToAction("Branch");
-                if(requestDto.BranchId != 0)
-                {
-                    await _branchService.UpdateBranch(requestDto);
-                    return RedirectToAction("Branch");
-                }
-                await _branchService.AddBranch(requestDto);
-                return RedirectToAction("Branch");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [HttpGet]
-        public async Task<IActionResult> GetBranchById(int id)
-        {
-            try
-            {
-                var companiesList = await _companyService.GetAllCompany();
-                var branch = _branchService.GetBranchById(id);
-                var branchModel = new BranchDto
-                {
-                    Companies = new SelectList(companiesList, "CompanyId", "Name")
-                };
-                branch.Companies = branchModel.Companies;
-                return View("AddBranch", branch);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);    
-                throw;
-            }
-        }
+       
 
         /// <summary>
         /// 
@@ -425,5 +438,12 @@ namespace Host.Controllers
             }
         }
 
+        #endregion
+
+        public IActionResult QrCode()
+        {
+            var qrCode = _qRCodeGenerator.QrCode();
+            return View("QRCode", qrCode);
+        }
     }
 }

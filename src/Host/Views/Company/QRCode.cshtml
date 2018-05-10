@@ -1,5 +1,28 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿
 @{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Home";
 }
+<head>
+    <title>Testing QR code</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    
+</head>
+
+<input id="text" type="text"
+       value="abc" style="Width:20%"
+       onblur='generateBarCode();' />
+
+<img id='barcode'
+     alt=""
+     title="arsalan"
+     width="50"
+     height="50" />
+
+<script type="text/javascript">
+    function generateBarCode() {
+        var nric = $('#text').val();
+        var url = 'https://api.qrserver.com/v1/create-qr-code/?data=' + nric + '&amp;size=50x50';
+        $('#barcode').attr('src', url);
+    }
+</script>
