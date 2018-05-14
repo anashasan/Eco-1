@@ -21,8 +21,9 @@ const changeIt = () => {
 };
 
 
-const GetDynamicTextBox = (value) => {
+const GetDynamicTextBox = (value, id) => {
     return '<input name="DynamicTextBox" class="form-control col-sm-5" type="text" placeholder="Activity Name" value="' + value + '" /> ' +
+        '<input name="DynamicTextBox" class="form-control col-sm-5" type="hidden"  value="' + id + '" />' +
         '<a onclick="RemoveTextBox(this)"><span class="glyphicon glyphicon-remove" ></span></a >'
 };
 
@@ -52,7 +53,7 @@ const ActivityTextBox = (activity) => {
     var s = "";
     AddTextBox();
     for (var i = 0; i < activity.length; i++) {
-        s += "<div>" + GetDynamicTextBox(activity[i].name) + "</div>"; //Create one textbox as HTML
+        s += "<div>" + GetDynamicTextBox(activity[i].name, activity[i].activityId) + "</div>"; //Create one textbox as HTML
         document.getElementById("TextBoxContainer").innerHTML = s;
     }
 
@@ -99,11 +100,18 @@ const postActivity = async () => {
     };
     var dataArray = $("#formActivity")
         .serializeArray();
-    for (var i in dataArray) {
+    for (let i = 0; i < dataArray.length; i = i + 2) {
         model.activities.push({
-            name: dataArray[i].value
+            name: dataArray[i].value,
+            activityId: dataArray[i + 1].value
         });
-    };
+    }
+    //for (var i in dataArray) {
+    //    model.activities.push({
+    //        name: dataArray[i].value,
+    //        id: dataArray[i]
+    //    });
+    //};
 
     const headers = new Headers();
     headers.append("Accept", "application/json");
@@ -150,8 +158,7 @@ const getStationById = (id) => {
 
                     }
                     else {
-                        var elem = document.getElementById("TextBoxContainer");
-                        elem.removeAttribute();
+                        document.getElementById("TextBoxContainer").innerHTML = '';
                     }
                 }).catch(ex => {
                 });

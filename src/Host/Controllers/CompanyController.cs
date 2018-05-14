@@ -149,7 +149,11 @@ namespace Host.Controllers
         {
             if (ModelState.IsValid)
                 return RedirectToAction("Station");
-
+            if(requestDto.Activities.Any())
+            {
+               await _activityService.UpdateActivity(requestDto);
+                return RedirectToAction("Station");
+            }
             await _activityService.AddActivity(requestDto);
             return RedirectToAction("Station");
         }
@@ -444,6 +448,11 @@ namespace Host.Controllers
         {
             var qrCode = _qRCodeGenerator.QrCode();
             return View("QRCode", qrCode);
+        }
+
+        public IActionResult Activity()
+        {
+            return View("Activity");
         }
     }
 }

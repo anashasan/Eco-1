@@ -35,10 +35,6 @@ namespace Host.Business.DbServices
         {
             try
             {
-                //foreach(var activity in requestDto.Activities)
-                //{
-                //    var activities = _
-                //}
                 var activities = requestDto.Activities.Select(i => new Activity
                 {
                     PkActivityId = i.ActivityId,
@@ -56,11 +52,6 @@ namespace Host.Business.DbServices
 
                 _context.Activity.AddRange(activities);
                await _context.SaveChangesAsync();
-                //_context.StationActivity.AddRange(activities.Select(p => new StationActivity
-                //{
-                //    FkActivityId = p.PkActivityId,
-                //    FkStationId = requestDto.StationId
-                //}));
                 return await Task.FromResult(_context.SaveChanges());
             }
             catch (Exception e)
@@ -136,19 +127,36 @@ namespace Host.Business.DbServices
         /// </summary>
         /// <param name="requestDto"></param>
         /// <returns></returns>
-        public async Task<int> UpdateActivity(ActivityDto requestDto)
+        public async Task<int> UpdateActivity(StationActivityDto requestDto)
         {
             try
             {
-                var activity = new Activity
-                {
-                    Name = requestDto.Name,
-                    Description = requestDto.Description,
-                    UpdatedOn = DateTime.Now
-                };
-                _context.Activity.Update(activity);
+                var stationActivities = _context.StationActivity
+                                        .AsNoTracking()
+                                        .Where(i => i.FkStationId ==  requestDto.StationId)
+                                        .ToList();
+                _context.StationActivity.RemoveRange(stationActivities);
                 _context.SaveChanges();
-                return await Task.FromResult(activity.PkActivityId);
+
+                    var activities = requestDto.Activities.Select(i => new Activity
+                {
+                    PkActivityId = i.ActivityId,
+                    Name = i.Name,
+                    Description = i.Description,
+                    CreateOn = DateTime.Now,
+                    StationActivity = new List<StationActivity>
+                    {
+                        new StationActivity
+                        {
+                            FkStationId = requestDto.StationId
+                        }
+                    }
+                });
+
+                _context.Activity.UpdateRange(activities);
+                await _context.SaveChangesAsync();
+                return await Task.FromResult(_context.SaveChanges());
+
             }
             catch (Exception e)
             {
