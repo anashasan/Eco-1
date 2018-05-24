@@ -1,6 +1,5 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model List<Host.DataModel.BranchDto>
+
 
 @{
     Layout = "_AdminLayout";
@@ -12,9 +11,8 @@
             <h3 class="box-title">Company Data Table</h3></br>
             </br>
             <!-- Trigger the modal with a button -->
-            
-                <a class="btn  btn-primary " href="@Url.Action("AddBranch", "Company")" >Add</a>
-            
+
+            <a class="btn  btn-primary " href="@Url.Action("AddBranch", "Company")">Add</a>
         </div>
 
         <!-- /.box-header -->
@@ -22,23 +20,44 @@
             <table id="example2" class="table table-bordered table-hover">
                 <thead>
                     <tr>
-                        <th>Branch ID</th>
                         <th>Branch Name</th>
                         <th>Company Name</th>
                         <th>Location</th>
                         <th>Address</th>
                         <th>Phone</th>
                         <th>Email</th>
+                        <th>Options</th>
 
                     </tr>
                 </thead>
                 <tbody>
-
-                    <tr></tr>
+                    @foreach (var s in Model)
+                    {
+                    <tr>
+                        <td style="text-align: center">@s.Name</td>
+                        <td style="text-align: center">@s.CompanyName</td>
+                        <td style="text-align: center">@s.Location</td>
+                        <td style="text-align: center">@s.Address</td>
+                        <td style="text-align: center">@s.Phone</td>
+                        <td style="text-align: center">@s.Email</td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                   Option
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href="#" onClick='@($"window.location.href='/Company/GetBranchById?id={s.BranchId}'")'>Edit</a>
+                                    <a class="dropdown-item" href='#' onclick='@($"window.location.href='/Company/GetLocationById?id={s.BranchId}'")'>Location</a>
+                                    
+                                </div>
+                            </div>
+                           
+                        </td>
+                    </tr>
+                    }
 
             </table>
         </div>
-        <!-- /.box-body -->
     </div>
 </div>
 

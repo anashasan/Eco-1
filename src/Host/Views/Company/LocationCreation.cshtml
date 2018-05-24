@@ -1,0 +1,47 @@
+﻿@model List<Host.DataModel.LocationDto>
+@{
+    Layout = "_AdminLayout";
+}
+
+<div class="col-xs-12">
+    <div class="box">
+        <div class="box-header">
+            <h3 class="box-title">Location Data Table</h3></br>
+            </br>
+            <!-- Trigger the modal with a button -->
+
+            <label>@ViewBag.BranchId</label>
+            <a class="btn  btn-primary " onclick='@($"window.location.href='/Company/AddLocation?id={@ViewBag.BranchId}'")'>Add</a>
+        </div>
+
+        <!-- /.box-header -->
+        <div class="box-body">
+            @Html.Hidden("id", (int)ViewBag.BranchId)
+            <table id="example2" class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+
+                        <th>Location</th>
+                        <th>QR Code</th>
+                        <th>Options</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var a in Model)
+                    {
+                        <tr>
+                            <td style="text-align:center">@a.Name</td>
+                            <td>
+                                <button class="btn btn-default" onClick='@($"window.location.href='/Company/AddLocation?id={a.BranchId}&&locationId={a.LocationId}'")'>Edit</button>
+                            </td>
+                        </tr>
+
+                    }
+            </table>
+        </div>
+        <!-- /.box-body -->
+    </div>
+</div>
+
+

@@ -30,6 +30,11 @@ namespace Host.Controllers
             {
                 if (!ModelState.IsValid)
                     return RedirectToAction("Station","Company");
+                if(requestDto.Activities.Any(i => i.ActivityId != 0))
+                {
+                    await _activityService.UpdateActivity(requestDto);
+                    return RedirectToAction("Station", "Company");
+                }
                 await _activityService.AddActivity(requestDto);
                 return RedirectToAction("Station", "Company");
             }

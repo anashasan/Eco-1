@@ -1,4 +1,5 @@
 ﻿using Host.DataModel;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,6 @@ namespace Host.Business.IDbServices
         Task<int> UpdateBranch(BranchDto requestDto);
         BranchDto GetBranchById(int id);
         List<BranchDto> GetAllBranch();
+        SelectList GetBranchByCompanyId(int id);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Host.Business.IDbServices;
 using Host.DataContext;
 using Host.DataModel;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -37,7 +38,17 @@ namespace Host.Business.DbServices
                     Address = requestDto.Address,
                     Email = requestDto.Email,
                     Phone = requestDto.Phone,
+                    Location = requestDto.Location,
                     CreatedOn = DateTime.Now,
+                    CompanyBranch = new List<CompanyBranch>
+                    {
+                        new CompanyBranch
+                        {
+                             FkCompanyId = requestDto.CompanyId
+                        }
+
+                    }
+
                 };
                 _context.Branch.Add(branch);
                 _context.SaveChanges();
@@ -64,14 +75,40 @@ namespace Host.Business.DbServices
                        .AsNoTracking()
                        .Select(i => new BranchDto
                        {
-                         Address = i.Address,
-                         BranchId = i.PkBranchId,
-                         Email = i.Email,
-                         CreatedOn = i.CreatedOn,
-                         Name = i.Name,
-                         Phone = i.Phone,
-                         
-                       }).ToList();
+                           Address = i.Address,
+                           BranchId = i.PkBranchId,
+                           Email = i.Email,
+                           Location = i.Location,
+                           CreatedOn = i.CreatedOn,
+                           Name = i.Name,
+                           Phone = i.Phone,
+                           CompanyName = i.CompanyBranch.Select(p => p.FkCompany.Name).Single()
+
+                       })
+                       .OrderBy(i => i.CompanyName)
+                       .ToList();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public SelectList GetBranchByCompanyId(int id)
+        {
+            try
+            {
+                var model = _context.CompanyBranch
+                            .AsNoTracking()
+                            .Where(i => i.FkCompanyId == id)
+                            .Select(p => new CompanyBranchDto
+                            {
+                                BranchId = p.FkBranch.PkBranchId,
+                                BranchName = p.FkBranch.Name
+                            }).ToList();
+
+                return new SelectList(model, "BranchId", "BranchName");
             }
             catch (Exception e)
             {
@@ -97,6 +134,7 @@ namespace Host.Business.DbServices
                            Address = i.Address,
                            BranchId = i.PkBranchId,
                            Email = i.Email,
+                           Location = i.Location,
                            CreatedOn = i.CreatedOn,
                            Name = i.Name,
                            Phone = i.Phone,
@@ -125,8 +163,17 @@ namespace Host.Business.DbServices
                     Name = requestDto.Name,
                     Address = requestDto.Address,
                     Email = requestDto.Email,
+                    Location = requestDto.Location,
                     Phone = requestDto.Phone,
                     CreatedOn = DateTime.Now,
+                    CompanyBranch = new List<CompanyBranch>
+                    {
+                        new CompanyBranch
+                        {
+                             FkCompanyId = requestDto.CompanyId
+                        }
+
+                    }
                 };
                 _context.Branch.Update(branch);
                 _context.SaveChanges();
