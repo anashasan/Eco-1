@@ -24,6 +24,7 @@ namespace Host.Controllers
         private readonly IBranchEmployeeService _branchEmployeeService;
         private readonly ILocationService _locationService;
         private readonly QRCodeGenerator _qRCodeGenerator;
+        private readonly IStationLocationService _stationLocationService;
        
 
 
@@ -41,7 +42,8 @@ namespace Host.Controllers
                                  IBranchService branchService,
                                  IBranchEmployeeService branchEmployeeService,
                                  ILocationService locationService,
-                                 QRCodeGenerator qRCodeGenerator
+                                 QRCodeGenerator qRCodeGenerator,
+                                 IStationLocationService stationLocationService
                                  )
         {
             _companyService = companyService;
@@ -51,6 +53,7 @@ namespace Host.Controllers
             _branchEmployeeService = branchEmployeeService;
             _locationService =locationService;
             _qRCodeGenerator = qRCodeGenerator;
+            _stationLocationService = stationLocationService;
             
         }
         /// <summary>
@@ -105,7 +108,7 @@ namespace Host.Controllers
         public ActionResult Station()
         {
             var stations = _stationService.GetAllStation();
-            return View("Station", stations);
+            return View("StationCreation", stations);
         }
 
         /// <summary>
@@ -518,9 +521,56 @@ namespace Host.Controllers
             return View("LocationCreation", location);
         }
 
-        public IActionResult StationLocation()
+        public IActionResult StationLocation(int locationId)
         {
-            return View("StationLocation");
+            var stationLocation = _stationLocationService.GetStationLocationByLocationId(locationId);
+            if (!stationLocation.Any())
+            {
+                var stations = new List<StationLocationDto>();
+                ViewBag.LocationId = locationId;
+                return View("StationLocation", stations);
+            }
+            ViewBag.LocationId = locationId;
+
+            return View("StationLocation", stationLocation);
+
+        }
+
+        [HttpPost]
+        public  async Task <IActionResult> AddStationLocation(StationLocationDto requestDto)
+        {
+            try
+            {
+                if(!ModelState.IsValid)
+                {
+                    return RedirectToAction("StationLocation");
+                }
+                await _stationLocationService.AddStationLocation(requestDto);
+                return RedirectToAction("StationLocation", new { locationId = requestDto.LocationId});
+           
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+           
+        }
+
+        public  IActionResult AddStationLocation(int locationId, int stationId)
+        {
+            var stationlist =  _stationService.GetAllStation();
+            var stationloction = new StationLocationDto
+            {
+                Stations = new SelectList(stationlist, "StationId", "Name"),
+                LocationId = locationId
+            };
+            ViewBag.LocationId = locationId;
+            return View("AddStationLocation",stationloction);
+
+                
+
         }
 
       

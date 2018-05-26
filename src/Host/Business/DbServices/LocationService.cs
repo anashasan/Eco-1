@@ -102,6 +102,7 @@ namespace Host.Business.DbServices
 
                 var location = new Location
                 {
+                    PkLocationId = requestDto.LocationId,
                     Name = requestDto.Name,
 
                 };

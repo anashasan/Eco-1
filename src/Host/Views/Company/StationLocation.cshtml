@@ -1,4 +1,45 @@
-﻿
+﻿@model List<Host.DataModel.StationLocationDto>
 @{
-
+    Layout = "_AdminLayout";
 }
+
+<div class="col-xs-12">
+    <div class="box">
+        <div class="box-header">
+            <h3 class="box-title">Station Data Table</h3></br>
+            </br>
+            <!-- Trigger the modal with a button -->
+
+            <a class="btn  btn-primary " onclick='@($"window.location.href='/Company/AddStationLocation?locationId={ViewBag.LocationId}'")'>Add</a>
+        </div>
+
+        <!-- /.box-header -->
+        <div class="box-body">
+
+            <table id="example2" class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+
+                        <th>Station</th>
+
+                        <th>QR Code</th>
+                        <th>Option</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var s in Model)
+                    {
+                        <tr>
+                            <td>@s.StationName</td>
+
+                            <td><button type="button" class="btn  btn-primary glyphicon glyphicon-edit " onclick="editModel(@s.StationId)" style="width:16%"></button></td>
+                        </tr>
+                    }
+            </table>
+        </div>
+        <!-- /.box-body -->
+    </div>
+</div>
+
+

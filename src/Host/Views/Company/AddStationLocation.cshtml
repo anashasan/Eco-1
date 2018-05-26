@@ -1,4 +1,4 @@
-﻿@model Host.DataModel.LocationDto
+﻿@model Host.DataModel.StationLocationDto
 @{
     Layout = "_AdminLayout";
 }
@@ -7,7 +7,7 @@
 <div class="page-header">
     <div class="row">
         <div class="col-sm-9 col-xs-6">
-            <h2>Add Location</h2>
+            <h2>Add Station Location</h2>
         </div>
     </div>
 </div>
@@ -19,13 +19,13 @@
                 <div class="box-header">
                     <div class="panel panel-default">
                         <div class="panel-body">
-                            <form class="form-horizontal" asp-controller="Company" asp-action="AddLocation" method="post">
-                                <input type="hidden" asp-for="LocationId" />
-                                <input type="hidden" asp-for="BranchId" />
+                            <form class="form-horizontal" asp-controller="Company" asp-action="AddStationLocation" method="post">
+
+                                <input type="hidden" asp-for="LocationId"  />
                                 <div class="form-group">
-                                    <label class="col-md-2 control-label">Location Name</label>
+                                    <label class="col-md-2 control-label" for="Company">Station Name</label>
                                     <div class="col-md-4">
-                                        <input class="form-control" type="text" asp-for="Name" >
+                                        <select  class="form-control" asp-items="@Model.Stations" asp-for="StationId" placeholder="Select Business Name..."></select>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -44,7 +44,7 @@
 
                                     </div>
                                 </div>
-                                
+
                                 <button type="submit" class="btn-primary top-right">Add</button>
                             </form>
                         </div>

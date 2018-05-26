@@ -51,6 +51,7 @@ namespace Host
             services.AddScoped<QRCodeGenerator>();
             services.AddScoped<IBranchEmployeeService, BranchEmployeeService>();
             services.AddScoped<ILocationService, LocationService>();
+            services.AddScoped<IStationLocationService, StationLocationService>();
 
             services.AddMvc();
 
