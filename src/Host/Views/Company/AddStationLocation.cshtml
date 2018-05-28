@@ -22,6 +22,7 @@
                             <form class="form-horizontal" asp-controller="Company" asp-action="AddStationLocation" method="post">
 
                                 <input type="hidden" asp-for="LocationId"  />
+                                <input type="hidden" asp-for="StationLocationId"/>
                                 <div class="form-group">
                                     <label class="col-md-2 control-label" for="Company">Station Name</label>
                                     <div class="col-md-4">
@@ -32,7 +33,7 @@
                                     <label class="col-md-2 control-label">QR Code</label>
                                     <div class="col-md-10">
 
-                                        <input id="text" type="text"
+                                        <input id="text" type="hidden" asp-for="StationId"
                                                value="abc" style="Width:20%"
                                                onblur='generateBarCode();' />
 

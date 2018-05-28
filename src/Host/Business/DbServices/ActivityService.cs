@@ -26,12 +26,48 @@ namespace Host.Business.DbServices
 
         }
 
+       public async Task<int> AddActivity(ActivityDto requestDto)
+        {
+            try
+            {
+                var activity = new Activity
+                {
+                   
+                    Name=requestDto.Name,
+                    Description=requestDto.Description
+
+                };
+
+              
+                _context.Activity.Add(activity);
+                _context.SaveChanges();
+
+                var stationactivity = new StationActivity
+                {
+                    FkStationId=requestDto.StationId,
+                    FkActivityId=activity.PkActivityId
+                };
+
+                _context.StationActivity.Add(stationactivity);
+                return await Task.FromResult(_context.SaveChanges());
+
+
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+
+                throw;
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="requestDto"></param>
         /// <returns></returns>
-        public async Task<int> AddActivity(StationActivityDto requestDto)
+      /*  public async Task<int> AddActivity(StationActivityDto requestDto)
         {
             try
             {
@@ -60,7 +96,7 @@ namespace Host.Business.DbServices
                 throw;
             }
         }
-
+        */
         /// <summary>
         /// 
         /// </summary>
@@ -79,32 +115,58 @@ namespace Host.Business.DbServices
                    }).Single();
         }
 
-        public GetStationActivityDto GetActivityByStationId(int id)
+        /*  public GetStationActivityDto GetActivityByStationId(int id)
+          {
+              try
+              {
+                  var activities = _context.Station
+                                   .AsNoTracking()
+                                   .Where(i => i.PkStationId == id)
+                                   .Select(p => new GetStationActivityDto
+                                   {
+                                       StationId = p.PkStationId,
+                                       StationName = p.Name,
+                                       Activities = p.StationActivity.Select(i => new ActivityDto
+                                       {
+                                           ActivityId = i.FkActivityId,
+                                           Description = i.FkActivity.Description,
+                                           Name = i.FkActivity.Name
+                                       }).ToList()
+                                   }).Single();
+                  return activities;
+              }
+              catch (Exception e)
+              {
+                  Console.WriteLine(e);
+                  throw;
+              }
+          }*/
+
+       public List<ActivityDto> GetActivityByStationId(int id)
         {
             try
             {
-                var activities = _context.Station
-                                 .AsNoTracking()
-                                 .Where(i => i.PkStationId == id)
-                                 .Select(p => new GetStationActivityDto
-                                 {
-                                     StationId = p.PkStationId,
-                                     StationName = p.Name,
-                                     Activities = p.StationActivity.Select(i => new ActivityDto
-                                     {
-                                         ActivityId = i.FkActivityId,
-                                         Description = i.FkActivity.Description,
-                                         Name = i.FkActivity.Name
-                                     }).ToList()
-                                 }).Single();
-                return activities;
+                var stationactivity = _context.StationActivity
+                    .AsNoTracking()
+                    .Where(i => i.FkStationId == id)
+                    .Select(a => new ActivityDto
+                    {
+                        ActivityId = a.FkActivity.PkActivityId,
+                        Name = a.FkActivity.Name,
+                        Description = a.FkActivity.Description
+                    }).ToList();
+                return stationactivity;
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Console.WriteLine();
+                throw;
+
                 throw;
             }
         }
+
+
 
         /// <summary>
         /// 
@@ -122,12 +184,34 @@ namespace Host.Business.DbServices
                    }).ToList();
         }
 
+        public async Task<int> UpdateActivity(ActivityDto requestDto)
+        {
+            try
+            {
+                var activity = new Activity
+                {
+                    PkActivityId = requestDto.ActivityId,
+                    Name = requestDto.Name,
+                    Description = requestDto.Description
+                };
+                _context.Activity.Update(activity);
+                _context.SaveChanges();
+                return await Task.FromResult(activity.PkActivityId);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="requestDto"></param>
         /// <returns></returns>
-        public async Task<int> UpdateActivity(StationActivityDto requestDto)
+      /*  public async Task<int> UpdateActivity(StationActivityDto requestDto)
         {
             try
             {
@@ -164,7 +248,7 @@ namespace Host.Business.DbServices
                 throw;
             }
         }
-
+        */
 
     }
 }

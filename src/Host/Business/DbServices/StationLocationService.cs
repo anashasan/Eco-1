@@ -27,8 +27,8 @@ namespace Host.Business.DbServices
                 var stationLocation = new StationLocation
                 {
                     FkStationId = requestDto.StationId,
-                    FkLocationId = requestDto.LocationId
-
+                    FkLocationId = requestDto.LocationId,
+                    
                 };
 
                 _context.StationLocation.Add(stationLocation);
@@ -64,10 +64,55 @@ namespace Host.Business.DbServices
             }
         }
 
-        public Task<int> UpdateLocation(StationLocationDto requestDto)
+        public async Task<int> UpdateStationLocation(StationLocationDto requestDto)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var stationlocation = new StationLocation
+                {
+                    PkStationLocationId = requestDto.StationLocationId,
+                    FkStationId = requestDto.StationId,
+                    FkLocationId = requestDto.LocationId
+                };
+
+                _context.StationLocation.Update(stationlocation);
+                _context.SaveChanges();
+
+                return await Task.FromResult(stationlocation.PkStationLocationId);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+
+                throw;
+            }
         }
+
+        public StationLocationDto GetStationLocationById(int id)
+        {
+            try
+            {
+                return _context.StationLocation
+                    .AsNoTracking()
+                    .Where(i => i.FkLocationId == id)
+                    .Select(a => new StationLocationDto
+                    {
+                        StationLocationId = a.PkStationLocationId,
+                        StationId=a.FkStation.PkStationId,
+                    }).SingleOrDefault();
+
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+
+                throw;
+            }
+        
+        }
+
 
         /*  public List<StationLocationDto> GetStationByLocationId(int id)
 

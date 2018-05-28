@@ -10,7 +10,8 @@ namespace Host.Business.IDbServices
     public interface IStationLocationService
     {
        Task<int> AddStationLocation(StationLocationDto requestDto);
-        Task<int> UpdateLocation(StationLocationDto requestDto);
+        Task<int> UpdateStationLocation(StationLocationDto requestDto);
         List<StationLocationDto> GetStationLocationByLocationId(int locationId);
+        StationLocationDto GetStationLocationById(int id);
     }
 }

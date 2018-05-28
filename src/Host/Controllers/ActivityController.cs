@@ -6,9 +6,9 @@ using Host.Business.IDbServices;
 using Host.DataModel;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Host.Controllers
+/*namespace Host.Controllers
 {
-    public class ActivityController : Controller
+   public class ActivityController : Controller
     {
         private readonly IActivityService _activityService;
 
@@ -47,4 +47,5 @@ namespace Host.Controllers
 
 
     }
-}
+
+}*/

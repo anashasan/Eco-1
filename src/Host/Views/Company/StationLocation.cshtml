@@ -15,25 +15,24 @@
 
         <!-- /.box-header -->
         <div class="box-body">
-
+            @Html.Hidden("locationId", (int)ViewBag.LocationId)
             <table id="example2" class="table table-bordered table-hover">
                 <thead>
                     <tr>
 
                         <th>Station</th>
-
-                        <th>QR Code</th>
+                        <th>Qr Code</th>
                         <th>Option</th>
 
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="tbody">
                     @foreach (var s in Model)
                     {
                         <tr>
-                            <td>@s.StationName</td>
-
-                            <td><button type="button" class="btn  btn-primary glyphicon glyphicon-edit " onclick="editModel(@s.StationId)" style="width:16%"></button></td>
+                            <td id="text">@s.StationName</td>
+                            <td> </td>
+                            <td><a class="btn  btn-primary glyphicon glyphicon-edit " href='#' onClick='@($"window.location.href='/Company/AddStationLocation?locationId={ViewBag.LocationId}&stationlocationId={s.StationLocationId}'")'>Edit</a></td>
                         </tr>
                     }
             </table>
@@ -41,5 +40,32 @@
         <!-- /.box-body -->
     </div>
 </div>
+
+<script type="text/javascript">
+    var myArray = [];
+    var url
+    var tbody = document.getElementById("tbody");
+    const td = document.createElement("td");
+
+    @foreach (var d in Model.Select(i => i.StationName).ToList())
+    {
+        @:myArray.push("@d");
+
+    }
+
+    for (let model of myArray) {
+            const oImg = document.createElement("img");
+            oImg.setAttribute('src', 'https://api.qrserver.com/v1/create-qr-code/?data=' + model + '&amp;size=50x50');
+            oImg.style.width = '50px';
+            oImg.style.height = '50px';
+            td.appendChild(oImg);
+            tbody.appendChild(td);
+        }
+
+    console.log(myArray);
+
+
+
+</script>
 
 
