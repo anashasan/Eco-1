@@ -22,7 +22,10 @@ namespace Host.Controllers
         private readonly IActivityService _activityService;
         private readonly IBranchService _branchService;
         private readonly IBranchEmployeeService _branchEmployeeService;
+        private readonly ILocationService _locationService;
         private readonly QRCodeGenerator _qRCodeGenerator;
+        private readonly IStationLocationService _stationLocationService;
+       
 
 
         /// <summary>
@@ -38,14 +41,20 @@ namespace Host.Controllers
                                  IActivityService activityService,
                                  IBranchService branchService,
                                  IBranchEmployeeService branchEmployeeService,
-                                 QRCodeGenerator qRCodeGenerator)
+                                 ILocationService locationService,
+                                 QRCodeGenerator qRCodeGenerator,
+                                 IStationLocationService stationLocationService
+                                 )
         {
             _companyService = companyService;
             _stationService = stationService;
             _activityService = activityService;
             _branchService = branchService;
             _branchEmployeeService = branchEmployeeService;
+            _locationService =locationService;
             _qRCodeGenerator = qRCodeGenerator;
+            _stationLocationService = stationLocationService;
+            
         }
         /// <summary>
         /// 
@@ -99,7 +108,7 @@ namespace Host.Controllers
         public ActionResult Station()
         {
             var stations = _stationService.GetAllStation();
-            return View("Station", stations);
+            return View("StationCreation", stations);
         }
 
         /// <summary>
@@ -114,6 +123,11 @@ namespace Host.Controllers
                 return RedirectToAction("Station");
             var station = await _stationService.AddStation(requestDto);
             return RedirectToAction("Station");
+        }
+
+        public IActionResult AddStation()
+        {
+            return View("AddStation");
         }
 
         /// <summary>
@@ -144,8 +158,8 @@ namespace Host.Controllers
         /// </summary>
         /// <param name="requestDto"></param>
         /// <returns></returns>
-        [HttpPost("Company/AddActivity")]
-        public async Task<IActionResult> AddActivity([FromBody] StationActivityDto requestDto)
+     //   [HttpPost("Company/AddActivity")]
+      /*  public async Task<IActionResult> AddActivity([FromBody] StationActivityDto requestDto)
         {
             if (ModelState.IsValid)
                 return RedirectToAction("Station");
@@ -156,7 +170,7 @@ namespace Host.Controllers
             }
             await _activityService.AddActivity(requestDto);
             return RedirectToAction("Station");
-        }
+        }*/
 
         /// <summary>
         /// 
@@ -454,5 +468,231 @@ namespace Host.Controllers
         {
             return View("Activity");
         }
+
+        public IActionResult LocationCreation()
+        {
+            var location = _locationService.GetAllLocation();
+            return View("LocationCreation",location);
+        }
+
+        public IActionResult AddLocation(int id, int locationId)
+        {
+            if (locationId != 0)
+            {
+                var model = _locationService.GetLocationById(locationId);
+                model.BranchId = id;
+                return View("AddLocation", model);
+            }
+           
+            var location = new LocationDto
+            {
+                BranchId = id
+            };
+            return View("AddLocation", location);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddLocation(LocationDto requestDto)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return RedirectToAction("LocationCreation");
+
+                if (requestDto.LocationId != 0)
+                {
+                    await _locationService.UpdateLocation(requestDto);
+                    return RedirectToAction("GetLocationById",new { id = requestDto.BranchId } );
+                }
+
+                await _locationService.AddLocation(requestDto);
+                return RedirectToAction("GetLocationById",new { id = requestDto.BranchId });
+
+
+                
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e);
+                    throw;
+            }
+
+        }
+        [HttpGet]
+        public  IActionResult GetLocationById(int id)
+        {
+            var location = _locationService.GetLocationByBranchId(id);
+            ViewBag.BranchId = id;
+            return View("LocationCreation", location);
+        }
+        [HttpGet]
+        public IActionResult StationLocation(int locationId)
+        {
+            var stationLocation = _stationLocationService.GetStationLocationByLocationId(locationId);
+            if (!stationLocation.Any())
+            {
+                var stations = new List<StationLocationDto>();
+                ViewBag.LocationId = locationId;
+                return View("StationLocation", stations);
+            }
+            ViewBag.LocationId = locationId;
+
+            return View("StationLocation", stationLocation);
+
+        }
+
+        [HttpPost]
+        public  async Task <IActionResult> AddStationLocation(StationLocationDto requestDto)
+        {
+            try
+            {
+                if(!ModelState.IsValid)
+                {
+                    return RedirectToAction("StationLocation");
+                }
+
+                if (requestDto.StationLocationId != 0)
+                {
+                    await _stationLocationService.UpdateStationLocation(requestDto);
+                    return RedirectToAction("StationLocation", new { locationId = requestDto.LocationId });
+                }
+                await _stationLocationService.AddStationLocation(requestDto);
+                return RedirectToAction("StationLocation", new { locationId = requestDto.LocationId});
+           
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+           
+        }
+
+        public  IActionResult AddStationLocation(int locationId,int stationlocationId)
+        {
+            if (stationlocationId != 0)
+            {
+                var stationlist = _stationService.GetAllStation();
+                var model = _stationLocationService.GetStationLocationById(stationlocationId);
+
+
+                var stationloctionmodel = new StationLocationDto
+                {
+                    Stations = new SelectList(stationlist, "StationId", "Name"),
+                    LocationId = locationId
+                };
+                model.Stations = stationloctionmodel.Stations;
+                model.LocationId = stationlocationId;
+                ViewBag.LocationId = locationId;
+                return View("AddStationLocation", model);
+            }
+               
+                //return View("AddStationLocation", stationloction);
+            
+
+
+           
+            var station = _stationService.GetAllStation();
+            var stationlocation = new StationLocationDto
+            {
+                Stations = new SelectList(station, "StationId", "Name"),
+                LocationId = locationId
+            };
+
+
+            return View("AddStationLocation", stationlocation);
+        }
+
+
+    
+
+      /*  public  IActionResult EditStationLocation(int locationId,int stationlocationId)
+        {
+            if (stationlocationId != 0)
+            {
+                var stations =  _stationService.GetAllStation();
+                var model = _stationLocationService.GetStationLocationById(stationlocationId);
+                var stationlocationmodel = new StationLocationDto
+                {
+                    Stations = new SelectList(stations, "StationId", "Name"),
+                    LocationId = locationId
+                };
+                model.Stations = stationlocationmodel.Stations;
+                model.LocationId = stationlocationId;
+                return View("AddStationLocation", model);
+            }
+
+            
+            var location = new StationLocationDto
+            {
+                LocationId = locationId
+            };
+            return View("AddStationLocation", location);
+        }*/
+
+        public IActionResult ActivityCreation()
+        {
+            return View("ActivityCreation");
+        }
+        
+        
+
+        [HttpPost]
+        public async Task<IActionResult> AddActivity(ActivityDto requestDto)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return RedirectToAction("ActivityCreation");
+                }
+
+                if(requestDto.ActivityId !=0)
+                {
+                    await _activityService.UpdateActivity(requestDto);
+                    return RedirectToAction("GetActivityById", new { stationId= requestDto.StationId });
+                }
+
+                await _activityService.AddActivity(requestDto);
+                return RedirectToAction("GetActivityById", new { stationId = requestDto.StationId });
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+        }
+
+
+        public IActionResult AddActivity(int stationId, int activityId)
+        {
+            if (activityId != 0)
+            {
+                var model = _activityService.GetActivityById(activityId);
+                model.StationId = stationId;
+                return View("AddActivity", model);
+            }
+            var activity = new ActivityDto
+            {
+                StationId = stationId
+        };
+            return View("AddActivity", activity);
+
+        }
+
+        [HttpGet]
+        public IActionResult GetActivityById(int stationId)
+        {
+
+            var activity = _activityService.GetActivityByStationId(stationId);
+            
+            ViewBag.StationId = stationId;
+            return View("ActivityCreation", activity);
+        }
+
+
     }
 }

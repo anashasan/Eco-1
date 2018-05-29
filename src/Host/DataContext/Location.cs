@@ -10,6 +10,7 @@ namespace Host.DataContext
         public Location()
         {
             BranchLocation = new HashSet<BranchLocation>();
+            StationLocation = new HashSet<StationLocation>();
         }
 
         [Key]
@@ -20,5 +21,7 @@ namespace Host.DataContext
 
         [InverseProperty("FkLocation")]
         public ICollection<BranchLocation> BranchLocation { get; set; }
+        [InverseProperty("FkLocation")]
+        public ICollection<StationLocation> StationLocation { get; set; }
     }
 }

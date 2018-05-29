@@ -1,0 +1,69 @@
+﻿@model Host.DataModel.StationLocationDto
+@{
+    Layout = "_AdminLayout";
+}
+
+<!-- Main content -->
+<div class="page-header">
+    <div class="row">
+        <div class="col-sm-9 col-xs-6">
+            <h2>Add Station Location</h2>
+        </div>
+    </div>
+</div>
+
+<div class="main-contents">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <form class="form-horizontal" asp-controller="Company" asp-action="AddStationLocation" method="post">
+
+                                <input type="hidden" asp-for="LocationId"  />
+                                <input type="hidden" asp-for="StationLocationId"/>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label" for="Company">Station Name</label>
+                                    <div class="col-md-4">
+                                        <select  class="form-control" asp-items="@Model.Stations" asp-for="StationId" placeholder="Select Business Name..."></select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label">QR Code</label>
+                                    <div class="col-md-10">
+
+                                        <input id="text" type="hidden" asp-for="StationId"
+                                               value="abc" style="Width:20%"
+                                               onblur='generateBarCode();' />
+
+                                        <img id='barcode'
+                                             alt=""
+                                             title="arsalan"
+                                             width="50"
+                                             height="50" />
+
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn-primary top-right">Add</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function generateBarCode() {
+        var nric = $('#text').val();
+        var url = 'https://api.qrserver.com/v1/create-qr-code/?data=' + nric + '&amp;size=50x50';
+        $('#barcode').attr('src', url);
+    }
+</script>
+
+
+
+<!-- /.content -->

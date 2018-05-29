@@ -10,9 +10,10 @@ namespace Host.DataModel
     {
         public int ActivityId { get; set; }
         [Required]
-        [StringLength(250)]
+       // [StringLength(250)]
         public string Name { get; set; }
         public string Description { get; set; }
+        public int StationId { get; set; }
 
     }
 }

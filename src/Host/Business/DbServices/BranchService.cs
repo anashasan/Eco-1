@@ -38,9 +38,10 @@ namespace Host.Business.DbServices
                     Address = requestDto.Address,
                     Email = requestDto.Email,
                     Phone = requestDto.Phone,
-                    Location = requestDto.Location,
+                    Location=requestDto.Location,
                     CreatedOn = DateTime.Now,
                     CompanyBranch = new List<CompanyBranch>
+                    
                     {
                         new CompanyBranch
                         {

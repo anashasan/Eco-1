@@ -9,12 +9,12 @@ namespace Host.DataContext
     {
         [Key]
         public int PkStationLocationId { get; set; }
-        public int FkBranchLocationId { get; set; }
+        public int FkLocationId { get; set; }
         public int FkStationId { get; set; }
 
-        [ForeignKey("FkBranchLocationId")]
+        [ForeignKey("FkLocationId")]
         [InverseProperty("StationLocation")]
-        public BranchLocation FkBranchLocation { get; set; }
+        public Location FkLocation { get; set; }
         [ForeignKey("FkStationId")]
         [InverseProperty("StationLocation")]
         public Station FkStation { get; set; }

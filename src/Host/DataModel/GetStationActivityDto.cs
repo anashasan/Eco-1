@@ -10,5 +10,7 @@ namespace Host.DataModel
         public int StationId { get; set; }
         public string StationName { get; set; }
         public List<ActivityDto> Activities { get; set; }
+
+        
     }
 }

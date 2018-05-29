@@ -61,7 +61,7 @@ namespace Host.Business.DbServices
         /// 
         /// </summary>
         /// <returns></returns>
-        public List<GetStationDto> GetAllStation()
+        public  List<GetStationDto> GetAllStation()
         {
             return _context.Station
                    .AsNoTracking()

@@ -8,10 +8,16 @@ namespace Host.Business.IDbServices
 {
     public interface IActivityService
     {
-        Task<int> AddActivity(StationActivityDto requestDto);
-        Task<int> UpdateActivity(StationActivityDto requestDto);
+
+        // Task<int> AddActivity(StationActivityDto requestDto);
+        // Task<int> UpdateActivity(StationActivityDto requestDto);
+        Task<int> AddActivity(ActivityDto requestDto);
+        Task<int> UpdateActivity(ActivityDto requestDto);
         ActivityDto GetActivityById(int id);
         List<ActivityDto> GetAllActivity();
-        GetStationActivityDto GetActivityByStationId(int id);
+       // GetStationActivityDto GetActivityByStationId(int id);
+        List<ActivityDto> GetActivityByStationId(int id);
+
+
     }
 }

@@ -10,6 +10,7 @@ namespace Host.DataContext
         {
 
         }
+
         public virtual DbSet<Activity> Activity { get; set; }
         public virtual DbSet<AspNetRoleClaims> AspNetRoleClaims { get; set; }
         public virtual DbSet<AspNetRoles> AspNetRoles { get; set; }
@@ -21,7 +22,6 @@ namespace Host.DataContext
         public virtual DbSet<Branch> Branch { get; set; }
         public virtual DbSet<BranchEmployee> BranchEmployee { get; set; }
         public virtual DbSet<BranchLocation> BranchLocation { get; set; }
-        public virtual DbSet<CheckBoxType> CheckBoxType { get; set; }
         public virtual DbSet<Company> Company { get; set; }
         public virtual DbSet<CompanyBranch> CompanyBranch { get; set; }
         public virtual DbSet<EmployeeProfile> EmployeeProfile { get; set; }
@@ -33,7 +33,7 @@ namespace Host.DataContext
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-
+           
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -174,11 +174,11 @@ namespace Host.DataContext
 
             modelBuilder.Entity<StationLocation>(entity =>
             {
-                entity.HasOne(d => d.FkBranchLocation)
+                entity.HasOne(d => d.FkLocation)
                     .WithMany(p => p.StationLocation)
-                    .HasForeignKey(d => d.FkBranchLocationId)
+                    .HasForeignKey(d => d.FkLocationId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("Fk_StationLocation_BranchLocation_FkBranchLocationId");
+                    .HasConstraintName("Fk_StationLocation_Location_FkLocationId");
 
                 entity.HasOne(d => d.FkStation)
                     .WithMany(p => p.StationLocation)

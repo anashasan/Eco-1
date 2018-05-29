@@ -1,0 +1,58 @@
+﻿@model List<Host.DataModel.LocationDto>
+@{
+    Layout = "_AdminLayout";
+}
+
+<div class="col-xs-12">
+    <div class="box">
+        <div class="box-header">
+            <h3 class="box-title">Location Data Table</h3></br>
+            </br>
+            <!-- Trigger the modal with a button -->
+
+            
+            <a class="btn  btn-primary " onclick='@($"window.location.href='/Company/AddLocation?id={@ViewBag.BranchId}'")'>Add</a>
+        </div>
+
+        <!-- /.box-header -->
+        <div class="box-body">
+            @Html.Hidden("id", (int)ViewBag.BranchId)
+            <table id="example2" class="table table-bordered table-hover">
+                <thead >
+                    <tr>
+
+                        <th >Location</th>
+                     
+                        <th>Options</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var a in Model)
+                    {
+                        <tr>
+                            <td style="text-align:center">@a.Name</td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Option
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item" href='#' onClick='@($"window.location.href='/Company/AddLocation?id={ViewBag.BranchId}&locationId={a.LocationId}'")'>Edit</a>
+                                        <a class="dropdown-item" href='#' onClick='@($"window.location.href='/Company/StationLocation?locationId={a.LocationId}'")'>Stations</a>
+
+
+                                    </div>
+                                </div>
+                               
+                            </td>
+                        </tr>
+
+                    }
+            </table>
+        </div>
+        <!-- /.box-body -->
+    </div>
+</div>
+
+

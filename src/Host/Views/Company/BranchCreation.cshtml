@@ -13,7 +13,6 @@
             <!-- Trigger the modal with a button -->
 
             <a class="btn  btn-primary " href="@Url.Action("AddBranch", "Company")">Add</a>
-
         </div>
 
         <!-- /.box-header -->
@@ -42,7 +41,17 @@
                         <td style="text-align: center">@s.Phone</td>
                         <td style="text-align: center">@s.Email</td>
                         <td>
-                            <button class="btn btn-default" onClick='@($"window.location.href='/Company/GetBranchById?id={s.BranchId}'")'>Edit</button>
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                   Options
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href="#" onClick='@($"window.location.href='/Company/GetBranchById?id={s.BranchId}'")'>Edit</a>
+                                    <a class="dropdown-item" href='#' onclick='@($"window.location.href='/Company/GetLocationById?id={s.BranchId}'")'>Location</a>
+                                    
+                                </div>
+                            </div>
+                           
                         </td>
                     </tr>
                     }

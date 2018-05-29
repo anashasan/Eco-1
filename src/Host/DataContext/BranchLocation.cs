@@ -7,11 +7,6 @@ namespace Host.DataContext
 {
     public partial class BranchLocation
     {
-        public BranchLocation()
-        {
-            StationLocation = new HashSet<StationLocation>();
-        }
-
         [Key]
         public int PkBranchLocationId { get; set; }
         public int FkBranchId { get; set; }
@@ -23,7 +18,5 @@ namespace Host.DataContext
         [ForeignKey("FkLocationId")]
         [InverseProperty("BranchLocation")]
         public Location FkLocation { get; set; }
-        [InverseProperty("FkBranchLocation")]
-        public ICollection<StationLocation> StationLocation { get; set; }
     }
 }
