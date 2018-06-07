@@ -1,4 +1,4 @@
-﻿@model List<Host.DataModel.GetStationDto>
+﻿@model List<Host.DataModel.StationDto>
 
 @{
     ViewData["Title"] = "Station";
@@ -27,7 +27,7 @@
             <h3 class="box-title">Station Data Table</h3></br>
             </br>
             <!-- Trigger the modal with a button -->
-            <button type="button" class="btn  btn-primary " onclick="addModel()" id="myBtn">Add Station</button>
+            <a class="btn btn-default btn-md " href="@Url.Action("AddStation", "Company")">Add Station</a>
 
         </div>
 
@@ -55,10 +55,11 @@
                                         Options
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" href="@Url.Action("Company","StationLocation")">Edit</a>
+                                        <a class="dropdown-item" href="#" onclick='@($"window.location.href='/Company/GetStationById?id={s.StationId}'")'>Edit</a>
+                                        <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" href='#' onclick='@($"window.location.href='/Company/GetActivityById?stationId={s.StationId}'")'>Activities</a>
 
-                                        </div>
+                                    </div>
                                     </div>
 </td>
                         </tr>

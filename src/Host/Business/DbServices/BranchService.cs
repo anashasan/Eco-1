@@ -28,7 +28,7 @@ namespace Host.Business.DbServices
         /// </summary>
         /// <param name="requestDto"></param>
         /// <returns></returns>
-        public async Task<int> AddBranch(BranchDto requestDto)
+    /*    public async Task<int> AddBranch(BranchDto requestDto)
         {
             try
             {
@@ -45,7 +45,9 @@ namespace Host.Business.DbServices
                     {
                         new CompanyBranch
                         {
-                             FkCompanyId = requestDto.CompanyId
+                             FkCompanyId = requestDto.CompanyId,
+
+                             
                         }
 
                     }
@@ -62,7 +64,47 @@ namespace Host.Business.DbServices
                 throw;
             }
         }
+        */
 
+            public async Task<int> AddBranch(BranchDto requestDto)
+        {
+
+            try
+            {
+                var branch = new Branch
+                {
+                    Name = requestDto.Name,
+                    Address = requestDto.Address,
+                    Email = requestDto.Email,
+                    Phone = requestDto.Phone,
+                    Location = requestDto.Location,
+                    CreatedOn = DateTime.Now,
+
+                };
+
+                _context.Branch.Add(branch);
+                _context.SaveChanges();
+
+                var CompanyBranch = new CompanyBranch
+                {
+                    FkCompanyId = requestDto.CompanyId,
+                    FkBranchId = branch.PkBranchId,
+                };
+
+                _context.CompanyBranch.Add(CompanyBranch);
+
+                return await Task.FromResult(_context.SaveChanges());
+
+}
+
+            catch (Exception e)
+
+            {
+                Console.WriteLine(e);
+
+                throw;
+            }
+        }
         /// <summary>
         /// 
         /// </summary>
@@ -83,7 +125,7 @@ namespace Host.Business.DbServices
                            CreatedOn = i.CreatedOn,
                            Name = i.Name,
                            Phone = i.Phone,
-                           CompanyName = i.CompanyBranch.Select(p => p.FkCompany.Name).Single()
+                           CompanyName = i.CompanyBranch.Select(p => p.FkCompany.Name).SingleOrDefault()
 
                        })
                        .OrderBy(i => i.CompanyName)
@@ -96,17 +138,17 @@ namespace Host.Business.DbServices
             }
         }
 
-        public SelectList GetBranchByCompanyId(int id)
+      /*  public SelectList GetBranchByCompanyId(int id)
         {
             try
             {
                 var model = _context.CompanyBranch
                             .AsNoTracking()
                             .Where(i => i.FkCompanyId == id)
-                            .Select(p => new CompanyBranchDto
+                            .Select(p => new BranchDto
                             {
                                 BranchId = p.FkBranch.PkBranchId,
-                                BranchName = p.FkBranch.Name
+                                Name=p.FkBranch.Name,
                             }).ToList();
 
                 return new SelectList(model, "BranchId", "BranchName");
@@ -114,6 +156,34 @@ namespace Host.Business.DbServices
             catch (Exception e)
             {
                 Console.WriteLine(e);
+                throw;
+            }
+        }*/
+
+        public List<BranchDto> GetBranchByCompanyId(int id)
+        {
+            try
+            {
+                var companybranch = _context.CompanyBranch
+                    .AsNoTracking()
+                    .Where(i => i.FkCompanyId == id)
+                    .Select(i => new BranchDto
+                    {
+                        BranchId = i.FkBranch.PkBranchId,
+                        CompanyName=i.FkCompany.Name,
+                        Name = i.FkBranch.Name,
+                        Phone = i.FkBranch.Phone,
+                        Email = i.FkBranch.Email,
+                        Location = i.FkBranch.Location,
+                        Address = i.FkBranch.Address
+                    }).ToList();
+                return companybranch;
+            }
+            catch (Exception e )
+            {
+
+                Console.WriteLine(e);
+
                 throw;
             }
         }
@@ -140,7 +210,7 @@ namespace Host.Business.DbServices
                            Name = i.Name,
                            Phone = i.Phone,
 
-                       }).Single();
+                       }).SingleOrDefault();
             }
             catch (Exception e)
             {

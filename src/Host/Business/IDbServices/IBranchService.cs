@@ -13,6 +13,7 @@ namespace Host.Business.IDbServices
         Task<int> UpdateBranch(BranchDto requestDto);
         BranchDto GetBranchById(int id);
         List<BranchDto> GetAllBranch();
-        SelectList GetBranchByCompanyId(int id);
+        List<BranchDto> GetBranchByCompanyId(int id);
+       // SelectList GetBranchByCompanyId(int id);
     }
 }

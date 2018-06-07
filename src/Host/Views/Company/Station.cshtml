@@ -1,4 +1,4 @@
-﻿@model List<Host.DataModel.GetStationDto>
+﻿@model List<Host.DataModel.StationDto>
 
 @{
     ViewData["Title"] = "Station";
@@ -50,13 +50,7 @@
                             <td>@s.StationId</td>
                             <td>@s.Name</td>
                             <td>@s.Description</td>
-                            @if (@s.Activities != null)
-                            {
-                                @foreach (var a in s.Activities)
-                                {
-
-                                    <th class="label label-danger checkbox-inline ">@a</th>
-                                }
+                           
                                 <td>
                                 <button type="button" class="btn  btn-primary glyphicon glyphicon-edit " onclick="editModel(@s.StationId)" style="width:16%"></button>
                                 <a href="DeleteStation/id/@s.StationId" class="btn  btn-primary glyphicon glyphicon-trash " id="edit" style="width:16%"></a>

@@ -23,7 +23,11 @@ namespace Host.DataContext
         public DateTime CreateOn { get; set; }
         [Column(TypeName = "date")]
         public DateTime? UpdatedOn { get; set; }
+        public int FkActivityTypeId { get; set; }
 
+        [ForeignKey("FkActivityTypeId")]
+        [InverseProperty("Activity")]
+        public ActivityType FkActivityType { get; set; }
         [InverseProperty("FkActivity")]
         public ICollection<StationActivity> StationActivity { get; set; }
     }

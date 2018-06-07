@@ -8,15 +8,16 @@
 <div class="col-xs-12">
     <div class="box">
         <div class="box-header">
-            <h3 class="box-title">Company Data Table</h3></br>
+            <h3 class="box-title" style="font-family:'Times New Roman'">Branch Data Table</h3></br>
             </br>
             <!-- Trigger the modal with a button -->
 
-            <a class="btn  btn-primary " href="@Url.Action("AddBranch", "Company")">Add</a>
+            <a class="btn btn-default btn-md  "  onclick='@($"window.location.href='/Company/AddBranch?companyId={@ViewBag.CompanyId}'")'>Add Branch</a>
         </div>
 
         <!-- /.box-header -->
         <div class="box-body">
+           
             <table id="example2" class="table table-bordered table-hover">
                 <thead>
                     <tr>
@@ -32,29 +33,33 @@
                 </thead>
                 <tbody>
                     @foreach (var s in Model)
-                    {
-                    <tr>
-                        <td style="text-align: center">@s.Name</td>
-                        <td style="text-align: center">@s.CompanyName</td>
-                        <td style="text-align: center">@s.Location</td>
-                        <td style="text-align: center">@s.Address</td>
-                        <td style="text-align: center">@s.Phone</td>
-                        <td style="text-align: center">@s.Email</td>
-                        <td>
-                            <div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                   Options
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" href="#" onClick='@($"window.location.href='/Company/GetBranchById?id={s.BranchId}'")'>Edit</a>
-                                    <a class="dropdown-item" href='#' onclick='@($"window.location.href='/Company/GetLocationById?id={s.BranchId}'")'>Location</a>
-                                    
-                                </div>
+            {
+                <tr>
+                    <td style="text-align: center">@s.Name</td>
+                    <td style="text-align: center">@s.CompanyName</td>
+                    <td style="text-align: center">@s.Location</td>
+                    <td style="text-align: center">@s.Address</td>
+                    <td style="text-align: center">@s.Phone</td>
+                    <td style="text-align: center">@s.Email</td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Options
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#" onClick='@($"window.location.href='/Company/AddBranch?companyId={ViewBag.CompanyId}&branchId={s.BranchId}'")'>Edit</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href='#' onclick='@($"window.location.href='/Company/GetLocationById?id={s.BranchId}'")'>Location</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href='#' onclick='@($"window.location.href='/Company/GetBranchEmployeeByBranchId?branchId={s.BranchId}'")'>BranchEmployee</a>
+
+
                             </div>
-                           
-                        </td>
-                    </tr>
-                    }
+                        </div>
+
+                    </td>
+                </tr>
+    }
 
             </table>
         </div>

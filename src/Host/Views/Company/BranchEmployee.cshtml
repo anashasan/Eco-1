@@ -7,11 +7,11 @@
 <div class="col-xs-12">
     <div class="box">
         <div class="box-header">
-            <h3 class="box-title">Branch Employee Data Table</h3></br>
+            <h3 class="box-title" style="font-family:'Times New Roman'">Branch Employee Data Table</h3></br>
             </br>
             <!-- Trigger the modal with a button -->
 
-            <a class="btn  btn-primary " href="@Url.Action("AddBranchEmployee", "Company")">Add</a>
+            <a class="btn btn-default btn-md" onclick='@($"window.location.href='/Company/AddBranchEmployee?branchId={@ViewBag.BranchId}'")'>Add Branch Employee</a>
 
         </div>
 
@@ -21,8 +21,8 @@
                 <thead>
                     <tr>
                         <th>Employee Name</th>
-                        <th>Company Name</th>
                         <th>Branch Name</th>
+                        <th>Company Name</th>
                         <th>Designation</th>
                         <th>Phone</th>
                         <th>Email</th>
@@ -41,7 +41,7 @@
                         <td>@s.Phone</td>
                         <td>@s.Email</td>
                         <td>
-                            <button class="btn btn-default" onClick='@($"window.location.href='/Company/GetBranchEmployeeById?id={s.BranchEmployeeId}'")'>Edit</button>
+                            <button class="btn btn-default" onClick='@($"window.location.href='/Company/AddBranchEmployee?branchemployeeId={s.BranchEmployeeId}'")'>Edit</button>
                         </td>
                     </tr>
                     }

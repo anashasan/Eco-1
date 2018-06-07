@@ -52,6 +52,7 @@ namespace Host
             services.AddScoped<IBranchEmployeeService, BranchEmployeeService>();
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<IStationLocationService, StationLocationService>();
+            services.AddScoped<IActivityTypeService, ActivityTypeService>();
 
             services.AddMvc();
 

@@ -1,4 +1,5 @@
-﻿@model List<Host.DataModel.StationLocationDto>
+﻿@using Newtonsoft.Json
+@model List<Host.DataModel.StationLocationDto>
 @{
     Layout = "_AdminLayout";
 }
@@ -6,11 +7,11 @@
 <div class="col-xs-12">
     <div class="box">
         <div class="box-header">
-            <h3 class="box-title">Station Data Table</h3></br>
+            <h3 class="box-title" style="font-family:'Times New Roman'">Station Data Table</h3></br>
             </br>
             <!-- Trigger the modal with a button -->
 
-            <a class="btn  btn-primary " onclick='@($"window.location.href='/Company/AddStationLocation?locationId={ViewBag.LocationId}'")'>Add</a>
+            <a class="btn  btn-primary " onclick='@($"window.location.href='/Company/AddStationLocation?locationId={ViewBag.LocationId}'")'>Add Station</a>
         </div>
 
         <!-- /.box-header -->
@@ -30,8 +31,9 @@
                     @foreach (var s in Model)
                     {
                         <tr>
-                            <td id="text">@s.StationName</td>
-                            <td> </td>
+                            <td>@s.StationName</td>
+                            <td id="@(s.StationLocationId)"> </td>
+                            <td> <a class="btn  btn-primary glyphicon glyphicon-download" download="QrCode" />Download </td>
                             <td><a class="btn  btn-primary glyphicon glyphicon-edit " href='#' onClick='@($"window.location.href='/Company/AddStationLocation?locationId={ViewBag.LocationId}&stationlocationId={s.StationLocationId}'")'>Edit</a></td>
                         </tr>
                     }
@@ -45,21 +47,22 @@
     var myArray = [];
     var url
     var tbody = document.getElementById("tbody");
-    const td = document.createElement("td");
 
-    @foreach (var d in Model.Select(i => i.StationName).ToList())
-    {
-        @:myArray.push("@d");
-
+    var model = @Html.Raw(JsonConvert.SerializeObject(Model));
+    for (let m of model) {
+        myArray.push({
+            id: m.StationLocationId,
+            name: m.StationName
+        });
     }
 
     for (let model of myArray) {
-            const oImg = document.createElement("img");
-            oImg.setAttribute('src', 'https://api.qrserver.com/v1/create-qr-code/?data=' + model + '&amp;size=50x50');
+        const oImg = document.createElement("img");
+        oImg.setAttribute('src', 'https://api.qrserver.com/v1/create-qr-code/?data=' + model.name + '&amp;size=50x50');
             oImg.style.width = '50px';
-            oImg.style.height = '50px';
-            td.appendChild(oImg);
-            tbody.appendChild(td);
+        oImg.style.height = '50px';
+        const element = document.getElementById(String(model.id));
+            element.appendChild(oImg);
         }
 
     console.log(myArray);

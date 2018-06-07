@@ -126,7 +126,7 @@ namespace Host.Business.DbServices
             {
                 var model = new BranchEmployee
                 {
-                    PkBranchEmployeeId = requestDto.BranchEmployeeId,
+                    PkBranchEmployeeId = requestDto.BranchEmployeeId.Value,
                     EmployeeName = requestDto.EmployeeName,
                     Designation = requestDto.Designation,
                     Email = requestDto.Email,
@@ -138,6 +138,64 @@ namespace Host.Business.DbServices
                 _context.SaveChanges();
                 return await Task.FromResult(model.PkBranchEmployeeId);
 
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+       public List<BranchEmployeeDto> GetBranchEmployeeByBranchId(int id)
+        {
+            try
+            {
+                var branchemployee = _context.BranchEmployee
+                    .AsNoTracking()
+                    .Where(i => i.FkBranchId == id)
+                    .Select(a => new BranchEmployeeDto
+                    {
+                        BranchEmployeeId = a.PkBranchEmployeeId,
+                        CompanyName = a.FkBranch.CompanyBranch.Select(p => p.FkCompany.Name).Single(),
+                        BranchName =a.FkBranch.Name,
+                        EmployeeName = a.EmployeeName,
+                        Designation=a.Designation,
+                        Email=a.Email,
+                        Phone=a.Phone
+
+
+                    }).ToList();
+                return branchemployee;
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+
+                throw;
+            }
+        }
+
+       public List<BranchEmployeeDto> GetBranchEmployeeByCompanyId(int id)
+        {
+            try
+            {
+                var branchemployee = _context.BranchEmployee
+                   .AsNoTracking()
+                   .Where(i => i.FkBranch.CompanyBranch.Select(p => p.FkCompanyId).Single() == id)
+                   .Select(a => new BranchEmployeeDto
+                   {
+                       BranchEmployeeId = a.PkBranchEmployeeId,
+                       CompanyName=  a.FkBranch.CompanyBranch.Select(p => p.FkCompany.Name).Single(),
+                       BranchName = a.FkBranch.Name,
+                       EmployeeName = a.EmployeeName,
+                       Designation = a.Designation,
+                       Email = a.Email,
+                       Phone = a.Phone
+
+
+                   }).ToList();
+                return branchemployee;
             }
             catch (Exception e)
             {
