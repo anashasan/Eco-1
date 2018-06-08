@@ -34,7 +34,8 @@ namespace Host.Business.DbServices
                 {
                    
                     Name=requestDto.Name,
-                    Description=requestDto.Description
+                    Description=requestDto.Description,
+                    FkActivityTypeId = requestDto.ActivityTypeId
 
                 };
 
@@ -111,7 +112,9 @@ namespace Host.Business.DbServices
                    {
                       ActivityId = p.PkActivityId,
                       Name = p.Name,
-                      Description = p.Description
+                      Description = p.Description,
+                      ActivityTypeId = p.FkActivityTypeId,
+                      Type = p.FkActivityType.Type
                    }).Single();
         }
 
@@ -153,7 +156,8 @@ namespace Host.Business.DbServices
                     {
                         ActivityId = a.FkActivity.PkActivityId,
                         Name = a.FkActivity.Name,
-                        Description = a.FkActivity.Description
+                        Description = a.FkActivity.Description,
+                        Type = a.FkActivity.FkActivityType.Type
                     }).ToList();
                 return stationactivity;
             }
@@ -180,7 +184,9 @@ namespace Host.Business.DbServices
                    {
                        ActivityId = p.PkActivityId,
                        Name = p.Name,
-                       Description = p.Description
+                       Description = p.Description,
+                       ActivityTypeId = p.FkActivityTypeId,
+                       Type = p.FkActivityType.Type
                    }).ToList();
         }
 
@@ -192,7 +198,8 @@ namespace Host.Business.DbServices
                 {
                     PkActivityId = requestDto.ActivityId,
                     Name = requestDto.Name,
-                    Description = requestDto.Description
+                    Description = requestDto.Description,
+                    FkActivityTypeId = requestDto.ActivityTypeId
                 };
                 _context.Activity.Update(activity);
                 _context.SaveChanges();

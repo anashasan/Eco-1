@@ -6,9 +6,7 @@
 <!-- Main content -->
 <div class="page-header">
     <div class="row">
-        <div class="col-sm-9 col-xs-6">
-            <h2>New Branch</h2>
-        </div>
+       
     </div>
 </div>
 
@@ -17,50 +15,52 @@
         <div class="col-md-12">
             <div class="box">
                 <div class="box-header">
+                    <h4 style="font-family:'Times New Roman'">New Branch</h4>
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <form class="form-horizontal" asp-controller="Company" asp-action="AddBranch" method="post">
-                                <input type="hidden">
-                                <div class="form-group">
+                                <input type="hidden" asp-for="CompanyId" >
+                                <input type="hidden" asp-for="BranchId">
+                               <!-- <div class="form-group">
                                     <label class="col-md-2 control-label" for="Company">Company Name</label>
                                     <div class="col-md-10">
                                         <select class="form-control" asp-items="@Model.Companies" asp-for="CompanyId" placeholder="Select Business Name..."></select>
                                     </div>
-                                </div>
+                                </div>-->
                                 <div class="form-group">
-                                    <label class="col-md-2 control-label">Branch Name</label>
+                                    <label class="col-md-2 control-label">Branch Name<i class="fa fa-asterisk" style="color:red" aria-hidden="true"></i></label>
                                     <div class="col-md-10">
-                                        <input class="form-control" type="text"asp-for="Name" >
-                                        <span class="text-danger field-validation-valid"></span>
+                                        <input class="form-control" type="text" asp-for="Name">
+                                        <span asp-validation-for="Name" class="text-danger field-validation-valid"></span>
                                     </div>
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label class="col-md-2 control-label">Location</label>
+                                    <label class="col-md-2 control-label">Location<i class="fa fa-asterisk" style="color:red" aria-hidden="true"></i></label>
                                     <div class="col-md-10">
                                         <input class="form-control" type="text" asp-for="Location">
-                                        <span class="text-danger field-validation-valid"></span>
+                                        <span asp-validation-for="Location" class="text-danger field-validation-valid"></span>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-md-2 control-label">Address</label>
+                                    <label class="col-md-2 control-label">Address<i class="fa fa-asterisk" style="color:red" aria-hidden="true"></i></label>
                                     <div class="col-md-10">
                                         <input class="form-control" type="text" asp-for="Address">
-                                        <span class="text-danger field-validation-valid"></span>
+                                        <span asp-validation-for="Address" class="text-danger field-validation-valid"></span>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-md-2 control-label">Phone</label>
+                                    <label class="col-md-2 control-label">Phone<i class="fa fa-asterisk" style="color:red" aria-hidden="true"></i></label>
                                     <div class="col-md-10">
                                         <input class="form-control" type="text" asp-for="Phone">
-                                        <span class="text-danger field-validation-valid"></span>
+                                        <span asp-validation-for="Phone" class="text-danger field-validation-valid"></span>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-md-2 control-label">Email</label>
+                                    <label class="col-md-2 control-label">Email<i class="fa fa-asterisk" style="color:red" aria-hidden="true"></i></label>
                                     <div class="col-md-10">
                                         <input class="form-control" type="text" asp-for="Email">
-                                        <span class="text-danger field-validation-valid"></span>
+                                        <span asp-validation-for="Email" class="text-danger field-validation-valid"></span>
                                     </div>
                                 </div>
                                 <button type="submit">Add</button>

@@ -12,5 +12,7 @@ namespace Host.Business.IDbServices
         Task<int> UpdateBranchEmployee(BranchEmployeeDto requestDto);
         BranchEmployeeDto GetBranchEmployeeById(int id);
         List<BranchEmployeeDto> GetAllBranchEmployee();
+        List<BranchEmployeeDto> GetBranchEmployeeByBranchId(int id);
+        List<BranchEmployeeDto> GetBranchEmployeeByCompanyId(int id);
     }
 }

@@ -77,7 +77,7 @@
                         </li>
                         <!-- Control Sidebar Toggle Button -->
                         <li>
-                            <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                            <!--   <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a> -->
                         </li>
                     </ul>
                 </div>
@@ -135,9 +135,9 @@
                         </a>
                         <ul class="treeview-menu">
                             <li><a asp-controller="Company" asp-action="Station"><i class="fa fa-circle-o"></i> Station Account</a></li>
-                            <li><a asp-controller="Company" asp-action="Activity"><i class="fa fa-circle-o"></i>Activity</a></li>
-                            <li><a href="pages/layout/boxed.html"><i class="fa fa-circle-o"></i> Company Account</a></li>
-
+                            <!--<li><a asp-controller="Company" asp-action="Activity"><i class="fa fa-circle-o"></i>Activity</a></li>
+            <li><a href="pages/layout/boxed.html"><i class="fa fa-circle-o"></i> Company Account</a></li>
+                -->
                         </ul>
                         <ul class="treeview-menu"></ul>
                     </li>
@@ -155,7 +155,7 @@
                             <li><a asp-controller="Company" asp-action="CompanyCreation"><i class="fa fa-circle-o"></i> Company</a></li>
                             <li><a asp-controller="Company" asp-action="Branch"><i class="fa fa-circle-o"></i> Branch</a></li>
                             <li><a asp-controller="Company" asp-action="BranchEmployee"><i class="fa fa-circle-o"></i> Branch Employee</a></li>
-                            <li><a href="pages/layout/boxed.html"><i class="fa fa-circle-o"></i> Company Account</a></li>
+                            <!---  <li><a href="pages/layout/boxed.html"><i class="fa fa-circle-o"></i> Company Account</a></li> -->
 
                         </ul>
                         <ul class="treeview-menu"></ul>
@@ -176,7 +176,7 @@
                         </ul>
                     </li>
 
-                    <li><a href="@Url.Action("ViewCompany","Company")"><i class="fa fa-circle-o"></i> Company Info</a></li>
+                    <!--    <li><a href="@Url.Action("ViewCompany","Company")"><i class="fa fa-circle-o"></i> Company Info</a></li>-->
 
                     <li>
                         <a href="pages/widgets.html">
@@ -217,14 +217,14 @@
         <div class="content-wrapper">
             <!-- Content Header (Page header) -->
             <section class="content-header">
-                <h1>
-                    Admin   
-                    <small>Control panel</small>
+                <h1 style="font-family:'Times New Roman', Times, serif">
+                    Admin
                 </h1>
-                <ol class="breadcrumb">
-                    <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-                    <li class="active">Dashboard</li>
-                </ol>
+                <small>Control panel</small>
+                <!-- <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Dashboard</li>
+    </ol>-->
             </section>
             <!-- Main content -->
             @RenderBody()

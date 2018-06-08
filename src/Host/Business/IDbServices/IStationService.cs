@@ -11,7 +11,7 @@ namespace Host.Business.IDbServices
         Task<int> AddStation(StationDto requestDto);
         Task<int> UpdateStation(StationDto requestDto);
         StationDto GetStationById(int id);
-        List<GetStationDto> GetAllStation();
+        List<StationDto> GetAllStation();
         Task<int> DeleteStation(int id);
     }
 }

@@ -53,7 +53,7 @@ namespace Host.Business.DbServices
                                       {
                                           StationId = p.FkStation.PkStationId,
                                           StationName = p.FkStation.Name,
-                                          StationLocationId = p.FkStationId
+                                          StationLocationId = p.PkStationLocationId
                                       }).ToList();
                 return stationLocation;
             }

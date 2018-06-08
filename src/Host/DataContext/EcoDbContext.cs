@@ -12,6 +12,7 @@ namespace Host.DataContext
         }
 
         public virtual DbSet<Activity> Activity { get; set; }
+        public virtual DbSet<ActivityType> ActivityType { get; set; }
         public virtual DbSet<AspNetRoleClaims> AspNetRoleClaims { get; set; }
         public virtual DbSet<AspNetRoles> AspNetRoles { get; set; }
         public virtual DbSet<AspNetUserClaims> AspNetUserClaims { get; set; }
@@ -33,11 +34,19 @@ namespace Host.DataContext
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-           
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Activity>(entity =>
+            {
+                entity.HasOne(d => d.FkActivityType)
+                    .WithMany(p => p.Activity)
+                    .HasForeignKey(d => d.FkActivityTypeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Fk_Activity_ActivityType_FkActivityTypeId");
+            });
+
             modelBuilder.Entity<AspNetRoleClaims>(entity =>
             {
                 entity.HasIndex(e => e.RoleId);

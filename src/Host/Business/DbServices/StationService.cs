@@ -61,16 +61,16 @@ namespace Host.Business.DbServices
         /// 
         /// </summary>
         /// <returns></returns>
-        public  List<GetStationDto> GetAllStation()
+        public  List<StationDto> GetAllStation()
         {
             return _context.Station
                    .AsNoTracking()
-                   .Select(i => new GetStationDto
+                   .Select(i => new StationDto
                    {
                        Name = i.Name,
                        StationId = i.PkStationId,
                        Description = i.Description,
-                       Activities = i.StationActivity.Select(p => p.FkActivity.Name).ToList()
+                       
                    }).ToList();
         }
 
@@ -103,7 +103,7 @@ namespace Host.Business.DbServices
             {
                 var station = new Station
                 {
-                    PkStationId = requestDto.StationId,
+                    PkStationId = requestDto.StationId.Value,
                     Description = requestDto.Description,
                     Name = requestDto.Name,
                     UpdatedOn = DateTime.Now,

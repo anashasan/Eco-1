@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GemBox.Document;
 using Host.Business.IDbServices;
 using Host.DataModel;
 using Host.Helper;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -25,7 +29,8 @@ namespace Host.Controllers
         private readonly ILocationService _locationService;
         private readonly QRCodeGenerator _qRCodeGenerator;
         private readonly IStationLocationService _stationLocationService;
-       
+        private readonly IActivityTypeService _activityTypeService;
+
 
 
         /// <summary>
@@ -43,7 +48,8 @@ namespace Host.Controllers
                                  IBranchEmployeeService branchEmployeeService,
                                  ILocationService locationService,
                                  QRCodeGenerator qRCodeGenerator,
-                                 IStationLocationService stationLocationService
+                                 IStationLocationService stationLocationService,
+                                 IActivityTypeService activityTypeService
                                  )
         {
             _companyService = companyService;
@@ -51,11 +57,13 @@ namespace Host.Controllers
             _activityService = activityService;
             _branchService = branchService;
             _branchEmployeeService = branchEmployeeService;
-            _locationService =locationService;
+            _locationService = locationService;
             _qRCodeGenerator = qRCodeGenerator;
             _stationLocationService = stationLocationService;
-            
+            _activityTypeService = activityTypeService;
+
         }
+
         /// <summary>
         /// 
         /// </summary>
@@ -82,15 +90,15 @@ namespace Host.Controllers
         //    }
         //}
 
-            /// <summary>
-            /// 
-            /// </summary>
-            /// <returns></returns>
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public ActionResult CompanyWizard()
         {
             return View("CompanyWizard");
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -105,7 +113,7 @@ namespace Host.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        public ActionResult Station()
+        /*    public ActionResult Station()
         {
             var stations = _stationService.GetAllStation();
             return View("StationCreation", stations);
@@ -170,7 +178,7 @@ namespace Host.Controllers
             }
             await _activityService.AddActivity(requestDto);
             return RedirectToAction("Station");
-        }*/
+        }
 
         /// <summary>
         /// 
@@ -190,7 +198,7 @@ namespace Host.Controllers
                 Console.WriteLine(e);
                 throw;
             }
-        }
+        }*/
 
         /// <summary>
         /// 
@@ -209,15 +217,17 @@ namespace Host.Controllers
         /// <param name="requestDto"></param>
         /// <returns></returns>
         [HttpPost]
-        public  IActionResult AddCompany(CompanyDto requestDto)
+        public IActionResult AddCompany(CompanyDto requestDto)
         {
             try
             {
+                if (!ModelState.IsValid)
+                    return View(requestDto);
                 var userId = GetUserid().ToString();
                 requestDto.UserId = userId;
-                if (!ModelState.IsValid)
+                if (ModelState.IsValid)
                     return RedirectToAction("CompanyCreation");
-                if(requestDto.CompanyId.HasValue && requestDto.CompanyId != 0)
+                if (requestDto.CompanyId.HasValue && requestDto.CompanyId != 0)
                 {
                     _companyService.UpdateCompany(requestDto);
                     return RedirectToAction("CompanyCreation");
@@ -231,7 +241,7 @@ namespace Host.Controllers
                 throw;
             }
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -258,14 +268,14 @@ namespace Host.Controllers
         /// <returns></returns>
         public async Task<IActionResult> CompanyCreation()
         {
-            var allCompany =await _companyService.GetAllCompany();
-            if(allCompany == null)
+            var allCompany = await _companyService.GetAllCompany();
+            if (allCompany == null)
             {
                 var model = new CompanyDto();
                 return View("CompanyCreation", model);
             }
 
-            return View("CompanyCreation",allCompany);
+            return View("CompanyCreation", allCompany);
         }
 
         /// <summary>
@@ -277,6 +287,7 @@ namespace Host.Controllers
             return View("AddCompany");
         }
 
+
         #endregion
 
         /// <summary>
@@ -286,7 +297,7 @@ namespace Host.Controllers
         public IActionResult Branch()
         {
             var branchModel = _branchService.GetAllBranch();
-            if(branchModel == null)
+            if (branchModel == null)
             {
                 var model = new BranchDto();
                 return View("BranchCreation", model);
@@ -305,14 +316,14 @@ namespace Host.Controllers
             try
             {
                 if (!ModelState.IsValid)
-                    return RedirectToAction("Branch");
+                    return View(requestDto);
                 if (requestDto.BranchId != 0)
                 {
                     await _branchService.UpdateBranch(requestDto);
-                    return RedirectToAction("Branch");
+                    return RedirectToAction("Branch", new { companyId = requestDto.CompanyId });
                 }
                 await _branchService.AddBranch(requestDto);
-                return RedirectToAction("Branch");
+                return RedirectToAction("Branch", new { companyId = requestDto.CompanyId });
             }
             catch (Exception e)
             {
@@ -325,16 +336,53 @@ namespace Host.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        public async Task<IActionResult> AddBranch()
+        public async Task<IActionResult> AddBranch(int companyId, int branchId)
+
         {
-            var companiesList =await _companyService.GetAllCompany();
-            var brancModel = new BranchDto
+            if (branchId != 0)
             {
-                Companies = new SelectList(companiesList,"CompanyId", "Name")
+                var companiesList = await _companyService.GetAllCompany();
+                var model = _branchService.GetBranchById(branchId);
+                var brancModel = new BranchDto
+                {
+                    Companies = new SelectList(companiesList, "CompanyId", "Name"),
+                    CompanyId = companyId
+
+                };
+
+                model.Companies = brancModel.Companies;
+                model.CompanyId = companyId;
+                ViewBag.CompanyId = companyId;
+
+                return View("AddBranch", model);
+
+
+            }
+
+            var company = await _companyService.GetAllCompany();
+            var branches = new BranchDto
+            {
+                Companies = new SelectList(company, "CompanyId", "Name"),
+                CompanyId = companyId
             };
 
-            return View("AddBranch",brancModel);
+
+            return View("AddBranch", branches);
+
+
         }
+
+        [HttpGet]
+        public IActionResult GetBranchByCompanyId(int companyId)
+        {
+            var branch = _branchService.GetBranchByCompanyId(companyId);
+            ViewBag.CompanyId = companyId;
+            return View("BranchCreation", branch);
+
+        }
+
+
+
 
 
 
@@ -344,25 +392,108 @@ namespace Host.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> GetBranchById(int id)
-        {
-            try
-            {
-                var companiesList = await _companyService.GetAllCompany();
-                var branch = _branchService.GetBranchById(id);
-                var branchModel = new BranchDto
-                {
-                    Companies = new SelectList(companiesList, "CompanyId", "Name")
-                };
-                branch.Companies = branchModel.Companies;
-                return View("AddBranch", branch);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-        }
+        /*   public async Task<IActionResult> GetBranchById(int id)
+           {
+               try
+               {
+                   var companiesList = await _companyService.GetAllCompany();
+                   var branch = _branchService.GetBranchById(id);
+                   var branchModel = new BranchDto
+                   {
+                       Companies = new SelectList(companiesList, "CompanyId", "Name")
+                   };
+                   branch.Companies = branchModel.Companies;
+                   return View("AddBranch", branch);
+               }
+               catch (Exception e)
+               {
+                   Console.WriteLine(e);
+                   throw;
+               }
+
+           }*/
+
+        /*  public IActionResult Branch()
+          {
+              var branchModel = _branchService.GetAllBranch();
+              if (branchModel == null)
+              {
+                  var model = new BranchDto();
+                  return View("BranchCreation", model);
+              }
+              return View("BranchCreation", branchModel);
+          }
+
+          /// <summary>
+          /// 
+          /// </summary>
+          /// <param name="requestDto"></param>
+          /// <returns></returns>
+          [HttpPost]
+          public async Task<IActionResult> AddBranch(BranchDto requestDto)
+          {
+              try
+              {
+                  if (!ModelState.IsValid)
+                      return RedirectToAction("Branch");
+                  if (requestDto.BranchId != 0)
+                  {
+                      await _branchService.UpdateBranch(requestDto);
+                      return RedirectToAction("Branch");
+                  }
+                  await _branchService.AddBranch(requestDto);
+                  return RedirectToAction("Branch");
+              }
+              catch (Exception e)
+              {
+                  Console.WriteLine(e);
+                  throw;
+              }
+          }
+
+          /// <summary>
+          /// 
+          /// </summary>
+          /// <returns></returns>
+          public async Task<IActionResult> AddBranch()
+          {
+              var companiesList = await _companyService.GetAllCompany();
+              var brancModel = new BranchDto
+              {
+                  Companies = new SelectList(companiesList, "CompanyId", "Name")
+              };
+
+              return View("AddBranch", brancModel);
+          }
+
+
+
+          /// <summary>
+          /// 
+          /// </summary>
+          /// <param name="id"></param>
+          /// <returns></returns>
+          [HttpGet]
+          public async Task<IActionResult> GetBranchById(int id)
+          {
+              try
+              {
+                  var companiesList = await _companyService.GetAllCompany();
+                  var branch = _branchService.GetBranchById(id);
+                  var branchModel = new BranchDto
+                  {
+                      Companies = new SelectList(companiesList, "CompanyId", "Name")
+                  };
+                  branch.Companies = branchModel.Companies;
+                  return View("AddBranch", branch);
+              }
+              catch (Exception e)
+              {
+                  Console.WriteLine(e);
+                  throw;
+              }
+          }
+          */
 
         #region BranchEmployee
 
@@ -373,7 +504,7 @@ namespace Host.Controllers
         public IActionResult BranchEmployee()
         {
             var model = _branchEmployeeService.GetAllBranchEmployee();
-            if(model == null)
+            if (model == null)
             {
                 var branchEmployeeModel = new BranchEmployeeDto();
                 return View("BranchEmployee", branchEmployeeModel);
@@ -385,24 +516,44 @@ namespace Host.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        public async Task<IActionResult> AddBranchEmployee()
+        public async Task<IActionResult> AddBranchEmployee(int branchId, int branchemployeeId)
         {
-            var companiesList = await _companyService.GetAllCompany();
+            if (branchemployeeId != 0)
+            {
+                var companiesList = await _companyService.GetAllCompany();
+                var model = _branchEmployeeService.GetBranchEmployeeById(branchemployeeId);
+                var branchEmployee = new BranchEmployeeDto
+                {
+                    Companies = new SelectList(companiesList, "CompanyId", "Name"),
+                    BranchId = branchId
+
+                };
+
+                model.Companies = branchEmployee.Companies;
+                model.BranchId = branchId;
+                ViewBag.BranchId = branchId;
+                return View("AddBranchEmployee", model);
+            }
+
+            var company = await _companyService.GetAllCompany();
             var branchEmployeeModel = new BranchEmployeeDto
             {
-                Companies = new SelectList(companiesList, "CompanyId", "Name")
+                Companies = new SelectList(company, "CompanyId", "Name"),
+                BranchId = branchId
+
             };
+
             return View("AddBranchEmployee", branchEmployeeModel);
         }
 
-       
+
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("Company/GetBranchByCompanyId/Id/{id}")]
+        /*  [HttpGet("Company/GetBranchByCompanyId/Id/{id}")]
         public  IActionResult GetBranchByCompanyId([FromRoute] int id)
         {
             try
@@ -415,7 +566,7 @@ namespace Host.Controllers
                 Console.WriteLine(e);    
                 throw;
             }
-        }
+        }*/
 
         /// <summary>
         /// 
@@ -424,14 +575,14 @@ namespace Host.Controllers
         /// <returns></returns>
 
         [HttpPost]
-        public IActionResult AddBrancEmployee(BranchEmployeeDto requestDto)
+        public IActionResult AddBranchEmployee(BranchEmployeeDto requestDto)
         {
             try
             {
                 if (!ModelState.IsValid)
-                    return RedirectToAction("BranchEmployee");
+                    return View(requestDto);
                 _branchEmployeeService.AddBranchEmployee(requestDto);
-                return RedirectToAction("BranchEmployee");
+                return RedirectToAction("BranchEmployee", new { branchId = requestDto.BranchId });
 
             }
             catch (Exception e)
@@ -442,20 +593,35 @@ namespace Host.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetBranchEmployeeById(int id)
+        /*  public IActionResult GetBranchEmployeeById(int id)
+          {
+              try
+              {
+                  var model = _branchEmployeeService.GetBranchEmployeeById(id);
+                  return View("AddBranchEmployee", model);
+              }
+              catch (Exception e)
+              {
+                  Console.WriteLine(e);
+                  throw;
+              }
+          }*/
+
+        [HttpGet]
+        public IActionResult GetBranchEmployeeByBranchId(int branchId)
         {
-            try
-            {
-                var model = _branchEmployeeService.GetBranchEmployeeById(id);
-                return View("AddBranchEmployee", model);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+            var branchemployee = _branchEmployeeService.GetBranchEmployeeByBranchId(branchId);
+            ViewBag.BranchId = branchId;
+            return View("BranchEmployee", branchemployee);
         }
 
+        [HttpGet]
+        public IActionResult GetBranchEmployeeByCompanyId(int companyId)
+        {
+            var branchemployee = _branchEmployeeService.GetBranchEmployeeByCompanyId(companyId);
+            ViewBag.CompanyId = companyId;
+            return View("BranchEmployee", branchemployee);
+        }
         #endregion
 
         public IActionResult QrCode()
@@ -472,7 +638,7 @@ namespace Host.Controllers
         public IActionResult LocationCreation()
         {
             var location = _locationService.GetAllLocation();
-            return View("LocationCreation",location);
+            return View("LocationCreation", location);
         }
 
         public IActionResult AddLocation(int id, int locationId)
@@ -483,7 +649,7 @@ namespace Host.Controllers
                 model.BranchId = id;
                 return View("AddLocation", model);
             }
-           
+
             var location = new LocationDto
             {
                 BranchId = id
@@ -497,34 +663,36 @@ namespace Host.Controllers
             try
             {
                 if (!ModelState.IsValid)
-                    return RedirectToAction("LocationCreation");
+                    return View(requestDto);
 
                 if (requestDto.LocationId != 0)
                 {
                     await _locationService.UpdateLocation(requestDto);
-                    return RedirectToAction("GetLocationById",new { id = requestDto.BranchId } );
+                    return RedirectToAction("GetLocationById", new { id = requestDto.BranchId });
                 }
 
                 await _locationService.AddLocation(requestDto);
-                return RedirectToAction("GetLocationById",new { id = requestDto.BranchId });
+                return RedirectToAction("GetLocationById", new { id = requestDto.BranchId });
 
 
-                
+
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine(e);
-                    throw;
+                throw;
             }
 
         }
+
         [HttpGet]
-        public  IActionResult GetLocationById(int id)
+        public IActionResult GetLocationById(int id)
         {
             var location = _locationService.GetLocationByBranchId(id);
             ViewBag.BranchId = id;
             return View("LocationCreation", location);
         }
+
         [HttpGet]
         public IActionResult StationLocation(int locationId)
         {
@@ -542,11 +710,11 @@ namespace Host.Controllers
         }
 
         [HttpPost]
-        public  async Task <IActionResult> AddStationLocation(StationLocationDto requestDto)
+        public async Task<IActionResult> AddStationLocation(StationLocationDto requestDto)
         {
             try
             {
-                if(!ModelState.IsValid)
+                if (!ModelState.IsValid)
                 {
                     return RedirectToAction("StationLocation");
                 }
@@ -557,8 +725,8 @@ namespace Host.Controllers
                     return RedirectToAction("StationLocation", new { locationId = requestDto.LocationId });
                 }
                 await _stationLocationService.AddStationLocation(requestDto);
-                return RedirectToAction("StationLocation", new { locationId = requestDto.LocationId});
-           
+                return RedirectToAction("StationLocation", new { locationId = requestDto.LocationId });
+
 
             }
             catch (Exception e)
@@ -566,10 +734,10 @@ namespace Host.Controllers
                 Console.WriteLine(e);
                 throw;
             }
-           
+
         }
 
-        public  IActionResult AddStationLocation(int locationId,int stationlocationId)
+        public IActionResult AddStationLocation(int locationId, int stationlocationId)
         {
             if (stationlocationId != 0)
             {
@@ -587,12 +755,12 @@ namespace Host.Controllers
                 ViewBag.LocationId = locationId;
                 return View("AddStationLocation", model);
             }
-               
-                //return View("AddStationLocation", stationloction);
-            
+
+            //return View("AddStationLocation", stationloction);
 
 
-           
+
+
             var station = _stationService.GetAllStation();
             var stationlocation = new StationLocationDto
             {
@@ -605,38 +773,131 @@ namespace Host.Controllers
         }
 
 
-    
 
-      /*  public  IActionResult EditStationLocation(int locationId,int stationlocationId)
-        {
-            if (stationlocationId != 0)
-            {
-                var stations =  _stationService.GetAllStation();
-                var model = _stationLocationService.GetStationLocationById(stationlocationId);
-                var stationlocationmodel = new StationLocationDto
-                {
-                    Stations = new SelectList(stations, "StationId", "Name"),
-                    LocationId = locationId
-                };
-                model.Stations = stationlocationmodel.Stations;
-                model.LocationId = stationlocationId;
-                return View("AddStationLocation", model);
-            }
 
-            
-            var location = new StationLocationDto
-            {
-                LocationId = locationId
-            };
-            return View("AddStationLocation", location);
-        }*/
+        /*  public  IActionResult EditStationLocation(int locationId,int stationlocationId)
+          {
+              if (stationlocationId != 0)
+              {
+                  var stations =  _stationService.GetAllStation();
+                  var model = _stationLocationService.GetStationLocationById(stationlocationId);
+                  var stationlocationmodel = new StationLocationDto
+                  {
+                      Stations = new SelectList(stations, "StationId", "Name"),
+                      LocationId = locationId
+                  };
+                  model.Stations = stationlocationmodel.Stations;
+                  model.LocationId = stationlocationId;
+                  return View("AddStationLocation", model);
+              }
+
+
+              var location = new StationLocationDto
+              {
+                  LocationId = locationId
+              };
+              return View("AddStationLocation", location);
+          }*/
 
         public IActionResult ActivityCreation()
         {
             return View("ActivityCreation");
         }
-        
-        
+
+        [HttpGet("Company/Download")]
+        public async Task<IActionResult> Download()
+        {
+            try
+            {
+                System.IO.MemoryStream memoryStream = new System.IO.MemoryStream();
+
+                Document document = new Document(PageSize.A4, 10, 10, 10, 10);
+
+                PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
+                document.Open();
+
+                Chunk chunk = new Chunk("This is from chunk. ");
+                document.Add(chunk);
+
+                Phrase phrase = new Phrase("This is from Phrase.");
+                document.Add(phrase);
+
+                iTextSharp.text.Paragraph para = new iTextSharp.text.Paragraph("This is from paragraph.");
+                document.Add(para);
+
+                string text = @"you are successfully created PDF file.";
+                iTextSharp.text.Paragraph paragraph = new iTextSharp.text.Paragraph();
+                paragraph.SpacingBefore = 10;
+                paragraph.SpacingAfter = 10;
+                paragraph.Alignment = iTextSharp.text.Element.ALIGN_LEFT;
+                paragraph.Font = FontFactory.GetFont(FontFactory.HELVETICA, 12f, BaseColor.GREEN);
+                paragraph.Add(text);
+                document.Add(paragraph);
+
+                document.Close();
+                byte[] bytes = memoryStream.ToArray();
+                memoryStream.Close();
+                Response.Clear();
+                Response.ContentType = "application/pdf";
+
+                string pdfName = "User";
+                var response = File(bytes, "application/pdf", $"{pdfName}.pdf");
+                Response.Headers.Add("Content-Disposition", "attachment; filename=" + pdfName + ".pdf");
+                Response.ContentType = "application/pdf";
+                return response;
+           
+
+                //byte[] bytes = memoryStream.ToArray();
+                //memoryStream.Close();
+                //Response.Clear();
+                //Response.ContentType = "application/pdf";
+
+                //string pdfName = "User";
+                ////var response = File("application /pdf", $"{pdfName}.pdf");
+                //Response.Headers.Add("Content-Disposition", $"attachment; filename=" + pdfName + ".pdf");
+
+                //Response.Headers.Add("Content-Disposition", $"attachment; filename={pdfName}.pdf");
+                //return response;
+                //Response.Buffer = true;
+                //Response.Cache.SetCacheability(System.Web.HttpCacheability.NoCache);
+                //Response.BinaryWrite(bytes);
+                //Response.End();
+                //Response.Close();
+                //var client = new HttpClient();
+
+                //WebClient webClient = new WebClient();
+                //var documentName = "activity";
+                //var url = "https://api.qrserver.com/v1/create-qr-code/?data=abc&amp;size=50x50%27";
+                //var stream = await client.GetStreamAsync(url);
+                //if (System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
+                //{
+                //    using (System.Net.WebClient abc = new System.Net.WebClient())
+                //    {
+                //        abc.DownloadFileAsync(new Uri(url),
+                //        "D:\\test.png");
+                //        ComponentInfo.SetLicense("FREE-LIMITED-KEY");
+                //        Document document = new Document();
+                //        var doc = new DocumentModel();
+                //        doc.Sections.Add(
+                //            new Section(doc,
+                //                new Paragraph(doc,
+                //                    new Picture(doc, url))));
+                //        doc.Save("Sample.pdf");
+                //    }
+                //}
+
+                //var response = File(stream, "application/pdf", $"{documentName}.pdf");
+                //Response.Headers.Add("Content-Disposition", $"attachment; filename={documentName}.pdf");
+                //return null;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+
 
         [HttpPost]
         public async Task<IActionResult> AddActivity(ActivityDto requestDto)
@@ -645,13 +906,13 @@ namespace Host.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    return RedirectToAction("ActivityCreation");
+                    return View(requestDto);
                 }
 
-                if(requestDto.ActivityId !=0)
+                if (requestDto.ActivityId != 0)
                 {
                     await _activityService.UpdateActivity(requestDto);
-                    return RedirectToAction("GetActivityById", new { stationId= requestDto.StationId });
+                    return RedirectToAction("GetActivityById", new { stationId = requestDto.StationId });
                 }
 
                 await _activityService.AddActivity(requestDto);
@@ -669,6 +930,7 @@ namespace Host.Controllers
 
         public IActionResult AddActivity(int stationId, int activityId)
         {
+            var types = _activityTypeService.GetAllActivityType();
             if (activityId != 0)
             {
                 var model = _activityService.GetActivityById(activityId);
@@ -677,8 +939,9 @@ namespace Host.Controllers
             }
             var activity = new ActivityDto
             {
-                StationId = stationId
-        };
+                StationId = stationId,
+                Types = new SelectList(types, "ActivityTypeId", "Type"),
+            };
             return View("AddActivity", activity);
 
         }
@@ -688,11 +951,43 @@ namespace Host.Controllers
         {
 
             var activity = _activityService.GetActivityByStationId(stationId);
-            
+
             ViewBag.StationId = stationId;
             return View("ActivityCreation", activity);
         }
 
+        public IActionResult Station()
+        {
+            var stations = _stationService.GetAllStation();
+            return View("StationCreation", stations);
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddStation(StationDto requestDto)
+        {
+
+
+            if (!ModelState.IsValid)
+                return View(requestDto);
+            if (requestDto.StationId != 0 && requestDto.StationId != null)
+            {
+                await _stationService.UpdateStation(requestDto);
+                return RedirectToAction("Station");
+
+            }
+            await _stationService.AddStation(requestDto);
+            return RedirectToAction("Station");
+        }
+
+        public IActionResult AddStation()
+        {
+            return View("AddStation");
+        }
+        [HttpGet]
+        public IActionResult GetStationById(int id)
+        {
+            var station = _stationService.GetStationById(id);
+            return View("AddStation", station);
+        }
 
     }
 }
