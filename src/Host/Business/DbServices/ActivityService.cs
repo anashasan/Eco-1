@@ -63,41 +63,50 @@ namespace Host.Business.DbServices
             }
         }
 
+        public async Task<int> DeleteActivityById(int id)
+        {
+            var listOfActivityIds = _context.StationActivity.Find(id);
+            _context.StationActivity.Remove(listOfActivityIds);
+            _context.SaveChanges();
+            return await Task.FromResult(listOfActivityIds.PkStationActivityId);
+
+        }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="requestDto"></param>
         /// <returns></returns>
-      /*  public async Task<int> AddActivity(StationActivityDto requestDto)
-        {
-            try
-            {
-                var activities = requestDto.Activities.Select(i => new Activity
-                {
-                    PkActivityId = i.ActivityId,
-                    Name = i.Name,
-                    Description = i.Description,
-                    CreateOn = DateTime.Now,
-                    StationActivity = new List<StationActivity>
-                    {
-                        new StationActivity
-                        {
-                            FkStationId = requestDto.StationId
-                        }
-                    }
-                });
+        /*  public async Task<int> AddActivity(StationActivityDto requestDto)
+          {
+              try
+              {
+                  var activities = requestDto.Activities.Select(i => new Activity
+                  {
+                      PkActivityId = i.ActivityId,
+                      Name = i.Name,
+                      Description = i.Description,
+                      CreateOn = DateTime.Now,
+                      StationActivity = new List<StationActivity>
+                      {
+                          new StationActivity
+                          {
+                              FkStationId = requestDto.StationId
+                          }
+                      }
+                  });
 
-                _context.Activity.AddRange(activities);
-               await _context.SaveChangesAsync();
-                return await Task.FromResult(_context.SaveChanges());
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-        }
-        */
+                  _context.Activity.AddRange(activities);
+                 await _context.SaveChangesAsync();
+                  return await Task.FromResult(_context.SaveChanges());
+              }
+              catch (Exception e)
+              {
+                  Console.WriteLine(e);
+                  throw;
+              }
+          }
+          */
         /// <summary>
         /// 
         /// </summary>

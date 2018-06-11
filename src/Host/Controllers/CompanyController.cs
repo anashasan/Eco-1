@@ -512,6 +512,22 @@ namespace Host.Controllers
             return View("BranchEmployee", model);
         }
 
+        [HttpDelete("Company/DeleteBranchEmployee/id/{id}/branchId/{branchId}")]
+        public async Task<IActionResult> DeleteBrancEmployee([FromRoute]int id,[FromRoute]int branchId)
+        {
+            try
+            {
+               await _branchEmployeeService.DeleteBranchEmployeeById(id);
+                return RedirectToAction("GetBranchEmployeeByBranchId", new { branchId = branchId });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+
         /// <summary>
         /// 
         /// </summary>
@@ -581,9 +597,16 @@ namespace Host.Controllers
             {
                 if (!ModelState.IsValid)
                     return View(requestDto);
-                _branchEmployeeService.AddBranchEmployee(requestDto);
-                return RedirectToAction("BranchEmployee", new { branchId = requestDto.BranchId });
-
+                if(requestDto.BranchEmployeeId !=null && requestDto.BranchEmployeeId != 0)
+                {
+                    _branchEmployeeService.UpdateBranchEmployee(requestDto);
+                    return RedirectToAction("GetBranchEmployeeByBranchId", new { branchId = requestDto.BranchId });
+                }
+                else
+                {
+                    _branchEmployeeService.AddBranchEmployee(requestDto);
+                    return RedirectToAction("GetBranchEmployeeByBranchId", new { branchId = requestDto.BranchId });
+                }
             }
             catch (Exception e)
             {
@@ -804,11 +827,12 @@ namespace Host.Controllers
             return View("ActivityCreation");
         }
 
-        [HttpGet("Company/Download")]
-        public async Task<IActionResult> Download()
+        [HttpGet]
+        public async Task<IActionResult> Download(int id)
         {
             try
             {
+                var stationName = _stationLocationService.GetStationNameById(id);
                 System.IO.MemoryStream memoryStream = new System.IO.MemoryStream();
 
                 Document document = new Document(PageSize.A4, 10, 10, 10, 10);
@@ -816,10 +840,10 @@ namespace Host.Controllers
                 PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
                 document.Open();
 
-                Chunk chunk = new Chunk("This is from chunk. ");
+                Chunk chunk = new Chunk(id.ToString());
                 document.Add(chunk);
 
-                Phrase phrase = new Phrase("This is from Phrase.");
+                Phrase phrase = new Phrase(stationName);
                 document.Add(phrase);
 
                 iTextSharp.text.Paragraph para = new iTextSharp.text.Paragraph("This is from paragraph.");
@@ -956,11 +980,20 @@ namespace Host.Controllers
             return View("ActivityCreation", activity);
         }
 
-        public IActionResult Station()
+        [HttpDelete("Company/StationDelete/id/{id}")]
+        public IActionResult DeleteStationActivity(int id)
         {
+            
+            var activity= _activityService.DeleteActivityById(id);
+            return View("AddActivity",activity);
+        }
+
+        public IActionResult Station()
+        {   
             var stations = _stationService.GetAllStation();
             return View("StationCreation", stations);
         }
+
         [HttpPost]
         public async Task<IActionResult> AddStation(StationDto requestDto)
         {
@@ -988,6 +1021,6 @@ namespace Host.Controllers
             var station = _stationService.GetStationById(id);
             return View("AddStation", station);
         }
-
-    }
+       
+    } 
 }

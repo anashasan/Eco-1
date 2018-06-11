@@ -16,7 +16,6 @@ namespace Host.DataModel
         public string Designation { get; set; }
         [Required]
         public string Email { get; set; }
-        [Required]
         public string CompanyName { get; set; }
         public string BranchName { get; set; }
         [Required]

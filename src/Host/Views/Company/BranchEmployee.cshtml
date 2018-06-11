@@ -26,6 +26,7 @@
                         <th>Designation</th>
                         <th>Phone</th>
                         <th>Email</th>
+                        <th>Delete</th>
                         <th>Options</th>
 
                     </tr>
@@ -41,7 +42,10 @@
                         <td>@s.Phone</td>
                         <td>@s.Email</td>
                         <td>
-                            <button class="btn btn-default" onClick='@($"window.location.href='/Company/AddBranchEmployee?branchemployeeId={s.BranchEmployeeId}'")'>Edit</button>
+                            <button class="btn btn-default" onClick='DeleteBranchEmployee(@s.BranchEmployeeId,@ViewBag.BranchId)'>Delete</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-default" onClick='@($"window.location.href='/Company/AddBranchEmployee?branchId={ViewBag.BranchId}&branchemployeeId={s.BranchEmployeeId}'")'>Edit</button>
                         </td>
                     </tr>
                     }
@@ -50,5 +54,28 @@
         <!-- /.box-body -->
     </div>
 </div>
+
+<script>
+    function DeleteBranchEmployee(id, branchId) 
+    {
+        const stationData = {};
+        const headers = new Headers();
+        headers.append("Accept", "application/json");
+        headers.append("Content-Type", "application/json");
+        fetch(`/Company/DeleteBranchEmployee/id/${id}/branchId/${branchId}`, {
+            credentials: "same-origin",
+            headers: headers,
+            method: "Delete"
+        })
+            .then(function (response) {
+                if (!response.ok) {
+                    window.location.reload();
+                    return;
+                }
+            })
+            .catch(ex => { });
+    };
+
+</script>
 
 

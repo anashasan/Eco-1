@@ -18,6 +18,7 @@ namespace Host.DataModel
         public int ActivityTypeId { get; set; }
         public string Type { get; set; }
         public SelectList Types { get; set; }
+        public int StationActivityId { get; set; }
 
     }
 }
