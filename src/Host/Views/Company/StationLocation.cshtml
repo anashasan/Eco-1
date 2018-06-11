@@ -33,7 +33,7 @@
                         <tr>
                             <td>@s.StationName</td>
                             <td id="@(s.StationLocationId)"> </td>
-                            <td> <a class="btn  btn-primary glyphicon glyphicon-download" download="QrCode" />Download </td>
+                            <td> <a class="btn  btn-primary glyphicon glyphicon-download" onClick='@($"window.location.href='/Company/Download?id={s.StationId}'")'>Downlaod</a></td>
                             <td><a class="btn  btn-primary glyphicon glyphicon-edit " href='#' onClick='@($"window.location.href='/Company/AddStationLocation?locationId={ViewBag.LocationId}&stationlocationId={s.StationLocationId}'")'>Edit</a></td>
                         </tr>
                     }

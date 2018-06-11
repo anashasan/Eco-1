@@ -15,7 +15,7 @@ namespace Host.Business.DbServices
         /// 
         /// </summary>
         private readonly EcoDbContext _context;
-            
+
         /// <summary>
         /// 
         /// </summary>
@@ -46,7 +46,7 @@ namespace Host.Business.DbServices
                 _context.BranchEmployee.Add(model);
                 _context.SaveChanges();
                 return await Task.FromResult(model.PkBranchEmployeeId);
-                            
+
             }
             catch (Exception e)
             {
@@ -96,7 +96,7 @@ namespace Host.Business.DbServices
                             .AsNoTracking()
                             .Where(o => o.PkBranchEmployeeId == id)
                             .Select(i => new BranchEmployeeDto
-                            { 
+                            {
                                 Email = i.Email,
                                 EmployeeName = i.EmployeeName,
                                 Designation = i.Designation,
@@ -146,7 +146,7 @@ namespace Host.Business.DbServices
             }
         }
 
-       public List<BranchEmployeeDto> GetBranchEmployeeByBranchId(int id)
+        public List<BranchEmployeeDto> GetBranchEmployeeByBranchId(int id)
         {
             try
             {
@@ -157,11 +157,11 @@ namespace Host.Business.DbServices
                     {
                         BranchEmployeeId = a.PkBranchEmployeeId,
                         CompanyName = a.FkBranch.CompanyBranch.Select(p => p.FkCompany.Name).Single(),
-                        BranchName =a.FkBranch.Name,
+                        BranchName = a.FkBranch.Name,
                         EmployeeName = a.EmployeeName,
-                        Designation=a.Designation,
-                        Email=a.Email,
-                        Phone=a.Phone
+                        Designation = a.Designation,
+                        Email = a.Email,
+                        Phone = a.Phone
 
 
                     }).ToList();
@@ -176,7 +176,7 @@ namespace Host.Business.DbServices
             }
         }
 
-       public List<BranchEmployeeDto> GetBranchEmployeeByCompanyId(int id)
+        public List<BranchEmployeeDto> GetBranchEmployeeByCompanyId(int id)
         {
             try
             {
@@ -186,7 +186,7 @@ namespace Host.Business.DbServices
                    .Select(a => new BranchEmployeeDto
                    {
                        BranchEmployeeId = a.PkBranchEmployeeId,
-                       CompanyName=  a.FkBranch.CompanyBranch.Select(p => p.FkCompany.Name).Single(),
+                       CompanyName = a.FkBranch.CompanyBranch.Select(p => p.FkCompany.Name).Single(),
                        BranchName = a.FkBranch.Name,
                        EmployeeName = a.EmployeeName,
                        Designation = a.Designation,
@@ -196,6 +196,22 @@ namespace Host.Business.DbServices
 
                    }).ToList();
                 return branchemployee;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public Task<int> DeleteBranchEmployeeById(int id)
+
+        {
+            try
+            {
+                var branchEmployee = _context.BranchEmployee.Find(id);
+                _context.BranchEmployee.Remove(branchEmployee);
+                return Task.FromResult(_context.SaveChanges());
             }
             catch (Exception e)
             {

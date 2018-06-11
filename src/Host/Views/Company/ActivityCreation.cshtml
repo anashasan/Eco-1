@@ -15,7 +15,7 @@
         <!-- /.box-header -->
         <div class="box-body">
             @Html.Hidden("stationId", (int)ViewBag.StationId)
-            
+
             <table id="example2" class="table table-bordered table-hover">
                 <thead>
                     <tr>
@@ -28,18 +28,20 @@
                 <tbody>
 
                     @foreach (var a in Model)
-            {
-                <tr>
-                    <td style="text-align:center">@a.Name</td>
-                    <td style="text-align:center">@a.Description</td>
-                    <td style="text-align:center">@a.Type</td>
-                    <td><a class="btn  btn-primary glyphicon glyphicon-edit " href='#' onClick='@($"window.location.href='/Company/AddActivity?stationId={ViewBag.StationId}&activityId={a.ActivityId}'")'>Edit</a></td>
-                </tr>
+                    {
+                        <tr>
+                            <td style="text-align:center">@a.Name</td>
+                            <td style="text-align:center">@a.Description</td>
+                            <td style="text-align:center">@a.Type</td>
+                            <td><a class="btn  btn-primary glyphicon glyphicon-edit " href='#' onClick='@($"window.location.href='/Company/AddActivity?stationId={ViewBag.StationId}&activityId={a.ActivityId}'")'>Edit</a></td>
+                            <td><a class="btn  btn-primary glyphicon glyphicon-delete " href='#' onClick='@($"window.location.href='/Company/DeleteStationActivity?activityId={a.ActivityId}'")'>Delete</a></td>
+                        </tr>
 
-    }
+
+                    }
 
 
-                
+
             </table>
         </div>
         <!-- /.box-body -->

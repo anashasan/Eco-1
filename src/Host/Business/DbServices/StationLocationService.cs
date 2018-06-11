@@ -113,6 +113,15 @@ namespace Host.Business.DbServices
         
         }
 
+        public string GetStationNameById(int id)
+        {
+            return _context.Station
+                    .AsNoTracking()
+                    .Where(i => i.PkStationId == id)
+                    .Select(o => o.Name)
+                    .SingleOrDefault();
+        }
+
 
         /*  public List<StationLocationDto> GetStationByLocationId(int id)
 

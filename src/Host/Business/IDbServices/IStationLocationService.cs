@@ -13,5 +13,6 @@ namespace Host.Business.IDbServices
         Task<int> UpdateStationLocation(StationLocationDto requestDto);
         List<StationLocationDto> GetStationLocationByLocationId(int locationId);
         StationLocationDto GetStationLocationById(int id);
+        string GetStationNameById(int id);
     }
 }
