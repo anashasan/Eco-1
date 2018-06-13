@@ -12,6 +12,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using iTextSharp.text.factories;
+
+
 
 namespace Host.Controllers
 {
@@ -30,7 +33,7 @@ namespace Host.Controllers
         private readonly QRCodeGenerator _qRCodeGenerator;
         private readonly IStationLocationService _stationLocationService;
         private readonly IActivityTypeService _activityTypeService;
-
+        
 
 
         /// <summary>
@@ -320,10 +323,10 @@ namespace Host.Controllers
                 if (requestDto.BranchId != 0)
                 {
                     await _branchService.UpdateBranch(requestDto);
-                    return RedirectToAction("Branch", new { companyId = requestDto.CompanyId });
+                    return RedirectToAction("GetBranchByCompanyId", new { companyId = requestDto.CompanyId });
                 }
                 await _branchService.AddBranch(requestDto);
-                return RedirectToAction("Branch", new { companyId = requestDto.CompanyId });
+                return RedirectToAction("GetBranchByCompanyId", new { companyId = requestDto.CompanyId });
             }
             catch (Exception e)
             {
@@ -828,35 +831,158 @@ namespace Host.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Download(int id)
+        public async Task<IActionResult> Download(int id,int locationId)
         {
             try
             {
                 var stationName = _stationLocationService.GetStationNameById(id);
+                var stationLocation = _locationService.GetLocationById(locationId);
+                ViewBag.LocationId = locationId;
                 System.IO.MemoryStream memoryStream = new System.IO.MemoryStream();
+
+                
 
                 Document document = new Document(PageSize.A4, 10, 10, 10, 10);
 
                 PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
                 document.Open();
 
-                Chunk chunk = new Chunk(id.ToString());
-                document.Add(chunk);
-
-                Phrase phrase = new Phrase(stationName);
+                Phrase phrase = new Phrase();
                 document.Add(phrase);
 
+               // Chunk chunk = new Chunk(id.ToString());
+               
+                //document.Add(chunk);
+
+               
+                string Phone = @"Phone:021-34829161/63";
+
+                
+
+                iTextSharp.text.Paragraph phone = new iTextSharp.text.Paragraph();
+                
+                phone.SpacingBefore = 10;
+                phone.SpacingAfter = 10;
+                phone.Alignment = iTextSharp.text.Element.ALIGN_RIGHT;
+                phone.Font = FontFactory.GetFont(FontFactory.HELVETICA, 16f, BaseColor.BLACK);
+                phone.Add(Phone);
+                document.Add(phone);
+
+                string Email = @"info@ecoservices.com.pk";
+                iTextSharp.text.Paragraph email = new iTextSharp.text.Paragraph();
+
+                email.SpacingBefore = 10;
+                email.SpacingAfter = 10;
+                email.Alignment = iTextSharp.text.Element.ALIGN_RIGHT;
+                email.Font = FontFactory.GetFont(FontFactory.HELVETICA, 16f, BaseColor.BLACK);
+                email.Add(Email);
+                document.Add(email);
+
+                string Web = @"www.ecoservices.com.pk";
+                iTextSharp.text.Paragraph web = new iTextSharp.text.Paragraph();
+
+                web.SpacingBefore = 10;
+                web.SpacingAfter = 10;
+                web.Alignment = iTextSharp.text.Element.ALIGN_RIGHT;
+                web.Font = FontFactory.GetFont(FontFactory.HELVETICA, 16f, BaseColor.BLACK);
+                web.Add(Web);
+                document.Add(web);
+
+                PdfContentByte cb = writer.DirectContent;
+                var Rectangular = new Rectangle(55, 715, 540, 175);
+                Rectangular.BorderWidthLeft = 2.1f;
+                Rectangular.BorderWidthRight = 3.1f;
+                Rectangular.BorderWidthTop = 4.1f;
+                Rectangular.BorderWidthBottom = 5.1f;
+                cb.Rectangle(Rectangular);
+                cb.Stroke();
+
+                
                 iTextSharp.text.Paragraph para = new iTextSharp.text.Paragraph("This is from paragraph.");
+                para.FirstLineIndent =100;
                 document.Add(para);
 
-                string text = @"you are successfully created PDF file.";
-                iTextSharp.text.Paragraph paragraph = new iTextSharp.text.Paragraph();
-                paragraph.SpacingBefore = 10;
-                paragraph.SpacingAfter = 10;
-                paragraph.Alignment = iTextSharp.text.Element.ALIGN_LEFT;
-                paragraph.Font = FontFactory.GetFont(FontFactory.HELVETICA, 12f, BaseColor.GREEN);
-                paragraph.Add(text);
-                document.Add(paragraph);
+               
+                cb.SetLineWidth(3);
+                cb.Rectangle(100, 600, 350, 100);
+                cb.BeginText();
+                BaseFont f_cn = BaseFont.CreateFont("c:\\windows\\fonts\\calibri.ttf", BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+                cb.SetFontAndSize(f_cn, 20);
+                cb.SetTextMatrix(195, 655);
+                cb.ShowText("STATIONID:  "+id);
+                cb.EndText();
+
+              
+               
+
+
+
+
+              /*  ColumnText ct = new ColumnText(cb);
+                //ct.SetSimpleColumn(cb);
+                ct.AddElement(new iTextSharp.text.Paragraph("This is the text added in the rectangle"));
+                ct.Go();
+                */
+
+                cb.Rectangle(100, 450, 350, 100);
+                cb.SetLineWidth(3);
+                cb.Stroke();
+                cb.BeginText();
+                BaseFont f_cnn = BaseFont.CreateFont("c:\\windows\\fonts\\calibri.ttf", BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+                cb.SetFontAndSize(f_cnn, 20);
+                cb.SetTextMatrix(160, 500);
+                cb.ShowText("STATION NAME:  " + stationName);
+                cb.EndText();
+
+
+                cb.Rectangle(100, 300, 350, 100);
+                cb.SetLineWidth(3);          
+                cb.Stroke();
+                cb.BeginText();
+                BaseFont f_cnnn = BaseFont.CreateFont("c:\\windows\\fonts\\calibri.ttf", BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+                cb.SetFontAndSize(f_cnnn, 20);
+                cb.SetTextMatrix(150, 350);
+                cb.ShowText("LOCATION NAME: "+stationLocation.Name);
+                cb.EndText();
+
+
+                /* PdfPTable table = new PdfPTable(2);
+
+
+                 table.AddCell("Station ID:");
+                 table.AddCell(id.ToString());
+                     document.Add(table);
+
+                 iTextSharp.text.Paragraph d = new iTextSharp.text.Paragraph();
+                 d.Font = FontFactory.GetFont(FontFactory.HELVETICA, 22f, BaseColor.GREEN);
+                 d.Add(table);
+                 document.Add(d);*/
+
+                /*  string stationid = @"Station ID:" + id.ToString();
+                  iTextSharp.text.Paragraph ID = new iTextSharp.text.Paragraph();
+
+                  ID.IndentationLeft = 80;
+                  ID.SpacingBefore = 10;
+                  ID.SpacingAfter = 10;
+                  ID.FirstLineIndent = 50;
+                  ID.Alignment = iTextSharp.text.Element.ALIGN_LEFT;
+                  ID.Font = FontFactory.GetFont(FontFactory.HELVETICA, 22f, BaseColor.GREEN);
+                  ID.Add(stationid);
+                  document.Add(ID);
+
+
+                  string text = @"Station Name:" + stationName;
+                  iTextSharp.text.Paragraph paragraph = new iTextSharp.text.Paragraph();
+
+                  paragraph.IndentationLeft = 80;
+                  paragraph.SpacingBefore = 10;
+                  paragraph.SpacingAfter = 10;
+                  paragraph.Alignment = iTextSharp.text.Element.ALIGN_LEFT;
+                  paragraph.Font = FontFactory.GetFont(FontFactory.HELVETICA, 22f, BaseColor.GREEN);
+                  paragraph.Add(text);
+                  document.Add(paragraph);
+
+                 */
 
                 document.Close();
                 byte[] bytes = memoryStream.ToArray();
