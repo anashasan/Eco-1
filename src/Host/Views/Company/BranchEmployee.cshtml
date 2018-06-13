@@ -5,6 +5,12 @@
 }
 
 <div class="col-xs-12">
+    <ol class="breadcrumb">
+        <li><a href="@Url.Action("CompanyCreation","Company")">Company</a></li>
+        <li><a href="@Url.Action("Branch","Company")">Branch</a></li>
+        <li class="active"><i class="fa fa-dashboard"></i>BranchEmployee</li>
+        
+    </ol>
     <div class="box">
         <div class="box-header">
             <h3 class="box-title" style="font-family:'Times New Roman'">Branch Employee Data Table</h3></br>
@@ -34,20 +40,20 @@
                 <tbody>
                     @foreach (var s in Model)
                     {
-                    <tr>
-                        <td>@s.EmployeeName</td>
-                        <td>@s.BranchName</td>
-                        <td>@s.CompanyName</td>
-                        <td>@s.Designation</td>
-                        <td>@s.Phone</td>
-                        <td>@s.Email</td>
-                        <td>
-                            <button class="btn btn-default" onClick='DeleteBranchEmployee(@s.BranchEmployeeId,@ViewBag.BranchId)'>Delete</button>
-                        </td>
-                        <td>
-                            <button class="btn btn-default" onClick='@($"window.location.href='/Company/AddBranchEmployee?branchId={ViewBag.BranchId}&branchemployeeId={s.BranchEmployeeId}'")'>Edit</button>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>@s.EmployeeName</td>
+                            <td>@s.BranchName</td>
+                            <td>@s.CompanyName</td>
+                            <td>@s.Designation</td>
+                            <td>@s.Phone</td>
+                            <td>@s.Email</td>
+                            <td>
+                                <button class="btn btn-default" onClick='DeleteBranchEmployee(@s.BranchEmployeeId,@ViewBag.BranchId)'>Delete</button>
+                            </td>
+                            <td>
+                                <button class="btn btn-default" onClick='@($"window.location.href='/Company/AddBranchEmployee?branchId={ViewBag.BranchId}&branchemployeeId={s.BranchEmployeeId}'")'>Edit</button>
+                            </td>
+                        </tr>
                     }
             </table>
         </div>

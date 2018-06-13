@@ -5,6 +5,13 @@
 }
 
 <div class="col-xs-12">
+    <ol class="breadcrumb">
+        <li><a href="@Url.Action("CompanyCreation","Company")">Company</a></li>
+        <li><a href="@Url.Action("Branch","Company")">Branch</a></li>
+        <li><a href="@Url.Action("BranchEmployee","Company")">BranchEmployee</a></li>
+        <li class="active"><i class="fa fa-dashboard"></i>Station Location</li>
+
+    </ol>
     <div class="box">
         <div class="box-header">
             <h3 class="box-title" style="font-family:'Times New Roman'">Station Data Table</h3></br>
@@ -33,7 +40,7 @@
                         <tr>
                             <td>@s.StationName</td>
                             <td id="@(s.StationLocationId)"> </td>
-                            <td> <a class="btn  btn-primary glyphicon glyphicon-download" onClick='@($"window.location.href='/Company/Download?id={s.StationId}'")'>Downlaod</a></td>
+                            <td> <a class="btn  btn-primary glyphicon glyphicon-download" onClick='@($"window.location.href='/Company/Download?id={s.StationId}&locationId={ViewBag.LocationId}'")'>Downlaod</a></td>
                             <td><a class="btn  btn-primary glyphicon glyphicon-edit " href='#' onClick='@($"window.location.href='/Company/AddStationLocation?locationId={ViewBag.LocationId}&stationlocationId={s.StationLocationId}'")'>Edit</a></td>
                         </tr>
                     }
