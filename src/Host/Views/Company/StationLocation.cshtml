@@ -52,13 +52,14 @@
     for (let m of model) {
         myArray.push({
             id: m.StationLocationId,
-            name: m.StationName
+            name: m.StationName,
+            code : m.Code
         });
     }
 
     for (let model of myArray) {
         const oImg = document.createElement("img");
-        oImg.setAttribute('src', 'https://api.qrserver.com/v1/create-qr-code/?data=' + model.name + '&amp;size=50x50');
+        oImg.setAttribute('src', 'https://api.qrserver.com/v1/create-qr-code/?data=' + model.code + '&amp;size=50x50');
             oImg.style.width = '50px';
         oImg.style.height = '50px';
         const element = document.getElementById(String(model.id));

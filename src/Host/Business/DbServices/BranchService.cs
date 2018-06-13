@@ -202,6 +202,7 @@ namespace Host.Business.DbServices
                        .Where(p => p.PkBranchId == id)
                        .Select(i => new BranchDto
                        {
+                           CompanyId = i.CompanyBranch.Select(p => p.FkCompanyId).Single(),
                            Address = i.Address,
                            BranchId = i.PkBranchId,
                            Email = i.Email,

@@ -342,21 +342,10 @@ namespace Host.Controllers
             if (branchId != 0)
             {
                 var companiesList = await _companyService.GetAllCompany();
-                var model = _branchService.GetBranchById(branchId);
-                var brancModel = new BranchDto
-                {
-                    Companies = new SelectList(companiesList, "CompanyId", "Name"),
-                    CompanyId = companyId
-
-                };
-
-                model.Companies = brancModel.Companies;
-                model.CompanyId = companyId;
                 ViewBag.CompanyId = companyId;
-
+                var model = _branchService.GetBranchById(branchId);
+                model.Companies = new SelectList(companiesList, "CompanyId", "Name", model.CompanyId);
                 return View("AddBranch", model);
-
-
             }
 
             var company = await _companyService.GetAllCompany();
@@ -958,6 +947,7 @@ namespace Host.Controllers
             if (activityId != 0)
             {
                 var model = _activityService.GetActivityById(activityId);
+                model.Types = new SelectList(types, "ActivityTypeId", "Type", model.ActivityTypeId);
                 model.StationId = stationId;
                 return View("AddActivity", model);
             }
@@ -1020,6 +1010,21 @@ namespace Host.Controllers
         {
             var station = _stationService.GetStationById(id);
             return View("AddStation", station);
+        }
+
+        [HttpGet("Company/GetStationActivityByCode/Code/{code}")]
+        public async Task<IActionResult> GetStationActivityByCode([FromRoute]string code)
+        {
+            try
+            {
+                var activities =await _stationLocationService.GetStationActivityByCode(code);
+                return Json(activities);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
        
     } 
