@@ -4,13 +4,27 @@
     Layout = "_AdminLayout";
 }
 
+    
+
+    
 <div class="col-xs-12">
+
+    <ol class="breadcrumb">
+        <li class="active"><i class="fa fa-dashboard"></i> Company</li>
+        <li><a href="@Url.Action("Branch","Company")">Branch</a></li>
+        <li><a href="@Url.Action("BranchEmployee","Company")">BranchEmployee</a></li>
+       
+    </ol>
+
     <div class="box">
+
         <div class="box-header">
             <h3 class="box-title">Company Data Table</h3></br>
             </br>
+
+
             <!-- Trigger the modal with a button -->
-            <a class=" btn btn-default btn-md"  href="@Url.Action("AddCompany", "Company")">Add Company</a>
+            <a class=" btn btn-default btn-md" href="@Url.Action("AddCompany", "Company")">Add Company</a>
         </div>
 
         <!-- /.box-header -->
@@ -26,49 +40,50 @@
                 </thead>
                 <tbody>
                     @foreach (var s in Model)
-    {
+                    {
 
-                <tr>
-                    <td style="text-align: center">
-                        @s.Name
-                        <a class="text-primary"></a>
-                    </td>
-                    <td style="text-align: center">
-                        @s.Type
-                        <span>
-                            <i class='zmdi large-size'></i>
-                        </span>
-                    </td>
+                        <tr>
+                            <td style="text-align: center">
+                                @s.Name
+                                <a class="text-primary"></a>
+                            </td>
+                            <td style="text-align: center">
+                                @s.Type
+                                <span>
+                                    <i class='zmdi large-size'></i>
+                                </span>
+                            </td>
 
-                    <td style="text-align: center">
-                        @s.Url
-                        <span>
-                            <i class='zmdi large-size'></i>
-                        </span>
-                    </td>
-                    <td>
-                        <div class="dropdown">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Options
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" href="#" onClick='@($"window.location.href='/Company/GetCompanyById?id={s.CompanyId}'")'>Edit</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href='#' onclick='@($"window.location.href='/Company/GetBranchByCompanyId?companyId={s.CompanyId}'")'>Branches</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href='#' onclick='@($"window.location.href='/Company/GetBranchEmployeeByCompanyId?companyId={s.CompanyId}'")'>Correspondants</a>
+                            <td style="text-align: center">
+                                @s.Url
+                                <span>
+                                    <i class='zmdi large-size'></i>
+                                </span>
+                            </td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Options
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item" href="#" onClick='@($"window.location.href='/Company/GetCompanyById?id={s.CompanyId}'")'>Edit</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href='#' onclick='@($"window.location.href='/Company/GetBranchByCompanyId?companyId={s.CompanyId}'")'>Branches</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href='#' onclick='@($"window.location.href='/Company/GetBranchEmployeeByCompanyId?companyId={s.CompanyId}'")'>Correspondants</a>
 
-                            </div>
-                        </div>
-                    </td>
-                </tr>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
 
-                
-}
-</table>
+
+                    }
+            </table>
         </div>
         <!-- /.box-body -->
     </div>
 </div>
+    
 
 

@@ -73,17 +73,20 @@ namespace Host.Business.DbServices
         {
             try
             {
-                var stationlocation = new StationLocation
-                {
-                    PkStationLocationId = requestDto.StationLocationId,
-                    FkStationId = requestDto.StationId,
-                    FkLocationId = requestDto.LocationId
-                };
+                var stationLocation = _context.StationLocation.Find(requestDto.StationLocationId);
+                stationLocation.FkStationId = requestDto.StationId;
+                stationLocation.FkLocationId = requestDto.LocationId;
+                //var stationlocation = new StationLocation
+                //{
+                //    PkStationLocationId = requestDto.StationLocationId,
+                //    FkStationId = requestDto.StationId,
+                //    FkLocationId = requestDto.LocationId
+                //};
 
-                _context.StationLocation.Update(stationlocation);
+                _context.StationLocation.Update(stationLocation);
                 _context.SaveChanges();
 
-                return await Task.FromResult(stationlocation.PkStationLocationId);
+                return await Task.FromResult(stationLocation.PkStationLocationId);
 
             }
             catch (Exception e)
@@ -100,7 +103,7 @@ namespace Host.Business.DbServices
             {
                 return _context.StationLocation
                     .AsNoTracking()
-                    .Where(i => i.FkLocationId == id)
+                    .Where(i => i.PkStationLocationId == id)
                     .Select(a => new StationLocationDto
                     {
                         StationLocationId = a.PkStationLocationId,
@@ -163,19 +166,19 @@ namespace Host.Business.DbServices
                                    new ActivityDto
                                    {
                                        Name = p.FkActivity.Name,
-                                       ActivityId = p.FkStationId,
+                                       ActivityId = p.FkActivityId,
                                        ActivityTypeId = p.FkActivity.FkActivityTypeId,
                                        Description = p.FkActivity.Description,
                                        StationActivityId = p.PkStationActivityId,
                                        Type = p.FkActivity.FkActivityType.Type 
                                    }
                                }
+                               .ToList()
                              })
                              .ToList();
 
             return await Task.FromResult(activities);
         }
-
 
         /*  public List<StationLocationDto> GetStationByLocationId(int id)
 

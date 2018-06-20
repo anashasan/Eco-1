@@ -14,6 +14,7 @@ namespace Host.DataModel
         public int LocationId { get; set; }
         public string StationName { get; set; }
         public string Code { get; set; }
+        public byte[] QrCodeImage { get; set; }
 
     }
 }

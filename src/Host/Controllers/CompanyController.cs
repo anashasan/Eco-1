@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using iTextSharp.text.factories;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Host.Controllers
 {
@@ -30,7 +32,7 @@ namespace Host.Controllers
         private readonly QRCodeGenerator _qRCodeGenerator;
         private readonly IStationLocationService _stationLocationService;
         private readonly IActivityTypeService _activityTypeService;
-
+        
 
 
         /// <summary>
@@ -61,7 +63,6 @@ namespace Host.Controllers
             _qRCodeGenerator = qRCodeGenerator;
             _stationLocationService = stationLocationService;
             _activityTypeService = activityTypeService;
-
         }
 
         /// <summary>
@@ -320,10 +321,10 @@ namespace Host.Controllers
                 if (requestDto.BranchId != 0)
                 {
                     await _branchService.UpdateBranch(requestDto);
-                    return RedirectToAction("Branch", new { companyId = requestDto.CompanyId });
+                    return RedirectToAction("GetBranchByCompanyId", new { companyId = requestDto.CompanyId });
                 }
                 await _branchService.AddBranch(requestDto);
-                return RedirectToAction("Branch", new { companyId = requestDto.CompanyId });
+                return RedirectToAction("GetBranchByCompanyId", new { companyId = requestDto.CompanyId });
             }
             catch (Exception e)
             {
@@ -757,12 +758,12 @@ namespace Host.Controllers
                 var model = _stationLocationService.GetStationLocationById(stationlocationId);
 
 
-                var stationloctionmodel = new StationLocationDto
-                {
-                    Stations = new SelectList(stationlist, "StationId", "Name"),
-                    LocationId = locationId
-                };
-                model.Stations = stationloctionmodel.Stations;
+                //var stationloctionmodel = new StationLocationDto
+                //{
+                //    Stations = new SelectList(stationlist, "StationId", "Name"),
+                //    LocationId = locationId
+                //};
+                model.Stations = new SelectList(stationlist,"StationId","Name",model.StationId);
                 model.LocationId = stationlocationId;
                 ViewBag.LocationId = locationId;
                 return View("AddStationLocation", model);
@@ -817,91 +818,23 @@ namespace Host.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Download(int id)
+        public async Task<IActionResult> Download(int id,int locationId)
         {
             try
             {
                 var stationName = _stationLocationService.GetStationNameById(id);
+                var stationLocation = _locationService.GetLocationById(locationId);
+                ViewBag.LocationId = locationId;
                 System.IO.MemoryStream memoryStream = new System.IO.MemoryStream();
-
-                Document document = new Document(PageSize.A4, 10, 10, 10, 10);
-
-                PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
-                document.Open();
-
-                Chunk chunk = new Chunk(id.ToString());
-                document.Add(chunk);
-
-                Phrase phrase = new Phrase(stationName);
-                document.Add(phrase);
-
-                iTextSharp.text.Paragraph para = new iTextSharp.text.Paragraph("This is from paragraph.");
-                document.Add(para);
-
-                string text = @"you are successfully created PDF file.";
-                iTextSharp.text.Paragraph paragraph = new iTextSharp.text.Paragraph();
-                paragraph.SpacingBefore = 10;
-                paragraph.SpacingAfter = 10;
-                paragraph.Alignment = iTextSharp.text.Element.ALIGN_LEFT;
-                paragraph.Font = FontFactory.GetFont(FontFactory.HELVETICA, 12f, BaseColor.GREEN);
-                paragraph.Add(text);
-                document.Add(paragraph);
-
-                document.Close();
-                byte[] bytes = memoryStream.ToArray();
+                var bytes = DownloadPdf.Download(id, stationName, stationLocation.Name);
                 memoryStream.Close();
                 Response.Clear();
                 Response.ContentType = "application/pdf";
-
-                string pdfName = "User";
-                var response = File(bytes, "application/pdf", $"{pdfName}.pdf");
-                Response.Headers.Add("Content-Disposition", "attachment; filename=" + pdfName + ".pdf");
+                
+                var response = File(bytes, "application/pdf", $"{stationName + stationLocation.Name}.pdf");
+                Response.Headers.Add("Content-Disposition", "attachment; filename=" + stationName + stationLocation.Name+ ".pdf");
                 Response.ContentType = "application/pdf";
                 return response;
-           
-
-                //byte[] bytes = memoryStream.ToArray();
-                //memoryStream.Close();
-                //Response.Clear();
-                //Response.ContentType = "application/pdf";
-
-                //string pdfName = "User";
-                ////var response = File("application /pdf", $"{pdfName}.pdf");
-                //Response.Headers.Add("Content-Disposition", $"attachment; filename=" + pdfName + ".pdf");
-
-                //Response.Headers.Add("Content-Disposition", $"attachment; filename={pdfName}.pdf");
-                //return response;
-                //Response.Buffer = true;
-                //Response.Cache.SetCacheability(System.Web.HttpCacheability.NoCache);
-                //Response.BinaryWrite(bytes);
-                //Response.End();
-                //Response.Close();
-                //var client = new HttpClient();
-
-                //WebClient webClient = new WebClient();
-                //var documentName = "activity";
-                //var url = "https://api.qrserver.com/v1/create-qr-code/?data=abc&amp;size=50x50%27";
-                //var stream = await client.GetStreamAsync(url);
-                //if (System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
-                //{
-                //    using (System.Net.WebClient abc = new System.Net.WebClient())
-                //    {
-                //        abc.DownloadFileAsync(new Uri(url),
-                //        "D:\\test.png");
-                //        ComponentInfo.SetLicense("FREE-LIMITED-KEY");
-                //        Document document = new Document();
-                //        var doc = new DocumentModel();
-                //        doc.Sections.Add(
-                //            new Section(doc,
-                //                new Paragraph(doc,
-                //                    new Picture(doc, url))));
-                //        doc.Save("Sample.pdf");
-                //    }
-                //}
-
-                //var response = File(stream, "application/pdf", $"{documentName}.pdf");
-                //Response.Headers.Add("Content-Disposition", $"attachment; filename={documentName}.pdf");
-                //return null;
             }
             catch (Exception e)
             {
@@ -981,6 +914,7 @@ namespace Host.Controllers
         public IActionResult Station()
         {   
             var stations = _stationService.GetAllStation();
+            var model = PagingList.CreateAsync(qry, 10, Page);
             return View("StationCreation", stations);
         }
 
