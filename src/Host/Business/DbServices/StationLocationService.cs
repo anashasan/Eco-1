@@ -37,7 +37,7 @@ namespace Host.Business.DbServices
             }
             catch (Exception e)
             {
-                Console.WriteLine();
+                Console.WriteLine(e);
                 throw;
             }
         }
@@ -122,15 +122,7 @@ namespace Host.Business.DbServices
                     .SingleOrDefault();
         }
 
-        public string GetLocationNameById(int locid)
-        {
-                            return   _context.StationLocation
-                                     .AsNoTracking()
-                                     .Where(i => i.FkLocationId == locid)
-                                     .Select(p =>p.FkLocation.Name)
-                                     .SingleOrDefault();
-            
-        }
+       
         
         /*  public List<StationLocationDto> GetStationByLocationId(int id)
 

@@ -339,6 +339,7 @@ namespace Host.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
+        /// 
         public async Task<IActionResult> AddBranch(int companyId, int branchId)
 
         {
@@ -831,7 +832,7 @@ namespace Host.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Download(int id,int locationId)
+        public IActionResult Download(int id,int locationId)
         {
             try
             {
@@ -843,8 +844,10 @@ namespace Host.Controllers
                 
 
                 Document document = new Document(PageSize.A4, 10, 10, 10, 10);
+               
 
-                PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
+                PdfWriter writer = PdfWriter.GetInstance(document,  memoryStream);
+                
                 document.Open();
 
                 Phrase phrase = new Phrase();
@@ -897,11 +900,7 @@ namespace Host.Controllers
                 cb.Rectangle(Rectangular);
                 cb.Stroke();
 
-                
-                iTextSharp.text.Paragraph para = new iTextSharp.text.Paragraph("This is from paragraph.");
-                para.FirstLineIndent =100;
-                document.Add(para);
-
+               
                
                 cb.SetLineWidth(3);
                 cb.Rectangle(100, 600, 350, 100);
@@ -913,16 +912,7 @@ namespace Host.Controllers
                 cb.EndText();
 
               
-               
-
-
-
-
-              /*  ColumnText ct = new ColumnText(cb);
-                //ct.SetSimpleColumn(cb);
-                ct.AddElement(new iTextSharp.text.Paragraph("This is the text added in the rectangle"));
-                ct.Go();
-                */
+              
 
                 cb.Rectangle(100, 450, 350, 100);
                 cb.SetLineWidth(3);
@@ -945,6 +935,12 @@ namespace Host.Controllers
                 cb.ShowText("LOCATION NAME: "+stationLocation.Name);
                 cb.EndText();
 
+
+                /* 
+                iTextSharp.text.Paragraph para = new iTextSharp.text.Paragraph("This is from paragraph.");
+                para.FirstLineIndent =100;
+                document.Add(para);
+                */
 
                 /* PdfPTable table = new PdfPTable(2);
 
@@ -969,18 +965,6 @@ namespace Host.Controllers
                   ID.Font = FontFactory.GetFont(FontFactory.HELVETICA, 22f, BaseColor.GREEN);
                   ID.Add(stationid);
                   document.Add(ID);
-
-
-                  string text = @"Station Name:" + stationName;
-                  iTextSharp.text.Paragraph paragraph = new iTextSharp.text.Paragraph();
-
-                  paragraph.IndentationLeft = 80;
-                  paragraph.SpacingBefore = 10;
-                  paragraph.SpacingAfter = 10;
-                  paragraph.Alignment = iTextSharp.text.Element.ALIGN_LEFT;
-                  paragraph.Font = FontFactory.GetFont(FontFactory.HELVETICA, 22f, BaseColor.GREEN);
-                  paragraph.Add(text);
-                  document.Add(paragraph);
 
                  */
 
@@ -1106,14 +1090,14 @@ namespace Host.Controllers
             return View("ActivityCreation", activity);
         }
 
-        [HttpDelete("Company/StationDelete/id/{id}")]
+     /*   [HttpDelete("Company/StationDelete/id/{id}")]
         public IActionResult DeleteStationActivity(int id)
         {
             
             var activity= _activityService.DeleteActivityById(id);
             return View("AddActivity",activity);
         }
-
+        */
         public IActionResult Station()
         {   
             var stations = _stationService.GetAllStation();
