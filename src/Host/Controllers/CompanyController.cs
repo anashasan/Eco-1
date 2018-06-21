@@ -345,7 +345,8 @@ namespace Host.Controllers
                 var companiesList = await _companyService.GetAllCompany();
                 ViewBag.CompanyId = companyId;
                 var model = _branchService.GetBranchById(branchId);
-                model.Companies = new SelectList(companiesList, "CompanyId", "Name", model.CompanyId);
+              //  model.Companies = new SelectList(companiesList, "CompanyId", "Name", model.CompanyId);
+
                 return View("AddBranch", model);
             }
 
@@ -822,10 +823,13 @@ namespace Host.Controllers
         {
             try
             {
+
+                
                 var stationName = _stationLocationService.GetStationNameById(id);
                 var stationLocation = _locationService.GetLocationById(locationId);
                 ViewBag.LocationId = locationId;
                 System.IO.MemoryStream memoryStream = new System.IO.MemoryStream();
+               
                 var bytes = DownloadPdf.Download(id, stationName, stationLocation.Name);
                 memoryStream.Close();
                 Response.Clear();
@@ -904,17 +908,17 @@ namespace Host.Controllers
         }
 
         [HttpDelete("Company/StationDelete/id/{id}")]
-        public IActionResult DeleteStationActivity(int id)
+       /* public IActionResult DeleteStationActivity(int id)
         {
             
             var activity= _activityService.DeleteActivityById(id);
             return View("AddActivity",activity);
-        }
+        }*/
 
         public IActionResult Station()
         {   
             var stations = _stationService.GetAllStation();
-            var model = PagingList.CreateAsync(qry, 10, Page);
+           // var model = PagingList.CreateAsync(qry, 10, Page);
             return View("StationCreation", stations);
         }
 

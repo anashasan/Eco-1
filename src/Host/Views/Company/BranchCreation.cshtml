@@ -5,12 +5,18 @@
     Layout = "_AdminLayout";
 }
 
+<style>
+    #th {
+        background-color: #323232;
+        color: white
+    }
+</style>
 <div class="col-xs-12">
     <ol class="breadcrumb">
         <li><a href="@Url.Action("CompanyCreation","Company")">Company</a></li>
         <li class="active"><i class="fa fa-dashboard">Branch</a></i></li>
         <li><a href="@Url.Action("BranchEmployee","Company")">BranchEmployee</a></li>
-        
+
 
     </ol>
 
@@ -20,14 +26,14 @@
             </br>
             <!-- Trigger the modal with a button -->
 
-            <a class="btn btn-default btn-md  " onclick='@($"window.location.href='/Company/AddBranch?companyId={@ViewBag.CompanyId}'")'>Add Branch</a>
+            <a class="btn btn-default btn-md  " id="th" onclick='@($"window.location.href='/Company/AddBranch?companyId={@ViewBag.CompanyId}'")'>Add Branch</a>
         </div>
 
         <!-- /.box-header -->
         <div class="box-body">
 
             <table id="example2" class="table table-bordered table-hover">
-                <thead>
+                <thead id="th">
                     <tr>
                         <th>Branch Name</th>
                         <th>Company Name</th>

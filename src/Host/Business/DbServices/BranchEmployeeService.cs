@@ -156,7 +156,7 @@ namespace Host.Business.DbServices
                     .Select(a => new BranchEmployeeDto
                     {
                         BranchEmployeeId = a.PkBranchEmployeeId,
-                        CompanyName = a.FkBranch.CompanyBranch.Select(p => p.FkCompany.Name).Single(),
+                        CompanyName = a.FkBranch.CompanyBranch.Select(p => p.FkCompany.Name).SingleOrDefault(),
                         BranchName = a.FkBranch.Name,
                         EmployeeName = a.EmployeeName,
                         Designation = a.Designation,
@@ -186,7 +186,7 @@ namespace Host.Business.DbServices
                    .Select(a => new BranchEmployeeDto
                    {
                        BranchEmployeeId = a.PkBranchEmployeeId,
-                       CompanyName = a.FkBranch.CompanyBranch.Select(p => p.FkCompany.Name).Single(),
+                       CompanyName = a.FkBranch.CompanyBranch.Select(p => p.FkCompany.Name).SingleOrDefault(),
                        BranchName = a.FkBranch.Name,
                        EmployeeName = a.EmployeeName,
                        Designation = a.Designation,

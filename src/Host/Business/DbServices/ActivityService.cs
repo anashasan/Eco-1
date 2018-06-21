@@ -63,14 +63,14 @@ namespace Host.Business.DbServices
             }
         }
 
-        public async Task<int> DeleteActivityById(int id)
+       /* public ActivityDto DeleteActivityById(int id)
         {
             var listOfActivityIds = _context.StationActivity.Find(id);
             _context.StationActivity.Remove(listOfActivityIds);
             _context.SaveChanges();
-            return await Task.FromResult(listOfActivityIds.PkStationActivityId);
+            return (listOfActivityIds.PkStationActivityId);
 
-        }
+        }*/
 
         /// <summary>
         /// 
@@ -172,10 +172,9 @@ namespace Host.Business.DbServices
             }
             catch (Exception e)
             {
-                Console.WriteLine();
+                Console.WriteLine(e);
                 throw;
-
-                throw;
+               
             }
         }
 
