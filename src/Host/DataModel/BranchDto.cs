@@ -25,5 +25,6 @@ namespace Host.DataModel
         public DateTime? UpdatedOn { get; set; }
         public int CompanyId { get; set; }
         public SelectList Companies { get; set; }
+        
     }
 }

@@ -4,6 +4,15 @@
     Layout = "_AdminLayout";
 }
 
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<style>
+    #th {
+        background-color: #191919;
+        color: white
+    }
+
+</style>
+
 <div class="col-xs-12">
     <ol class="breadcrumb">
         <li><a href="@Url.Action("CompanyCreation","Company")">Company</a></li>
@@ -18,14 +27,14 @@
             </br>
             <!-- Trigger the modal with a button -->
 
-            <a class="btn  btn-primary " onclick='@($"window.location.href='/Company/AddStationLocation?locationId={ViewBag.LocationId}'")'>Add Station</a>
+            <a class="btn  btn-primary " style="background-color:#323232" onclick='@($"window.location.href='/Company/AddStationLocation?locationId={ViewBag.LocationId}'")'>Add Station</a>
         </div>
 
         <!-- /.box-header -->
         <div class="box-body">
             @Html.Hidden("locationId", (int)ViewBag.LocationId)
             <table id="example2" class="table table-bordered table-hover">
-                <thead>
+                <thead id="th">
                     <tr>
 
                         <th>Station</th>
@@ -40,8 +49,8 @@
                         <tr>
                             <td>@s.StationName</td>
                             <td id="@(s.StationLocationId)"> </td>
-                            <td> <a class="btn  btn-primary glyphicon glyphicon-download" onClick='@($"window.location.href='/Company/Download?id={s.StationId}&locationId={ViewBag.LocationId}'")'>Downlaod</a></td>
-                            <td><a class="btn  btn-primary glyphicon glyphicon-edit " href='#' onClick='@($"window.location.href='/Company/AddStationLocation?locationId={ViewBag.LocationId}&stationlocationId={s.StationLocationId}'")'>Edit</a></td>
+                            <td> <a class="btn  btn-primary glyphicon glyphicon-download " onClick='@($"window.location.href='/Company/Download?id={s.StationId}&locationId={ViewBag.LocationId}'")'>Downlaod</a></td>
+                            <td><a class="btn  btn-primary glyphicon glyphicon-edit  " href='#' onClick='@($"window.location.href='/Company/AddStationLocation?locationId={ViewBag.LocationId}&stationlocationId={s.StationLocationId}'")'>Edit</a></td>
                         </tr>
                     }
             </table>

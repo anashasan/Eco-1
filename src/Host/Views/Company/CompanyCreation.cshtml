@@ -4,7 +4,13 @@
     Layout = "_AdminLayout";
 }
 
-    
+    <style>
+        #th {
+            background-color: #323232;
+            color: white
+        }
+
+    </style>
 
     
 <div class="col-xs-12">
@@ -24,18 +30,18 @@
 
 
             <!-- Trigger the modal with a button -->
-            <a class=" btn btn-default btn-md" href="@Url.Action("AddCompany", "Company")">Add Company</a>
+            <a class=" btn  btn-primary" id="th" href="@Url.Action("AddCompany", "Company")">Add Company</a>
         </div>
 
         <!-- /.box-header -->
         <div class="box-body">
-            <table id="example2" class="table table-bordered table-hover">
-                <thead>
+            <table id="example2" class="table table-bordered table-hover table-striped">
+                <thead id="th">
                     <tr>
-                        <th>Company Name</th>
-                        <th>Type</th>
-                        <th>URL</th>
-                        <th>Options</th>
+                        <th >Company Name</th>
+                        <th >Type</th>
+                        <th >URL</th>
+                        <th >Options</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -62,15 +68,15 @@
                             </td>
                             <td>
                                 <div class="dropdown">
-                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                         Options
                                     </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" href="#" onClick='@($"window.location.href='/Company/GetCompanyById?id={s.CompanyId}'")'>Edit</a>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
+                                        <a class="dropdown-item" href="#" onClick='@($"window.location.href='/Company/GetCompanyById?id={s.CompanyId}'")'>&nbsp;&nbsp;&nbsp;&nbsp;Edit</a>
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href='#' onclick='@($"window.location.href='/Company/GetBranchByCompanyId?companyId={s.CompanyId}'")'>Branches</a>
+                                        <a class="dropdown-item" href='#' onclick='@($"window.location.href='/Company/GetBranchByCompanyId?companyId={s.CompanyId}'")'>&nbsp;&nbsp;&nbsp;&nbsp;Branches</a>
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href='#' onclick='@($"window.location.href='/Company/GetBranchEmployeeByCompanyId?companyId={s.CompanyId}'")'>Correspondants</a>
+                                        <a class="dropdown-item" href='#' onclick='@($"window.location.href='/Company/GetBranchEmployeeByCompanyId?companyId={s.CompanyId}'")'>&nbsp;&nbsp;&nbsp;&nbsp;Correspondants</a>
 
                                     </div>
                                 </div>
