@@ -49,6 +49,14 @@ namespace Host.Helper
                 /*iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(f)*/;
                 //document.Add(image);
 
+
+                iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(@"C:\Users\home\source\repos\Eco-1\src\Host\wwwroot\images\Eco.jpg");
+                image.ScaleAbsolute(149f, 110f);
+                image.SetAbsolutePosition(50f, 725f);
+                image.Alignment = iTextSharp.text.Element.ALIGN_LEFT;
+                document.Add(image);
+
+
                 string Phone = @"Phone:021-34829161/63";
 
                     List<iTextSharp.text.Paragraph> paragraph = new List<iTextSharp.text.Paragraph>();
@@ -83,7 +91,9 @@ namespace Host.Helper
                     web.Add(Web);
                     document.Add(web);
 
-                    PdfContentByte cb = writer.DirectContent;
+                
+
+                PdfContentByte cb = writer.DirectContent;
                     var Rectangular = new Rectangle(55, 715, 540, 175);
                     Rectangular.BorderWidthLeft = 2.1f;
                     Rectangular.BorderWidthRight = 3.1f;
@@ -124,11 +134,17 @@ namespace Host.Helper
 
 
 
-
+                // Page 2
 
                 document.NewPage();
 
 
+
+                iTextSharp.text.Image image1 = iTextSharp.text.Image.GetInstance(@"C:\Users\home\source\repos\Eco-1\src\Host\wwwroot\images\Eco.jpg");
+                image1.ScaleAbsolute(149f, 110f);
+                image1.SetAbsolutePosition(50f, 725f);
+                image1.Alignment = iTextSharp.text.Element.ALIGN_LEFT;
+                document.Add(image1);
 
                 string Phone1 = @"Phone:021-34829161/63";
 
@@ -175,32 +191,32 @@ namespace Host.Helper
 
 
                 cb1.SetLineWidth(3);
-                cb1.Rectangle(60, 600, 300, 100); //left width,top height,right width,bottom height
+                cb1.Rectangle(50, 600, 200, 80); //left width,top height,right width,bottom height
                 cb1.BeginText();
                 BaseFont f_cnNN = BaseFont.CreateFont("c:\\windows\\fonts\\calibri.ttf", BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-                cb1.SetFontAndSize(f_cn, 20);
-                cb1.SetTextMatrix(80, 655);
+                cb1.SetFontAndSize(f_cn, 14);
+                cb1.SetTextMatrix(80, 630);
                 cb1.ShowText("STATIONID:  " + stationId);
                 cb1.EndText();
 
-                cb1.Rectangle(60, 450, 300, 100); //left width,top height,right width,bottom height
+                cb1.Rectangle(50, 450, 200, 80); //left width,top height,right width,bottom height
                 cb1.SetLineWidth(3);
                 cb1.Stroke();
                 cb1.BeginText();
                 BaseFont f_cnnN = BaseFont.CreateFont("c:\\windows\\fonts\\calibri.ttf", BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-                cb1.SetFontAndSize(f_cnn, 20);
-                cb1.SetTextMatrix(80, 500);
+                cb1.SetFontAndSize(f_cnn, 14);
+                cb1.SetTextMatrix(70, 480);
                 cb1.ShowText("STATION NAME:  " + stationName);
                 cb1.EndText();
 
 
-                cb1.Rectangle(60, 300, 300, 100);
+                cb1.Rectangle(50, 300, 200, 80);
                 cb1.SetLineWidth(3);
                 cb1.Stroke();
                 cb1.BeginText();
                 BaseFont f_cnnnN = BaseFont.CreateFont("c:\\windows\\fonts\\calibri.ttf", BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-                cb1.SetFontAndSize(f_cnnn, 20);
-                cb1.SetTextMatrix(80, 350);
+                cb1.SetFontAndSize(f_cnnn, 14);
+                cb1.SetTextMatrix(70, 335);
                 cb1.ShowText("LOCATION NAME: " + locationName);
                 cb1.EndText();
 
