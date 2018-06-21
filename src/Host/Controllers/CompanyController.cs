@@ -75,6 +75,11 @@ namespace Host.Controllers
             return View();
         }
 
+        public IActionResult Graph()
+        {
+            return View("ExampleGraph");
+        }
+
         //[HttpPost]
         //public async Task<IActionResult> AddCompany(CompanyDto requestDto)
         //{
@@ -904,13 +909,13 @@ namespace Host.Controllers
             return View("ActivityCreation", activity);
         }
 
-        [HttpDelete("Company/StationDelete/id/{id}")]
-        public IActionResult DeleteStationActivity(int id)
-        {
+        //[HttpDelete("Company/StationDelete/id/{id}")]
+        //public IActionResult DeleteStationActivity(int id)
+        //{
             
-            var activity= _activityService.DeleteActivityById(id);
-            return View("AddActivity",activity);
-        }
+        //    //var activity= _activityService.DeleteActivityById(id);
+        //    //return View("AddActivity",activity);
+        //}
 
         public IActionResult Station(PagingParams pagingParams)
         {   

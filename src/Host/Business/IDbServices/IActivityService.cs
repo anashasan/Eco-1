@@ -17,7 +17,7 @@ namespace Host.Business.IDbServices
         List<ActivityDto> GetAllActivity();
        // GetStationActivityDto GetActivityByStationId(int id);
         List<ActivityDto> GetActivityByStationId(int id);
-        Task<int> DeleteActivityById(int id);
+      //  Task<int> DeleteActivityById(int id);
 
     }
 }

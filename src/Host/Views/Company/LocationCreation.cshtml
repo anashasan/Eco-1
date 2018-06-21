@@ -3,6 +3,13 @@
     Layout = "_AdminLayout";
 }
 
+<style>
+    #th {
+        background-color: #323232;
+        color: white
+    }
+</style>
+
 <div class="col-xs-12">
     <ol class="breadcrumb">
         <li><a href="@Url.Action("CompanyCreation","Company")">Company</a></li>
@@ -17,14 +24,14 @@
             <!-- Trigger the modal with a button -->
 
 
-            <a class="btn btn-default btn-md" onclick='@($"window.location.href='/Company/AddLocation?id={@ViewBag.BranchId}'")'>Add Location</a>
+            <a class="btn btn-default btn-md" id="th" onclick='@($"window.location.href='/Company/AddLocation?id={@ViewBag.BranchId}'")'>Add Location</a>
         </div>
 
         <!-- /.box-header -->
         <div class="box-body">
             @Html.Hidden("id", (int)ViewBag.BranchId)
             <table id="example2" class="table table-bordered table-hover">
-                <thead>
+                <thead id="th">
                     <tr>
 
                         <th>Location</th>

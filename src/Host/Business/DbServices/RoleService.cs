@@ -22,7 +22,7 @@ namespace Host.Business.DbServices
             _serviceProvider = serviceProvider;
             _context = context;
         }
-
+        
         public void AddUserRole(string userId, string roleId)
         {
             try
@@ -111,6 +111,23 @@ namespace Host.Business.DbServices
                         .Where(i => i.UserId == userId)
                         .Select(p => p.Role.Name)
                         .Single();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public string GetUserNameByEmail(string email)
+        {
+            try
+            {
+                return _context.AspNetUsers
+                       .AsNoTracking()
+                       .Where(i => i.Email == email)
+                       .Select(o => o.UserName)
+                       .SingleOrDefault();
             }
             catch (Exception e)
             {
