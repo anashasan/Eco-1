@@ -1,4 +1,5 @@
 ﻿using Host.DataModel;
+using Host.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace Host.Business.IDbServices
         Task<int> AddStation(StationDto requestDto);
         Task<int> UpdateStation(StationDto requestDto);
         StationDto GetStationById(int id);
+        PaginatedList<StationDto> GetAllStationPagination(PagingParams pagingParams);
         List<StationDto> GetAllStation();
         Task<int> DeleteStation(int id);
     }

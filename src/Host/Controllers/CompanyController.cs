@@ -13,7 +13,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using iTextSharp.text.factories;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+
+
 
 namespace Host.Controllers
 {
@@ -911,10 +912,9 @@ namespace Host.Controllers
             return View("AddActivity",activity);
         }
 
-        public IActionResult Station()
+        public IActionResult Station(PagingParams pagingParams)
         {   
-            var stations = _stationService.GetAllStation();
-            var model = PagingList.CreateAsync(qry, 10, Page);
+            var stations = _stationService.GetAllStationPagination(pagingParams);
             return View("StationCreation", stations);
         }
 

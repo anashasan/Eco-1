@@ -28,6 +28,7 @@ namespace Host
 
         public static IWebHost BuildWebHost(string[] args)
         {
+            WebHost.CreateDefaultBuilder(args);
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
                 .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
