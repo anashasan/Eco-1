@@ -14,6 +14,7 @@ namespace Host.Business.IDbServices
         List<StationLocationDto> GetStationLocationByLocationId(int locationId);
         StationLocationDto GetStationLocationById(int id);
         string GetStationNameById(int id);
-        
+        string LastCodeStationLocation();
+        Task<List<StationActivityDto>> GetStationActivityByCode(string code);
     }
 }

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Host.Helper;
 
 namespace Host.Business.DbServices
 {
@@ -24,10 +25,13 @@ namespace Host.Business.DbServices
 
             try
             {
+                var code = LastCodeStationLocation();
+                var decriptCode = EncoderAgent.EncryptString(code+"00001");
                 var stationLocation = new StationLocation
                 {
                     FkStationId = requestDto.StationId,
                     FkLocationId = requestDto.LocationId,
+                    Code = decriptCode
                     
                 };
 
@@ -37,7 +41,7 @@ namespace Host.Business.DbServices
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Console.WriteLine();
                 throw;
             }
         }
@@ -53,7 +57,8 @@ namespace Host.Business.DbServices
                                       {
                                           StationId = p.FkStation.PkStationId,
                                           StationName = p.FkStation.Name,
-                                          StationLocationId = p.PkStationLocationId
+                                          StationLocationId = p.PkStationLocationId,
+                                          Code = EncoderAgent.DecryptString(p.Code)
                                       }).ToList();
                 return stationLocation;
             }
@@ -68,17 +73,20 @@ namespace Host.Business.DbServices
         {
             try
             {
-                var stationlocation = new StationLocation
-                {
-                    PkStationLocationId = requestDto.StationLocationId,
-                    FkStationId = requestDto.StationId,
-                    FkLocationId = requestDto.LocationId
-                };
+                var stationLocation = _context.StationLocation.Find(requestDto.StationLocationId);
+                stationLocation.FkStationId = requestDto.StationId;
+                stationLocation.FkLocationId = requestDto.LocationId;
+                //var stationlocation = new StationLocation
+                //{
+                //    PkStationLocationId = requestDto.StationLocationId,
+                //    FkStationId = requestDto.StationId,
+                //    FkLocationId = requestDto.LocationId
+                //};
 
-                _context.StationLocation.Update(stationlocation);
+                _context.StationLocation.Update(stationLocation);
                 _context.SaveChanges();
 
-                return await Task.FromResult(stationlocation.PkStationLocationId);
+                return await Task.FromResult(stationLocation.PkStationLocationId);
 
             }
             catch (Exception e)
@@ -95,7 +103,7 @@ namespace Host.Business.DbServices
             {
                 return _context.StationLocation
                     .AsNoTracking()
-                    .Where(i => i.FkLocationId == id)
+                    .Where(i => i.PkStationLocationId == id)
                     .Select(a => new StationLocationDto
                     {
                         StationLocationId = a.PkStationLocationId,
@@ -122,8 +130,56 @@ namespace Host.Business.DbServices
                     .SingleOrDefault();
         }
 
-       
-        
+        public string LastCodeStationLocation()
+        {
+            try
+            {
+                var lastCode = _context.StationLocation
+                               .AsNoTracking()
+                               .Select(i => i.PkStationLocationId)
+                               .LastOrDefault();
+                return lastCode.ToString();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public async Task<List<StationActivityDto>> GetStationActivityByCode(string code)
+        {
+            var encrptCode = EncoderAgent.EncryptString(code);
+            var stationId = _context.StationLocation
+                            .AsNoTracking()
+                            .Where(i => i.Code == encrptCode)
+                            .Select(p => p.FkStationId)
+                            .Single();
+            var activities = _context.StationActivity
+                             .AsNoTracking()
+                             .Where(i => i.FkStationId == stationId)
+                             .Select(p => new StationActivityDto
+                             {
+                               StationId = p.FkStationId,
+                               Activities = new List<ActivityDto>
+                               {
+                                   new ActivityDto
+                                   {
+                                       Name = p.FkActivity.Name,
+                                       ActivityId = p.FkActivityId,
+                                       ActivityTypeId = p.FkActivity.FkActivityTypeId,
+                                       Description = p.FkActivity.Description,
+                                       StationActivityId = p.PkStationActivityId,
+                                       Type = p.FkActivity.FkActivityType.Type 
+                                   }
+                               }
+                               .ToList()
+                             })
+                             .ToList();
+
+            return await Task.FromResult(activities);
+        }
+
         /*  public List<StationLocationDto> GetStationByLocationId(int id)
 
           {

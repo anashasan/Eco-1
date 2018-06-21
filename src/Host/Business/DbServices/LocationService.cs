@@ -135,6 +135,7 @@ namespace Host.Business.DbServices
                        {
                            LocationId = p.PkLocationId,
                            Name = p.Name
+                           
                        }).SingleOrDefault();
             }
             catch (Exception e)

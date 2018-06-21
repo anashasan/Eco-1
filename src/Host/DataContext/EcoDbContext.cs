@@ -10,7 +10,6 @@ namespace Host.DataContext
         {
 
         }
-
         public virtual DbSet<Activity> Activity { get; set; }
         public virtual DbSet<ActivityType> ActivityType { get; set; }
         public virtual DbSet<AspNetRoleClaims> AspNetRoleClaims { get; set; }
@@ -34,6 +33,7 @@ namespace Host.DataContext
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+           
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
