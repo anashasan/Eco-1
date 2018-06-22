@@ -8,7 +8,7 @@ namespace Host.Models.AccountViewModels
 {
     public class UserInfoModel
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public int AccessFailedCount { get; set; }
         public string Email { get; set; }
         public bool EmailConfirmed { get; set; }

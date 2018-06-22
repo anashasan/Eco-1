@@ -1,6 +1,7 @@
 ﻿using Host.Business.IDbServices;
 using Host.Data;
 using Host.DataContext;
+using Host.DataModel;
 using Host.Models.AccountViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -86,6 +87,26 @@ namespace Host.Business.DbServices
             }
         }
 
+        public ForgetPasswordDto GetEmailById(string userId)
+        {
+            try
+            {
+                return _context.AspNetUsers
+                       .AsNoTracking()
+                       .Where(i => i.Id == userId)
+                       .Select(o => new ForgetPasswordDto
+                       {
+                           Email = o.Email,
+                           UserId = o.Id
+                       }).SingleOrDefault();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
         public string GetRoleByName(string roleName)
         {
             try
@@ -115,6 +136,45 @@ namespace Host.Business.DbServices
             catch (Exception e)
             {
                 Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public string GetUserIdByEmail(string email)
+        {
+            try
+            {
+                return _context.AspNetUsers
+                       .AsNoTracking()
+                       .Where(i => i.Email == email)
+                       .Select(o => o.Id)
+                       .SingleOrDefault();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public UserInfoModel GetUserInfoByEmai(string email)
+        {
+            try
+            {
+                return _context.AspNetUsers
+                       .AsNoTracking()
+                       .Where(i => i.Email == email)
+                       .Select(i => new UserInfoModel
+                       {
+                           Id = i.Id,
+                           UserName = i.UserName,
+                           NormalizeEmail = i.NormalizedEmail,
+                           NormalizeUserName = i.NormalizedUserName,
+                       }).SingleOrDefault();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
                 throw;
             }
         }

@@ -2,32 +2,32 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using Host.Business.IDbServices;
+using Host.Controllers;
+using Host.Data;
+using Host.DataModel;
+using Host.Models;
+using Host.Models.AccountViewModels;
+using Host.Quickstart.Account;
+using IdentityModel;
+using IdentityServer4.Events;
+using IdentityServer4.Extensions;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
-using IdentityServer4.Events;
-using IdentityServer4.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using IdentityServer4.Extensions;
-using System.Security.Principal;
-using System.Security.Claims;
-using IdentityModel;
-using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using Host.Models;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
-using Host.Data;
-using Microsoft.AspNetCore.Authorization;
-using Host.Models.AccountViewModels;
-using Host.Controllers;
-using Host.Business.IDbServices;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Host.DataModel;
+using System.Linq;
+using System.Security.Claims;
+using System.Security.Principal;
+using System.Threading.Tasks;
 
 namespace IdentityServer4.Quickstart.UI
 {
@@ -141,6 +141,23 @@ namespace IdentityServer4.Quickstart.UI
                 return View();
             }
 
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<ResetPasswordResult> ResetPassword(ResetPasswordViewModel requestDto )
+        {
+            IdentityResult result = IdentityResult.Failed(null);
+
+            
+            var user = await _userManager.FindByEmailAsync(requestDto.Email);
+            var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+            if (user != null)
+            {
+                result = await _userManager.ResetPasswordAsync(user, resetToken, requestDto.Password);
+            }
+
+            return new ResetPasswordResult(result);
         }
 
         [HttpPost]

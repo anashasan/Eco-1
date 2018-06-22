@@ -5,6 +5,7 @@
 using Host;
 using Host.Business.IDbServices;
 using Host.Controllers;
+using Host.DataModel;
 using Host.Models;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -41,6 +42,12 @@ namespace IdentityServer4.Quickstart.UI
         public IActionResult Sign()
         {
             return View("Sign");
+        }
+
+        public IActionResult ForgetPassword()
+        {
+            var model = new ForgetPasswordDto();
+            return View("ForgetPassword", model);
         }
 
         [Authorize]
