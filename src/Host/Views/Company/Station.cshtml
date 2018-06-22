@@ -1,4 +1,6 @@
-﻿@model List<Host.DataModel.StationDto>
+﻿@using Host.Helper;
+@using Host.DataModel;
+@model PaginatedList<StationDto>
 
 @{
     ViewData["Title"] = "Station";
@@ -44,32 +46,34 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var s in Model)
+                    @foreach (var s in Model.List)
                     {
                         <tr>
                             <td>@s.StationId</td>
                             <td>@s.Name</td>
                             <td>@s.Description</td>
-                           
-                                <td>
+
+                            <td>
                                 <button type="button" class="btn  btn-primary glyphicon glyphicon-edit " onclick="editModel(@s.StationId)" style="width:16%"></button>
                                 <a href="DeleteStation/id/@s.StationId" class="btn  btn-primary glyphicon glyphicon-trash " id="edit" style="width:16%"></a>
                             </td>
                             }
                             else
                             {
-                                <td class="label label-danger "></td>
-                                <td>
-                                    <button type="button" class="btn  btn-primary glyphicon glyphicon-edit " onclick="editModel(@s.StationId)" style="width:16%"></button>
-                                    <a href="DeleteStation/id/@s.StationId" class="btn  btn-primary glyphicon glyphicon-trash " id="edit" style="width:16%"></a>
-                                </td>
+                            <td class="label label-danger "></td>
+                            <td>
+                                <button type="button" class="btn  btn-primary glyphicon glyphicon-edit " onclick="editModel(@s.StationId)" style="width:16%"></button>
+                                <a href="DeleteStation/id/@s.StationId" class="btn  btn-primary glyphicon glyphicon-trash " id="edit" style="width:16%"></a>
+                            </td>
 
                             }
 
 
                         </tr>
+
                     }
             </table>
+            <ul id="pagination-demo" class="pagination-sm"></ul>
         </div>
         <!-- /.box-body -->
     </div>

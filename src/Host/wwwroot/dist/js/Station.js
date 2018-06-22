@@ -1,4 +1,21 @@
-﻿const addModel = () => {
+﻿var tableElement = $('#example2');
+
+tableElement.dataTable({
+    autoWidth: false,
+    preDrawCallback: function () {
+        // Initialize the responsive datatables helper once.
+        if (!responsiveHelper) {
+            responsiveHelper = new ResponsiveDatatablesHelper(tableElement, breakpointDefinition);
+        }
+    },
+    rowCallback: function (nRow) {
+        responsiveHelper.createExpandIcon(nRow);
+    },
+    drawCallback: function (oSettings) {
+        responsiveHelper.respond();
+    }
+});
+const addModel = () => {
     $(document).ready(function () {
 
         $("#myModal").modal();

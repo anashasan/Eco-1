@@ -17,8 +17,6 @@
 
     <ol class="breadcrumb">
         <li class="active"><i class="fa fa-dashboard"></i> Company</li>
-        <li><a href="@Url.Action("Branch","Company")">Branch</a></li>
-        <li><a href="@Url.Action("BranchEmployee","Company")">BranchEmployee</a></li>
        
     </ol>
 
@@ -72,11 +70,11 @@
                                         Options
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
-                                        <a class="dropdown-item" href="#" onClick='@($"window.location.href='/Company/GetCompanyById?id={s.CompanyId}'")'>&nbsp;&nbsp;&nbsp;&nbsp;Edit</a>
+                                        <a class="dropdown-item fa fa-edit"  href="#" onClick='@($"window.location.href='/Company/GetCompanyById?id={s.CompanyId}'")'>&nbsp;&nbsp;&nbsp;&nbsp;Edit</a>
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href='#' onclick='@($"window.location.href='/Company/GetBranchByCompanyId?companyId={s.CompanyId}'")'>&nbsp;&nbsp;&nbsp;&nbsp;Branches</a>
+                                        <a class="dropdown-item fa fa-delicious" href='#' onclick='@($"window.location.href='/Company/GetBranchByCompanyId?companyId={s.CompanyId}'")'>&nbsp;&nbsp;&nbsp;&nbsp;Branches</a>
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href='#' onclick='@($"window.location.href='/Company/GetBranchEmployeeByCompanyId?companyId={s.CompanyId}'")'>&nbsp;&nbsp;&nbsp;&nbsp;Correspondants</a>
+                                        <a class="dropdown-item fa fa-comment-o" href='#' onclick='@($"window.location.href='/Company/GetBranchEmployeeByCompanyId?companyId={s.CompanyId}'")'>&nbsp;&nbsp;&nbsp;&nbsp;Correspondants</a>
 
                                     </div>
                                 </div>

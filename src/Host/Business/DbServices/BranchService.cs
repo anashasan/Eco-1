@@ -193,6 +193,27 @@ namespace Host.Business.DbServices
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+       //public List<BranchDto> GetBranchByBranchEmployeeId(int id)
+       // {
+       //     try
+       //     {
+       //         var branchemployee=_context.BranchEmployee
+       //             .AsNoTracking()
+       //             .Where(i =>i.PkBranchEmployeeId ==id)
+       //             .Select 
+       //     }
+       //     catch (Exception e)
+       //     {
+       //         Console.WriteLine(e);
+       //         throw;
+       //     }
+       // }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public BranchDto GetBranchById(int id)
         {
             try
@@ -202,7 +223,7 @@ namespace Host.Business.DbServices
                        .Where(p => p.PkBranchId == id)
                        .Select(i => new BranchDto
                        {
-                           CompanyId = i.CompanyBranch.Select(p => p.FkCompanyId).Single(),
+                          // CompanyId = i.CompanyBranch.Select(p => p.FkCompanyId).Single(),
                            Address = i.Address,
                            BranchId = i.PkBranchId,
                            Email = i.Email,
@@ -229,24 +250,28 @@ namespace Host.Business.DbServices
         {
             try
             {
-                var branch = new Branch
-                {
-                    PkBranchId = requestDto.BranchId,
-                    Name = requestDto.Name,
-                    Address = requestDto.Address,
-                    Email = requestDto.Email,
-                    Location = requestDto.Location,
-                    Phone = requestDto.Phone,
-                    CreatedOn = DateTime.Now,
-                    CompanyBranch = new List<CompanyBranch>
-                    {
-                        new CompanyBranch
-                        {
-                             FkCompanyId = requestDto.CompanyId
-                        }
+                var branch = _context.Branch.Find(requestDto.BranchId);
+                branch.PkBranchId = requestDto.BranchId;
 
-                    }
-                };
+                branch.Name = requestDto.Name;
+                branch.Phone = requestDto.Phone;
+                branch.Address = requestDto.Address;
+                branch.Email = requestDto.Email;
+                branch.Location = requestDto.Location;
+                branch.CreatedOn = DateTime.Now;
+                branch.UpdatedOn = DateTime.Now;
+                
+                //var branch = new Branch
+                //{
+                //    PkBranchId = requestDto.BranchId,
+                //    Name = requestDto.Name,
+                //    Address = requestDto.Address,
+                //    Email = requestDto.Email,
+                //    Location = requestDto.Location,
+                //    Phone = requestDto.Phone,
+                //    CreatedOn = DateTime.Now,
+                    
+                //};
                 _context.Branch.Update(branch);
                 _context.SaveChanges();
                 return await Task.FromResult(branch.PkBranchId);

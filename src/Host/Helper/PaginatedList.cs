@@ -3,44 +3,79 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Host.Helper
 {
-    public class PaginatedList<T> : List<T>
+    public class PaginatedList<T>
     {
-        public int PageIndex { get; private set; }
-        public int TotalPages { get; private set; }
-
-        public PaginatedList(List<T> items, int count, int pageIndex, int pageSize)
+        public PaginatedList(IQueryable<T> source, int pageNumber, int pageSize)
         {
-            PageIndex = pageIndex;
-            TotalPages = (int)Math.Ceiling(count / (double)pageSize);
-
-            this.AddRange(items);
+            this.TotalItems = source.Count();
+            this.PageNumber = pageNumber;
+            this.PageSize = pageSize;
+            this.List = source
+                            .Skip(pageSize * (pageNumber - 1))
+                            .Take(pageSize)
+                            .ToList();
         }
 
-        public bool HasPreviousPage
+        public int TotalItems { get; }
+        public int PageNumber { get; }
+        public int PageSize { get; }
+        public List<T> List { get; }
+        public int TotalPages =>
+              (int)Math.Ceiling(this.TotalItems / (double)this.PageSize);
+        public bool HasPreviousPage => this.PageNumber > 1;
+        public bool HasNextPage => this.PageNumber < this.TotalPages;
+        public int NextPageNumber =>
+               this.HasNextPage ? this.PageNumber + 1 : this.TotalPages;
+        public int PreviousPageNumber =>
+               this.HasPreviousPage ? this.PageNumber - 1 : 1;
+
+        public PagingHeader GetHeader()
         {
-            get
-            {
-                return (PageIndex > 1);
-            }
+            return new PagingHeader(
+                 this.TotalItems, this.PageNumber,
+                 this.PageSize, this.TotalPages);
+        }
+    }
+
+    public class PagingParams
+    {
+        public int PageNumber { get; set; } = 1;
+        public int PageSize { get; set; } = 5;
+    }
+
+    public class LinkInfo
+    {
+        public string Href { get; set; }
+        public string Rel { get; set; }
+        public string Method { get; set; }
+    }
+    public class PagingHeader
+    {
+        public PagingHeader(
+           int totalItems, int pageNumber, int pageSize, int totalPages)
+        {
+            this.TotalItems = totalItems;
+            this.PageNumber = pageNumber;
+            this.PageSize = pageSize;
+            this.TotalPages = totalPages;
         }
 
-        public bool HasNextPage
-        {
-            get
-            {
-                return (PageIndex < TotalPages);
-            }
-        }
+        public int TotalItems { get; }
+        public int PageNumber { get; }
+        public int PageSize { get; }
+        public int TotalPages { get; }
 
-        public static async Task<PaginatedList<T>> CreateAsync(IQueryable<T> source, int pageIndex, int pageSize)
-        {
-            var count = await source.CountAsync();
-            var items = await source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-            return new PaginatedList<T>(items, count, pageIndex, pageSize);
-        }
-        
+        public string ToJson() => JsonConvert.SerializeObject(this,
+                                    new JsonSerializerSettings
+                                    {
+                                        ContractResolver = new
+                    CamelCasePropertyNamesContractResolver()
+                                    });
+
     }
 }

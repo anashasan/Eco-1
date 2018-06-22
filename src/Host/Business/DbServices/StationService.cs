@@ -1,6 +1,7 @@
 ﻿using Host.Business.IDbServices;
 using Host.DataContext;
 using Host.DataModel;
+using Host.Helper;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -57,13 +58,35 @@ namespace Host.Business.DbServices
             return await Task.FromResult(_context.SaveChanges());
         }
 
+        public List<StationDto> GetAllStation()
+        {
+            try
+            {
+               return _context.Station
+                   .AsNoTracking()
+                   .Select(i => new StationDto
+                   {
+                       Name = i.Name,
+                       StationId = i.PkStationId,
+                       Description = i.Description,
+
+                   }).ToList();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
-        public  List<StationDto> GetAllStation()
+        public PaginatedList<StationDto> GetAllStationPagination(PagingParams pagingParams)
         {
-            return _context.Station
+            
+            var station = _context.Station
                    .AsNoTracking()
                    .Select(i => new StationDto
                    {
@@ -72,6 +95,8 @@ namespace Host.Business.DbServices
                        Description = i.Description,
                        
                    }).ToList();
+            var model = new PaginatedList<StationDto>(station.AsQueryable(), pagingParams.PageNumber, pagingParams.PageSize);
+            return model;
         }
 
         /// <summary>

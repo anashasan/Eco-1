@@ -13,7 +13,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using iTextSharp.text.factories;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+
+
 
 namespace Host.Controllers
 {
@@ -72,6 +73,11 @@ namespace Host.Controllers
         public IActionResult Index()
         {
             return View();
+        }
+
+        public IActionResult Graph()
+        {
+            return View("ExampleGraph");
         }
 
         //[HttpPost]
@@ -226,7 +232,7 @@ namespace Host.Controllers
                     return View(requestDto);
                 var userId = GetUserid().ToString();
                 requestDto.UserId = userId;
-                if (ModelState.IsValid)
+                if (!ModelState.IsValid)
                     return RedirectToAction("CompanyCreation");
                 if (requestDto.CompanyId.HasValue && requestDto.CompanyId != 0)
                 {
@@ -345,8 +351,7 @@ namespace Host.Controllers
                 var companiesList = await _companyService.GetAllCompany();
                 ViewBag.CompanyId = companyId;
                 var model = _branchService.GetBranchById(branchId);
-              //  model.Companies = new SelectList(companiesList, "CompanyId", "Name", model.CompanyId);
-
+                model.Companies = new SelectList(companiesList, "CompanyId", "Name", model.CompanyId);
                 return View("AddBranch", model);
             }
 
@@ -359,7 +364,7 @@ namespace Host.Controllers
 
 
             return View("AddBranch", branches);
-
+            
 
         }
 
@@ -823,13 +828,10 @@ namespace Host.Controllers
         {
             try
             {
-
-                
                 var stationName = _stationLocationService.GetStationNameById(id);
                 var stationLocation = _locationService.GetLocationById(locationId);
                 ViewBag.LocationId = locationId;
                 System.IO.MemoryStream memoryStream = new System.IO.MemoryStream();
-               
                 var bytes = DownloadPdf.Download(id, stationName, stationLocation.Name);
                 memoryStream.Close();
                 Response.Clear();
@@ -907,18 +909,17 @@ namespace Host.Controllers
             return View("ActivityCreation", activity);
         }
 
-        [HttpDelete("Company/StationDelete/id/{id}")]
-       /* public IActionResult DeleteStationActivity(int id)
-        {
+        //[HttpDelete("Company/StationDelete/id/{id}")]
+        //public IActionResult DeleteStationActivity(int id)
+        //{
             
-            var activity= _activityService.DeleteActivityById(id);
-            return View("AddActivity",activity);
-        }*/
+        //    //var activity= _activityService.DeleteActivityById(id);
+        //    //return View("AddActivity",activity);
+        //}
 
-        public IActionResult Station()
+        public IActionResult Station(PagingParams pagingParams)
         {   
-            var stations = _stationService.GetAllStation();
-           // var model = PagingList.CreateAsync(qry, 10, Page);
+            var stations = _stationService.GetAllStationPagination(pagingParams);
             return View("StationCreation", stations);
         }
 

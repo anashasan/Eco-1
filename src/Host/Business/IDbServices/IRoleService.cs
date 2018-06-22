@@ -13,5 +13,6 @@ namespace Host.Business.IDbServices
         string GetRoleByName(string roleName);
         void AddUserRole(string userId, string roleId);
         string GetRoleNameById(string userId);
+        string GetUserNameByEmail(string email);
     }
 }

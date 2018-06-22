@@ -26,13 +26,13 @@ namespace Host.Business.DbServices
             try
             {
                 var code = LastCodeStationLocation();
-                var decriptCode = EncoderAgent.EncryptString(code+"00001");
+                var decriptCode = EncoderAgent.EncryptString(code + "00001");
                 var stationLocation = new StationLocation
                 {
                     FkStationId = requestDto.StationId,
                     FkLocationId = requestDto.LocationId,
                     Code = decriptCode
-                    
+
                 };
 
                 _context.StationLocation.Add(stationLocation);
@@ -107,7 +107,7 @@ namespace Host.Business.DbServices
                     .Select(a => new StationLocationDto
                     {
                         StationLocationId = a.PkStationLocationId,
-                        StationId=a.FkStation.PkStationId,
+                        StationId = a.FkStation.PkStationId,
                     }).SingleOrDefault();
 
 
@@ -118,7 +118,7 @@ namespace Host.Business.DbServices
 
                 throw;
             }
-        
+
         }
 
         public string GetStationNameById(int id)
@@ -147,7 +147,7 @@ namespace Host.Business.DbServices
             }
         }
 
-        public async Task<List<StationActivityDto>> GetStationActivityByCode(string code)
+        public async Task<StationActivityDto> GetStationActivityByCode(string code)
         {
             var encrptCode = EncoderAgent.EncryptString(code);
             var stationId = _context.StationLocation
@@ -158,26 +158,22 @@ namespace Host.Business.DbServices
             var activities = _context.StationActivity
                              .AsNoTracking()
                              .Where(i => i.FkStationId == stationId)
-                             .Select(p => new StationActivityDto
+                             .Select(p => new ActivityDto
                              {
-                               StationId = p.FkStationId,
-                               Activities = new List<ActivityDto>
-                               {
-                                   new ActivityDto
-                                   {
-                                       Name = p.FkActivity.Name,
-                                       ActivityId = p.FkActivityId,
-                                       ActivityTypeId = p.FkActivity.FkActivityTypeId,
-                                       Description = p.FkActivity.Description,
-                                       StationActivityId = p.PkStationActivityId,
-                                       Type = p.FkActivity.FkActivityType.Type 
-                                   }
-                               }
-                               .ToList()
+                                 Name = p.FkActivity.Name,
+                                 ActivityId = p.FkActivityId,
+                                 ActivityTypeId = p.FkActivity.FkActivityTypeId,
+                                 Description = p.FkActivity.Description,
+                                 StationActivityId = p.PkStationActivityId,
+                                 Type = p.FkActivity.FkActivityType.Type
                              })
                              .ToList();
 
-            return await Task.FromResult(activities);
+            return await Task.FromResult(new StationActivityDto
+            {
+                Activities = activities,
+                StationId = stationId
+            });
         }
 
         /*  public List<StationLocationDto> GetStationByLocationId(int id)
