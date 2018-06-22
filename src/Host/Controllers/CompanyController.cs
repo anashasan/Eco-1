@@ -232,7 +232,7 @@ namespace Host.Controllers
                     return View(requestDto);
                 var userId = GetUserid().ToString();
                 requestDto.UserId = userId;
-                if (ModelState.IsValid)
+                if (!ModelState.IsValid)
                     return RedirectToAction("CompanyCreation");
                 if (requestDto.CompanyId.HasValue && requestDto.CompanyId != 0)
                 {
@@ -364,7 +364,7 @@ namespace Host.Controllers
 
 
             return View("AddBranch", branches);
-
+            
 
         }
 

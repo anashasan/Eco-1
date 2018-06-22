@@ -2,14 +2,19 @@
 @{
     Layout = "_AdminLayout";
 }
-
+<style>
+    #th {
+        background-color: #323232;
+        color: white
+    }
+</style>
 <div class="col-xs-12">
     <div class="box">
         <div class="box-header">
             <h3 class="box-title">Activity Data Table</h3></br>
             </br>
             <!-- Trigger the modal with a button -->
-            <a class="btn  btn-primary " onclick='@($"window.location.href='/Company/AddActivity?stationId={@ViewBag.StationId}'")'>Add Activity</a>
+            <a class="btn  btn-primary " id="th" onclick='@($"window.location.href='/Company/AddActivity?stationId={@ViewBag.StationId}'")'>Add Activity</a>
         </div>
 
         <!-- /.box-header -->
@@ -17,7 +22,7 @@
             @Html.Hidden("stationId", (int)ViewBag.StationId)
 
             <table id="example2" class="table table-bordered table-hover">
-                <thead>
+                <thead id="th">
                     <tr>
                         <th>Activity Name</th>
                         <th>Description</th>
@@ -33,8 +38,8 @@
                             <td style="text-align:center">@a.Name</td>
                             <td style="text-align:center">@a.Description</td>
                             <td style="text-align:center">@a.Type</td>
-                            <td><a class="btn  btn-primary glyphicon glyphicon-edit " href='#' onClick='@($"window.location.href='/Company/AddActivity?stationId={ViewBag.StationId}&activityId={a.ActivityId}'")'>Edit</a></td>
-                            <td><a class="btn  btn-primary glyphicon glyphicon-delete " href='#' onClick='@($"window.location.href='/Company/DeleteStationActivity?activityId={a.ActivityId}'")'>Delete</a></td>
+                            <td style="text-align:center"><a class="fa fa-edit " href='#' onClick='@($"window.location.href='/Company/AddActivity?stationId={ViewBag.StationId}&activityId={a.ActivityId}'")'>Edit</a>
+                            <a class="fa fa-remove " href='#' onClick='@($"window.location.href='/Company/DeleteStationActivity?activityId={a.ActivityId}'")'>Delete</a></td>
                         </tr>
 
 

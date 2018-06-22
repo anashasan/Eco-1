@@ -14,8 +14,7 @@
     <ol class="breadcrumb">
         <li><a href="@Url.Action("CompanyCreation","Company")">Company</a></li>
         <li><a href="@Url.Action("Branch","Company")">Branch</a></li>
-        <li><a href="@Url.Action("BranchEmployee","Company")">BranchEmployee</a></li>
-        <li class="active"><i class="fa fa-dashboard"></i>LocationCreation</a></li>
+        <li class="active"><i class="fa fa-location-arrow"></i>LocationCreation</a></li>
     </ol>
     <div class="box">
         <div class="box-header">
@@ -51,9 +50,9 @@
                                         Option
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" href='#' onClick='@($"window.location.href='/Company/AddLocation?id={ViewBag.BranchId}&locationId={a.LocationId}'")'>Edit</a>
+                                        <a class="dropdown-item fa fa-edit" href='#' onClick='@($"window.location.href='/Company/AddLocation?id={ViewBag.BranchId}&locationId={a.LocationId}'")'>Edit</a>
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href='#' onClick='@($"window.location.href='/Company/StationLocation?locationId={a.LocationId}'")'>Stations</a>
+                                        <a class="dropdown-item fa fa-suitcase" href='#' onClick='@($"window.location.href='/Company/StationLocation?locationId={a.LocationId}'")'>Stations</a>
 
 
                                     </div>
