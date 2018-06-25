@@ -951,6 +951,7 @@ namespace Host.Controllers
             return View("AddStation", station);
         }
 
+        [AllowAnonymous]
         [HttpGet("Company/GetStationActivityByCode/Code/{code}")]
         public async Task<IActionResult> GetStationActivityByCode([FromRoute]string code)
         {

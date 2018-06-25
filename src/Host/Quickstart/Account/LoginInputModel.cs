@@ -8,11 +8,15 @@ namespace IdentityServer4.Quickstart.UI
 {
     public class LoginInputModel
     {
-        [Required]
+        
+        [EmailAddress(ErrorMessage = "The email address does not appear as valid")]
+        [StringLength(100, ErrorMessage = "Email has a maximum length of 100 characters")]
         public string Email { get; set; }
         //[Required]
         public string Username { get; set; }
-        [Required]
+        [Required(ErrorMessage = "Password is required")]
+        [DataType(DataType.Password)]
+        [Display(Name = "Password")]
         public string Password { get; set; }
         public bool RememberLogin { get; set; }
         public string ReturnUrl { get; set; }
