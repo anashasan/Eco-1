@@ -13,8 +13,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using iTextSharp.text.factories;
-
-
+using QRCoder;
+using System.Drawing;
 
 namespace Host.Controllers
 {
@@ -30,7 +30,7 @@ namespace Host.Controllers
         private readonly IBranchService _branchService;
         private readonly IBranchEmployeeService _branchEmployeeService;
         private readonly ILocationService _locationService;
-        private readonly QRCodeGenerator _qRCodeGenerator;
+       // private readonly QRCodeGenerator _qRCodeGenerator;
         private readonly IStationLocationService _stationLocationService;
         private readonly IActivityTypeService _activityTypeService;
         
@@ -50,7 +50,7 @@ namespace Host.Controllers
                                  IBranchService branchService,
                                  IBranchEmployeeService branchEmployeeService,
                                  ILocationService locationService,
-                                 QRCodeGenerator qRCodeGenerator,
+                                // QRCodeGenerator qRCodeGenerator,
                                  IStationLocationService stationLocationService,
                                  IActivityTypeService activityTypeService
                                  )
@@ -61,7 +61,7 @@ namespace Host.Controllers
             _branchService = branchService;
             _branchEmployeeService = branchEmployeeService;
             _locationService = locationService;
-            _qRCodeGenerator = qRCodeGenerator;
+           // _qRCodeGenerator = qRCodeGenerator;
             _stationLocationService = stationLocationService;
             _activityTypeService = activityTypeService;
         }
@@ -643,11 +643,11 @@ namespace Host.Controllers
         }
         #endregion
 
-        public IActionResult QrCode()
+      /*  public IActionResult QrCode()
         {
             var qrCode = _qRCodeGenerator.QrCode();
             return View("QRCode", qrCode);
-        }
+        }*/
 
         public IActionResult Activity()
         {
@@ -966,6 +966,8 @@ namespace Host.Controllers
                 throw;
             }
         }
+
+       
        
     } 
 }
