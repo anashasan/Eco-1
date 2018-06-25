@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using Org.BouncyCastle.Ocsp;
 
 namespace Host.Helper
 {
@@ -63,6 +64,7 @@ namespace Host.Helper
                     //Console.WriteLine("The mail has been sent successfully !!");
                     //Console.ReadLine();
                     //client.Disconnect(true);
+                   
                     return true;
                 }
             }
