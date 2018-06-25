@@ -3,20 +3,25 @@ using System;
 using Net.ConnectCode.BarcodeFontsStandard2D;
 using System.IO;
 using ZXing.QrCode;
+using System.Drawing;
+using QRCoder;
 
 namespace Host.Helper
 {
     [HtmlTargetElement("qrcode")]
     public class QRCodeGenerator
     {
-        public string Message { get; set; }
-
-        public string QrCode()
+        public Bitmap QR()
         {
-            QR qrCode = new QR("12345678", "M", 8);
-            string output = qrCode.Encode();
-            Message = output;
-            return Message;
+            QRCoder.QRCodeGenerator qrGenerator = new QRCoder.QRCodeGenerator();
+            QRCodeData qrCodeData = qrGenerator.CreateQrCode("The text which should be encoded.", QRCoder.QRCodeGenerator.ECCLevel.Q);
+            QRCode qrCode = new QRCode(qrCodeData);
+            Bitmap qrCodeImage = qrCode.GetGraphic(20);
+            return qrCodeImage;
+
+
+
+
         }
     }
 
