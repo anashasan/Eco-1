@@ -53,6 +53,7 @@ namespace Host
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<IStationLocationService, StationLocationService>();
             services.AddScoped<IActivityTypeService, ActivityTypeService>();
+            services.AddScoped<IActivityPerformService, ActivityPerformService>();
 
             services.AddMvc();
 

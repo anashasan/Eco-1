@@ -111,7 +111,7 @@ namespace IdentityServer4.Quickstart.UI
                         throw new Exception(result.Errors.First().Description);
                     }
                     _roleService.AddUserRole(userName.Id, user.RoleId);
-                    
+
                     Console.WriteLine("User Created");
                     var employeProfile = new EmployeeProfileDto
                     {
@@ -120,13 +120,13 @@ namespace IdentityServer4.Quickstart.UI
                         FkUserId = userName.Id,
                         CreatedOn = DateTime.Now,
                         WorkEmail = user.Email
-                        
+
 
                     };
 
-                   await _employeeProfileService.AddEmployeeProfile(employeProfile);
+                    await _employeeProfileService.AddEmployeeProfile(employeProfile);
 
-                    if(user.RoleId == "cd149620-3f5c-4081-94d1-f24b2408aa72")
+                    if (user.RoleId == "cd149620-3f5c-4081-94d1-f24b2408aa72")
                     {
                         var company = new CompanyDto
                         {
@@ -145,11 +145,11 @@ namespace IdentityServer4.Quickstart.UI
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ResetPasswordResult> ResetPassword(ResetPasswordViewModel requestDto )
+        public async Task<ResetPasswordResult> ResetPassword(ResetPasswordViewModel requestDto)
         {
             IdentityResult result = IdentityResult.Failed(null);
 
-            
+
             var user = await _userManager.FindByEmailAsync(requestDto.Email);
             var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
             if (user != null)
@@ -172,7 +172,7 @@ namespace IdentityServer4.Quickstart.UI
                            .AsNoTracking()
                            .Where(i => i.Name == rolesModel.Name)
                            .SingleOrDefault();
-            if(roleName == null)
+            if (roleName == null)
             {
                 var roles = new IdentityRole
                 {
@@ -194,9 +194,9 @@ namespace IdentityServer4.Quickstart.UI
             var roleList = _roleService.GetAllRoles();
             var userInfoModel = new UserInfoModel
             {
-               Roles =new SelectList(roleList,"RoleId","Name")
+                Roles = new SelectList(roleList, "RoleId", "Name")
             };
-            return View("NewHire", userInfoModel );
+            return View("NewHire", userInfoModel);
         }
 
         public IActionResult Role()
@@ -204,13 +204,13 @@ namespace IdentityServer4.Quickstart.UI
             var scope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
             var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
             var roleModel = _roleService.GetAllRoles();
- 
-            return View("AdminRole",roleModel);
+
+            return View("AdminRole", roleModel);
         }
 
         public IActionResult AddRole()
         {
-            
+
             return View("AddRole");
         }
 
@@ -231,7 +231,7 @@ namespace IdentityServer4.Quickstart.UI
                 return await ExternalLogin(vm.ExternalLoginScheme, returnUrl);
             }
 
-            return RedirectToAction("Sign","Home");
+            return RedirectToAction("Sign", "Home");
         }
 
         /// <summary>
@@ -240,7 +240,7 @@ namespace IdentityServer4.Quickstart.UI
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AllowAnonymous]
-        public async Task<IActionResult> Login(LoginInputModel model, string button)//
+        public async Task<IActionResult> Login(LoginInputModel model, string button)
         {
 
             if (ModelState.IsValid)
@@ -271,7 +271,7 @@ namespace IdentityServer4.Quickstart.UI
 
             // something went wrong, show form with error
             //var vm = await BuildLoginViewModelAsync(model);
-            return RedirectToAction("Login",model);
+            return RedirectToAction("Login", model);
         }
 
 
@@ -280,10 +280,18 @@ namespace IdentityServer4.Quickstart.UI
         [AllowAnonymous]
         public async Task<IActionResult> UserLogin([FromBody] LoginInputModel model)
         {
-                var users = _roleService.GetUserNameByEmail(model.Email);
-                var result = await _signInManager.PasswordSignInAsync(users, model.Password, model.RememberLogin, lockoutOnFailure: false);
-                return Json(result.Succeeded);
-            
+            var users = _roleService.GetUserNameByEmail(model.Email);
+            var result = await _signInManager.PasswordSignInAsync(users, model.Password, model.RememberLogin, lockoutOnFailure: false);
+            if (result.Succeeded)
+            {
+                return Json(GetUserid());
+            }
+            else
+            {
+
+                return Json("User is not Authenticate");
+            }
+
         }
 
         /// <summary>
@@ -417,7 +425,7 @@ namespace IdentityServer4.Quickstart.UI
                 return SignOut(new AuthenticationProperties { RedirectUri = url }, vm.ExternalAuthenticationScheme);
             }
 
-            return RedirectToAction("Sign" , "Home");
+            return RedirectToAction("Sign", "Home");
         }
 
         /*****************************************/

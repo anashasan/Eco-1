@@ -147,33 +147,41 @@ namespace Host.Business.DbServices
             }
         }
 
-        public async Task<StationActivityDto> GetStationActivityByCode(string code)
+        public async Task<ActivityPerformDto> GetStationActivityByCode(string code)
         {
             var encrptCode = EncoderAgent.EncryptString(code);
             var stationId = _context.StationLocation
                             .AsNoTracking()
                             .Where(i => i.Code == encrptCode)
                             .Select(p => p.FkStationId)
-                            .Single();
-            var activities = _context.StationActivity
+                            .SingleOrDefault();
+            if(stationId != 0)
+            {
+                var activities = _context.StationActivity
                              .AsNoTracking()
                              .Where(i => i.FkStationId == stationId)
-                             .Select(p => new ActivityDto
+                             .Select(p => new ActivityPerformDetailDto
                              {
                                  Name = p.FkActivity.Name,
                                  ActivityId = p.FkActivityId,
                                  ActivityTypeId = p.FkActivity.FkActivityTypeId,
-                                 Description = p.FkActivity.Description,
                                  StationActivityId = p.PkStationActivityId,
                                  Type = p.FkActivity.FkActivityType.Type
                              })
                              .ToList();
-
-            return await Task.FromResult(new StationActivityDto
+                return await Task.FromResult(new ActivityPerformDto
+                {
+                    Activities = activities,
+                    StationId = stationId
+                });
+            }
+            return await Task.FromResult(new ActivityPerformDto
             {
-                Activities = activities,
+                Activities = null,
                 StationId = stationId
             });
+
+
         }
 
         /*  public List<StationLocationDto> GetStationByLocationId(int id)

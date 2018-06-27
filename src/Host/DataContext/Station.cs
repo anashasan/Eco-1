@@ -9,6 +9,7 @@ namespace Host.DataContext
     {
         public Station()
         {
+            ActivityPerform = new HashSet<ActivityPerform>();
             StationActivity = new HashSet<StationActivity>();
             StationLocation = new HashSet<StationLocation>();
         }
@@ -25,6 +26,8 @@ namespace Host.DataContext
         [Column(TypeName = "date")]
         public DateTime? UpdatedOn { get; set; }
 
+        [InverseProperty("FkStation")]
+        public ICollection<ActivityPerform> ActivityPerform { get; set; }
         [InverseProperty("FkStation")]
         public ICollection<StationActivity> StationActivity { get; set; }
         [InverseProperty("FkStation")]

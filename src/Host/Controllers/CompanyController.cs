@@ -33,6 +33,7 @@ namespace Host.Controllers
        // private readonly QRCodeGenerator _qRCodeGenerator;
         private readonly IStationLocationService _stationLocationService;
         private readonly IActivityTypeService _activityTypeService;
+        private readonly IActivityPerformService _activityPerformService;
         
 
 
@@ -52,7 +53,8 @@ namespace Host.Controllers
                                  ILocationService locationService,
                                 // QRCodeGenerator qRCodeGenerator,
                                  IStationLocationService stationLocationService,
-                                 IActivityTypeService activityTypeService
+                                 IActivityTypeService activityTypeService,
+                                 IActivityPerformService activityPerformService
                                  )
         {
             _companyService = companyService;
@@ -64,6 +66,7 @@ namespace Host.Controllers
            // _qRCodeGenerator = qRCodeGenerator;
             _stationLocationService = stationLocationService;
             _activityTypeService = activityTypeService;
+            _activityPerformService = activityPerformService;
         }
 
         /// <summary>
@@ -951,6 +954,21 @@ namespace Host.Controllers
             return View("AddStation", station);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="code"></param>
+        /// <param name=" ActivityId"></param> 
+        /// <param name=" Name"></param>
+        ///<param name="StationId"></param>
+        ///<param name="ActivityTypeId"></param> 
+        ///<param name="Type"></param>
+        ///<param name="StationActivityId"></param>
+        ///<param name=" Observation"></param>
+        ///<param name="EmployeeId"></param>
+        ///<param name="IsPerform"></param>
+        ///<param name="Perform"></param>
+        /// <returns></returns>
         [AllowAnonymous]
         [HttpGet("Company/GetStationActivityByCode/Code/{code}")]
         public async Task<IActionResult> GetStationActivityByCode([FromRoute]string code)
@@ -958,7 +976,12 @@ namespace Host.Controllers
             try
             {
                 var activities =await _stationLocationService.GetStationActivityByCode(code);
-                return Json(activities);
+                if (activities.Activities != null)
+                {
+
+                    return Json(activities);
+                }
+                return Json("Code is invalid");
             }
             catch (Exception e)
             {
@@ -967,7 +990,14 @@ namespace Host.Controllers
             }
         }
 
-       
+       [HttpPost("Company/ActivityPerform")]
+       public async Task<IActionResult> ActivityPerform([FromBody] ActivityPerformDto requestDto)
+        {
+            if (!ModelState.IsValid)
+                return Json(requestDto);
+            var id = await _activityPerformService.ActivityPerform(requestDto);
+            return  Json(id);
+        }
        
     } 
 }

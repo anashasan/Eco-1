@@ -23,9 +23,9 @@
         </span>*@
 
                 <div class="wrap-input100 validate-input">
-                    <input class="input100" type="text" asp-for="Email" placeholder="User Name">
-                    <span asp-validation-for="Email" class="text-danger field-validation-valid"></span>
-                    @*<span class="focus-input100" data-placeholder="User Name"></span>*@
+                    <input class="input100" type="text" asp-for="Email" placeholder="Email">
+                    <span asp-validation-for="Email"  class="text-danger field-validation-valid"></span>
+                    @*<span class="focus-input100" asp-validation-for="Email"></span>*@
                 </div>
 
                 <div class="wrap-input100 validate-input" data-validate="Enter password">
@@ -33,7 +33,7 @@
                         <i class="zmdi zmdi-eye"></i>
                     </span>
                     <input class="input100" type="password" asp-for="Password" placeholder="Password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}">
-                    @*<span class="focus-input100" data-placeholder="Password"></span>*@
+                    <span class="focus-input100" asp-validation-for="Password"></span>
                 </div>
                 <div class="clearfix">
                     <label class="pull-left checkbox-inline"><input type="checkbox"> Remember me</label>
