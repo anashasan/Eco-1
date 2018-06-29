@@ -1,0 +1,71 @@
+﻿@model List<Host.DataModel.BranchStationLocationDto>
+@{
+    Layout = "_AdminLayout";
+}
+
+<style>
+    #th {
+        background-color: #323232;
+        color: white
+    }
+</style>
+
+<div class="col-xs-12">
+    <ol class="breadcrumb">
+        <li><a href="@Url.Action("CompanyCreation","Company")">Company</a></li>
+        <li><a href="@Url.Action("Branch","Company")">Branch</a></li>
+        <li class="active"><i class="fa fa-location-arrow"></i>LocationCreation</a></li>
+    </ol>
+    <div class="box">
+        <div class="box-header">
+            <h3 class="box-title" style="font-family:'Times New Roman'">Branch Station Data Table</h3></br>
+            </br>
+            <!-- Trigger the modal with a button -->
+
+
+
+        </div>
+
+        <!-- /.box-header -->
+        <div class="box-body">
+
+            <table id="myTable" class="table table-bordered table-hover">
+                <thead id="th">
+                    <tr>
+
+                        <th>Station Id</th>
+
+                        <th>Station Name</th>
+                        <th>Location Name</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var a in Model)
+                    {
+                        <tr>
+                            <td>@a.StationId</td>
+                            <td>@a.StationName</td>
+                            <td>@a.LocationName</td>
+
+
+
+                        </tr>
+
+                    }
+            </table>
+        </div>
+        <!-- /.box-body -->
+    </div>
+</div>
+
+@section Scripts{
+    <link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+    <script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable();
+        });
+        
+    </script>
+    }

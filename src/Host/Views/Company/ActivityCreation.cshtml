@@ -38,8 +38,10 @@
                             <td style="text-align:center">@a.Name</td>
                             <td style="text-align:center">@a.Description</td>
                             <td style="text-align:center">@a.Type</td>
-                            <td style="text-align:center"><a class="fa fa-edit " href='#' onClick='@($"window.location.href='/Company/AddActivity?stationId={ViewBag.StationId}&activityId={a.ActivityId}'")'>Edit</a>
-                            <a class="fa fa-remove " href='#' onClick='@($"window.location.href='/Company/DeleteStationActivity?activityId={a.ActivityId}'")'>Delete</a></td>
+                            <td style="text-align:center">
+                                <a class="fa fa-edit " href='#' onClick='@($"window.location.href='/Company/AddActivity?stationId={ViewBag.StationId}&activityId={a.ActivityId}'")'>Edit</a>
+                                <a class="fa fa-remove " href='#' onClick='@($"window.location.href='/Company/DeleteStationActivity?activityId={a.ActivityId}'")'>Delete</a>
+                            </td>
                         </tr>
 
 
@@ -52,5 +54,14 @@
         <!-- /.box-body -->
     </div>
 </div>
+@section Scripts{
+    <link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+    <script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#example2').DataTable();
+        });
 
+    </script>
+}
 

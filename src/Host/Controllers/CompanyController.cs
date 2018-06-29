@@ -998,6 +998,13 @@ namespace Host.Controllers
             var id = await _activityPerformService.ActivityPerform(requestDto);
             return  Json(id);
         }
-       
+
+        [HttpGet]
+        public IActionResult GetStationByBranchId(int branchId)
+        {
+            var stationbranch = _stationLocationService.GetStationLocationByBranchId(branchId);
+            return View("StationBranch", stationbranch);
+        }
+
     } 
 }

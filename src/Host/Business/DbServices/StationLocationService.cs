@@ -68,6 +68,38 @@ namespace Host.Business.DbServices
                 throw;
             }
         }
+        public List<BranchStationLocationDto> GetStationLocationByBranchId(int branchId)
+        {
+            try
+            {
+                var locationId = _context.BranchLocation
+                                .AsNoTracking()
+                                .Where(i => i.FkBranchId == branchId)
+                                .Select(i => i.FkLocationId)
+                                .ToList();
+                var branch = _context.StationLocation
+                            .AsNoTracking()
+                            .Where(i => locationId.Contains(i.FkLocationId))
+                            .Select(p => new BranchStationLocationDto
+                            {
+                                StationId = p.FkStation.PkStationId,
+                                StationName=p.FkStation.Name,
+                                LocationId = p.FkLocationId,
+                                LocationName = p.FkLocation.Name
+                                
+
+                                
+                            }).ToList();
+
+                return branch;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+
+            }
+        }
 
         public async Task<int> UpdateStationLocation(StationLocationDto requestDto)
         {
@@ -183,6 +215,8 @@ namespace Host.Business.DbServices
 
 
         }
+
+       
 
         /*  public List<StationLocationDto> GetStationByLocationId(int id)
 
