@@ -111,7 +111,7 @@ namespace IdentityServer4.Quickstart.UI
                         throw new Exception(result.Errors.First().Description);
                     }
                     _roleService.AddUserRole(userName.Id, user.RoleId);
-                    
+
                     Console.WriteLine("User Created");
                     var employeProfile = new EmployeeProfileDto
                     {
@@ -120,13 +120,13 @@ namespace IdentityServer4.Quickstart.UI
                         FkUserId = userName.Id,
                         CreatedOn = DateTime.Now,
                         WorkEmail = user.Email
-                        
+
 
                     };
 
-                   await _employeeProfileService.AddEmployeeProfile(employeProfile);
+                    await _employeeProfileService.AddEmployeeProfile(employeProfile);
 
-                    if(user.RoleId == "cd149620-3f5c-4081-94d1-f24b2408aa72")
+                    if (user.RoleId == "cd149620-3f5c-4081-94d1-f24b2408aa72")
                     {
                         var company = new CompanyDto
                         {
@@ -145,11 +145,11 @@ namespace IdentityServer4.Quickstart.UI
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ResetPasswordResult> ResetPassword(ResetPasswordViewModel requestDto )
+        public async Task<ResetPasswordResult> ResetPassword(ResetPasswordViewModel requestDto)
         {
             IdentityResult result = IdentityResult.Failed(null);
 
-            
+
             var user = await _userManager.FindByEmailAsync(requestDto.Email);
             var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
             if (user != null)
@@ -172,7 +172,7 @@ namespace IdentityServer4.Quickstart.UI
                            .AsNoTracking()
                            .Where(i => i.Name == rolesModel.Name)
                            .SingleOrDefault();
-            if(roleName == null)
+            if (roleName == null)
             {
                 var roles = new IdentityRole
                 {
@@ -194,9 +194,9 @@ namespace IdentityServer4.Quickstart.UI
             var roleList = _roleService.GetAllRoles();
             var userInfoModel = new UserInfoModel
             {
-               Roles =new SelectList(roleList,"RoleId","Name")
+                Roles = new SelectList(roleList, "RoleId", "Name")
             };
-            return View("NewHire", userInfoModel );
+            return View("NewHire", userInfoModel);
         }
 
         public IActionResult Role()
@@ -204,13 +204,13 @@ namespace IdentityServer4.Quickstart.UI
             var scope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
             var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
             var roleModel = _roleService.GetAllRoles();
- 
-            return View("AdminRole",roleModel);
+
+            return View("AdminRole", roleModel);
         }
 
         public IActionResult AddRole()
         {
-            
+
             return View("AddRole");
         }
 
@@ -231,7 +231,7 @@ namespace IdentityServer4.Quickstart.UI
                 return await ExternalLogin(vm.ExternalLoginScheme, returnUrl);
             }
 
-            return RedirectToAction("Sign","Home");
+            return RedirectToAction("Sign", "Home");
         }
 
         /// <summary>
@@ -242,27 +242,6 @@ namespace IdentityServer4.Quickstart.UI
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginInputModel model, string button)
         {
-            //if (button != "login")
-            //{
-            //    // the user clicked the "cancel" button
-            //    var context = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
-            //    if (context != null)
-            //    {
-            //        // if the user cancels, send a result back into IdentityServer as if they 
-            //        // denied the consent (even if this client does not require consent).
-            //        // this will send back an access denied OIDC error response to the client.
-            //        await _interaction.GrantConsentAsync(context, ConsentResponse.Denied);
-
-            //        // we can trust model.ReturnUrl since GetAuthorizationContextAsync returned non-null
-            //        //return Redirect(model.ReturnUrl);
-            //        return RedirectToAction("Home/SignUp");
-            //    }
-            //    else
-            //    {
-            //        // since we don't have a valid context, then we just go back to the home page
-            //        return Redirect("~/");
-            //    }
-            //}
 
             if (ModelState.IsValid)
             {
@@ -291,8 +270,28 @@ namespace IdentityServer4.Quickstart.UI
             }
 
             // something went wrong, show form with error
-            var vm = await BuildLoginViewModelAsync(model);
-            return RedirectToAction("Login",vm);
+            //var vm = await BuildLoginViewModelAsync(model);
+            return RedirectToAction("Login", model);
+        }
+
+
+        [HttpPost("Account/UserLogin")]
+        //[ValidateAntiForgeryToken]
+        [AllowAnonymous]
+        public async Task<IActionResult> UserLogin([FromBody] LoginInputModel model)
+        {
+            var users = _roleService.GetUserNameByEmail(model.Email);
+            var result = await _signInManager.PasswordSignInAsync(users, model.Password, model.RememberLogin, lockoutOnFailure: false);
+            if (result.Succeeded)
+            {
+                return Json(GetUserid());
+            }
+            else
+            {
+
+                return Json("User is not Authenticate");
+            }
+
         }
 
         /// <summary>
@@ -426,7 +425,7 @@ namespace IdentityServer4.Quickstart.UI
                 return SignOut(new AuthenticationProperties { RedirectUri = url }, vm.ExternalAuthenticationScheme);
             }
 
-            return RedirectToAction("Sign" , "Home");
+            return RedirectToAction("Sign", "Home");
         }
 
         /*****************************************/

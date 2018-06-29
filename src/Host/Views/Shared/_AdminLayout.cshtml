@@ -50,7 +50,7 @@
         <!-- Theme style -->
         <link href="~/dist/css/AdminLTE.min.css" rel="stylesheet" />
         <!-- AdminLTE Skins. Choose a skin from the css/skins
-         folder instead of downloading all of them to reduce the load. -->
+     folder instead of downloading all of them to reduce the load. -->
         <link href="~/dist/css/skins/_all-skins.min.css" rel="stylesheet" />
         <!-- Morris chart -->
         <!-- jvectormap -->
@@ -66,8 +66,15 @@
 
         <!--Font Awsome-->
         <link href="~/dist/css/font-awesome.css" rel="stylesheet" />
+        <!--Datatable Responsive-->
+
+        <link rel="stylesheet" href="~/css/datatables.responsive.css" />
 
     </environment>
+
+    @RenderSection("Styles", required: false)
+
+
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -81,11 +88,11 @@
     <div class="wrapper">
         <header class="main-header">
             <!-- Logo -->
-            <a href="index2.html" class="logo">
+            <a class="logo">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
                 <span class="logo-mini"><b>ECO</b></span>
                 <!-- logo for regular state and mobile devices -->
-                <span class="logo-lg"><b>ECO</b>SERVICES</span>
+                <span class="logo-l"><b>ECO</b>SERVICES</span>
             </a>
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top">
@@ -124,16 +131,6 @@
                     </div>
                 </div>
                 <!-- search form -->
-                <form action="#" method="get" class="sidebar-form">
-                    <div class="input-group">
-                        <input type="text" name="q" class="form-control" placeholder="Search...">
-                        <span class="input-group-btn">
-                            <button type="submit" name="search" id="search-btn" class="btn btn-flat">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </span>
-                    </div>
-                </form>
                 <!-- /.search form -->
                 <!-- sidebar menu: : style can be found in sidebar.less -->
                 <ul class="sidebar-menu" data-widget="tree">
@@ -180,8 +177,8 @@
                         </a>
                         <ul class="treeview-menu">
                             <li><a asp-controller="Company" asp-action="CompanyCreation"><i class="fa fa-circle-o"></i> Company</a></li>
-                            <li><a asp-controller="Company" asp-action="Branch"><i class="fa fa-circle-o"></i> Branch</a></li>
-                            <li><a asp-controller="Company" asp-action="BranchEmployee"><i class="fa fa-circle-o"></i> Branch Employee</a></li>
+                            <!-- <li><a asp-controller="Company" asp-action="Branch"><i class="fa fa-circle-o"></i> Branch</a></li>
+     <li><a asp-controller="Company" asp-action="BranchEmployee"><i class="fa fa-circle-o"></i> Branch Employee</a></li>-->
                             <!---  <li><a href="pages/layout/boxed.html"><i class="fa fa-circle-o"></i> Company Account</a></li> -->
 
                         </ul>
@@ -209,7 +206,7 @@
                         <a href="pages/widgets.html">
                             <i class="fa fa-th"></i> <span>Reports</span>
                             <span class="pull-right-container">
-                                <small class="label pull-right bg-green">new</small>
+
                             </span>
                         </a>
                     </li>
@@ -512,6 +509,8 @@
         <!-- AdminLTE for demo purposes -->
         <script src="~/dist/js/demo.js"></script>
     </environment>
+
+    @RenderSection("Scripts", required: false)
 </body>
 </html>
 

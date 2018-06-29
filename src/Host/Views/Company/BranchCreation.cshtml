@@ -61,7 +61,7 @@
     <ol class="breadcrumb">
         <li><a href="@Url.Action("CompanyCreation","Company")">Company</a></li>
         <li class="active"><i class="fa fa-delicious">Branch</a></i></li>
-        
+
 
 
     </ol>
@@ -112,6 +112,8 @@
                                         <a class="dropdown-item fa fa-location-arrow" href='#' onclick='@($"window.location.href='/Company/GetLocationById?id={s.BranchId}'")'>Location</a>
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item fa fa-user-o" href='#' onclick='@($"window.location.href='/Company/GetBranchEmployeeByBranchId?branchId={s.BranchId}'")'>BranchEmployee</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item fa fa-user-o" href='#' onclick='@($"window.location.href='/Company/GetStationByBranchId?branchId={s.BranchId}'")'>BranchStation</a>
 
 
                                     </div>
@@ -126,4 +128,14 @@
     </div>
 </div>
 
+@section Scripts{
+    <link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+    <script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#example2').DataTable();
+        });
+
+    </script>
+}
 

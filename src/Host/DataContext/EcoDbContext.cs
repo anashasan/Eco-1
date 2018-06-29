@@ -10,7 +10,11 @@ namespace Host.DataContext
         {
 
         }
+
         public virtual DbSet<Activity> Activity { get; set; }
+        public virtual DbSet<ActivityObservation> ActivityObservation { get; set; }
+        public virtual DbSet<ActivityPerform> ActivityPerform { get; set; }
+        public virtual DbSet<ActivityPerformDetail> ActivityPerformDetail { get; set; }
         public virtual DbSet<ActivityType> ActivityType { get; set; }
         public virtual DbSet<AspNetRoleClaims> AspNetRoleClaims { get; set; }
         public virtual DbSet<AspNetRoles> AspNetRoles { get; set; }
@@ -33,7 +37,6 @@ namespace Host.DataContext
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-           
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -45,6 +48,45 @@ namespace Host.DataContext
                     .HasForeignKey(d => d.FkActivityTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Fk_Activity_ActivityType_FkActivityTypeId");
+            });
+
+            modelBuilder.Entity<ActivityObservation>(entity =>
+            {
+                entity.HasOne(d => d.FkActivityPerformDetail)
+                    .WithMany(p => p.ActivityObservation)
+                    .HasForeignKey(d => d.FkActivityPerformDetailId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Fk_ActivityObservation_ActivityPerformDetail_FkActivityPerformDetailId");
+            });
+
+            modelBuilder.Entity<ActivityPerform>(entity =>
+            {
+                entity.HasOne(d => d.FkEmployee)
+                    .WithMany(p => p.ActivityPerform)
+                    .HasForeignKey(d => d.FkEmployeeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Fk_ActivityPerform_AspNetUsers_FkEmployeeId");
+
+                entity.HasOne(d => d.FkStation)
+                    .WithMany(p => p.ActivityPerform)
+                    .HasForeignKey(d => d.FkStationId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Fk_ActivityPerform_Station_StationId");
+            });
+
+            modelBuilder.Entity<ActivityPerformDetail>(entity =>
+            {
+                entity.HasOne(d => d.FkActivity)
+                    .WithMany(p => p.ActivityPerformDetail)
+                    .HasForeignKey(d => d.FkActivityId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Fk_ActivityPerformDetail_Activity_FkActivityId");
+
+                entity.HasOne(d => d.FkActivityPerform)
+                    .WithMany(p => p.ActivityPerformDetail)
+                    .HasForeignKey(d => d.FkActivityPerformId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Fk_ActivityPerformDetail_ActivityPerfrom_FkActivityPerformId");
             });
 
             modelBuilder.Entity<AspNetRoleClaims>(entity =>

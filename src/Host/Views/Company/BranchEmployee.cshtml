@@ -16,7 +16,7 @@
         <li><a href="@Url.Action("CompanyCreation","Company")">Company</a></li>
         <li><a href='#' onclick='@($"window.location.href='/Company/GetBranchEmployeeByCompanyId?companyId={@ViewBag.CompanyId}'")'>Branch</a></li>
         <li class="active"><i class="fa fa-user-o"></i>BranchEmployee</li>
-        
+
     </ol>
     <div class="box">
         <div class="box-header">
@@ -47,21 +47,21 @@
                 <tbody>
                     @foreach (var s in Model)
                     {
-                    <tr>
-                        <td>@s.EmployeeName</td>
-                        <td>@s.BranchName</td>
-                        <td>@s.CompanyName</td>
-                        <td>@s.Designation</td>
-                        <td>@s.Phone</td>
-                        <td>@s.Email</td>
+                        <tr>
+                            <td>@s.EmployeeName</td>
+                            <td>@s.BranchName</td>
+                            <td>@s.CompanyName</td>
+                            <td>@s.Designation</td>
+                            <td>@s.Phone</td>
+                            <td>@s.Email</td>
 
-                        <td>
-                            <a class="fa fa-edit" onClick='@($"window.location.href='/Company/AddBranchEmployee?branchId={ViewBag.BranchId}&branchemployeeId={s.BranchEmployeeId}'")'>Edit</a>
-                        </td>
-                        <td>
-                            <a class="fa fa-remove" onClick='DeleteBranchEmployee(@s.BranchEmployeeId,@ViewBag.BranchId)'>Delete</a>
-                        </td>
-                    </tr>
+                            <td>
+                                <a class="fa fa-edit" onClick='@($"window.location.href='/Company/AddBranchEmployee?branchId={ViewBag.BranchId}&branchemployeeId={s.BranchEmployeeId}'")'>Edit</a>
+                            </td>
+                            <td>
+                                <a class="fa fa-remove" onClick='DeleteBranchEmployee(@s.BranchEmployeeId,@ViewBag.BranchId)'>Delete</a>
+                            </td>
+                        </tr>
                     }
             </table>
         </div>
@@ -70,8 +70,7 @@
 </div>
 <link href="~/dist/css/font-awesome.css" rel="stylesheet" />
 <script>
-    function DeleteBranchEmployee(id, branchId) 
-    {
+    function DeleteBranchEmployee(id, branchId) {
         const stationData = {};
         const headers = new Headers();
         headers.append("Accept", "application/json");
@@ -93,3 +92,13 @@
 </script>
 
 
+@section Scripts{
+    <link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+    <script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#example2').DataTable();
+        });
+
+    </script>
+}

@@ -9,6 +9,7 @@ namespace Host.DataContext
     {
         public Activity()
         {
+            ActivityPerformDetail = new HashSet<ActivityPerformDetail>();
             StationActivity = new HashSet<StationActivity>();
         }
 
@@ -28,6 +29,8 @@ namespace Host.DataContext
         [ForeignKey("FkActivityTypeId")]
         [InverseProperty("Activity")]
         public ActivityType FkActivityType { get; set; }
+        [InverseProperty("FkActivity")]
+        public ICollection<ActivityPerformDetail> ActivityPerformDetail { get; set; }
         [InverseProperty("FkActivity")]
         public ICollection<StationActivity> StationActivity { get; set; }
     }

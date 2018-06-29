@@ -29,43 +29,55 @@
         <!-- /.box-header -->
         <div class="box-body">
             @Html.Hidden("id", (int)ViewBag.BranchId)
-            <table id="example2" class="table table-bordered table-hover">
-                <thead id="th">
-                    <tr>
-
-                        <th>Location</th>
-
-                        <th>Options</th>
-
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var a in Model)
-                    {
+            <div class="table-responsive">
+                <table id="example2" class="table table-bordered table-hover">
+                    <thead id="th">
                         <tr>
-                            <td>@a.Name</td>
-                            <td>
-                                <div class="dropdown">
-                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Option
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item fa fa-edit" href='#' onClick='@($"window.location.href='/Company/AddLocation?id={ViewBag.BranchId}&locationId={a.LocationId}'")'>Edit</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item fa fa-suitcase" href='#' onClick='@($"window.location.href='/Company/StationLocation?locationId={a.LocationId}'")'>Stations</a>
 
+                            <th>Location</th>
 
-                                    </div>
-                                </div>
+                            <th>Options</th>
 
-                            </td>
                         </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var a in Model)
+                {
+                    <tr>
+                        <td>@a.Name</td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Option
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item fa fa-edit" href='#' onClick='@($"window.location.href='/Company/AddLocation?id={ViewBag.BranchId}&locationId={a.LocationId}'")'>Edit</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item fa fa-suitcase" href='#' onClick='@($"window.location.href='/Company/StationLocation?locationId={a.LocationId}'")'>Stations</a>
 
-                    }
-            </table>
+
+                                </div>
+                            </div>
+
+                        </td>
+                    </tr>
+
+        }
+                </table>
+                </div>
+            </div>
+            <!-- /.box-body -->
         </div>
-        <!-- /.box-body -->
-    </div>
 </div>
 
 
+@section Scripts{
+    <link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+    <script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#example2').DataTable();
+        });
+
+    </script>
+}

@@ -9,6 +9,7 @@ namespace Host.DataContext
     {
         public AspNetUsers()
         {
+            ActivityPerform = new HashSet<ActivityPerform>();
             AspNetUserClaims = new HashSet<AspNetUserClaims>();
             AspNetUserLogins = new HashSet<AspNetUserLogins>();
             AspNetUserRoles = new HashSet<AspNetUserRoles>();
@@ -37,6 +38,8 @@ namespace Host.DataContext
         [StringLength(256)]
         public string UserName { get; set; }
 
+        [InverseProperty("FkEmployee")]
+        public ICollection<ActivityPerform> ActivityPerform { get; set; }
         [InverseProperty("User")]
         public ICollection<AspNetUserClaims> AspNetUserClaims { get; set; }
         [InverseProperty("User")]
