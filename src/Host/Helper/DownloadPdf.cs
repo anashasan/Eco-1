@@ -50,7 +50,7 @@ namespace Host.Helper
                 //document.Add(image);
 
 
-                iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(@"C:\Users\home\source\repos\Eco-1\src\Host\wwwroot\images\Eco.jpg");
+                iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(@"D:\Eco\Eco\src\Host\wwwroot\images\Eco.jpg");
                 image.ScaleAbsolute(149f, 110f);
                 image.SetAbsolutePosition(50f, 725f);
                 image.Alignment = iTextSharp.text.Element.ALIGN_LEFT;
@@ -140,7 +140,7 @@ namespace Host.Helper
 
 
 
-                iTextSharp.text.Image image1 = iTextSharp.text.Image.GetInstance(@"C:\Users\home\source\repos\Eco-1\src\Host\wwwroot\images\Eco.jpg");
+                iTextSharp.text.Image image1 = iTextSharp.text.Image.GetInstance(@"D:\Eco\Eco\src\Host\wwwroot\images\Eco.jpg");
                 image1.ScaleAbsolute(149f, 110f);
                 image1.SetAbsolutePosition(50f, 725f);
                 image1.Alignment = iTextSharp.text.Element.ALIGN_LEFT;

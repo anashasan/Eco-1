@@ -13,6 +13,9 @@ using Host.Business.DbServices;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
 using Host.Helper;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Authentication;
 
 namespace Host
 {
@@ -39,6 +42,7 @@ namespace Host
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+           
 
             // services Add 
             services.AddScoped<IActivityService, ActivityService>();
@@ -67,11 +71,28 @@ namespace Host
                 .AddAspNetIdentity<ApplicationUser>();
 
             services.AddAuthentication()
+                .AddJwtBearer(cfg => {
+
+                    cfg.RequireHttpsMetadata = false;
+                    cfg.SaveToken = true;
+
+                    cfg.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidIssuer = Configuration["Tokens:Issuer"],
+                        ValidAudience = Configuration["Tokens:Issuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Tokens:Key"]))
+                    };
+                }
+                )
                 .AddGoogle(options =>
                 {
                     options.ClientId = "998042782978-s07498t8i8jas7npj4crve1skpromf37.apps.googleusercontent.com";
                     options.ClientSecret = "HsnwJri_53zn7VcO1Fm7THBb";
+                    options.SaveTokens = true;
+
                 });
+
+            services.AddMvc();
 
 
             services.AddSwaggerGen(c =>
@@ -93,6 +114,9 @@ namespace Host
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
                 app.UseDatabaseErrorPage();
+                app.UseMiddleware<AuthenticationMiddleware>();
+
+                app.UseMvc();
             }
             else
             {

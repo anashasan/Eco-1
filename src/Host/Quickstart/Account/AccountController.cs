@@ -14,19 +14,25 @@ using IdentityServer4.Events;
 using IdentityServer4.Extensions;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace IdentityServer4.Quickstart.UI
@@ -45,6 +51,9 @@ namespace IdentityServer4.Quickstart.UI
         private readonly IRoleService _roleService;
         private readonly IEmployeeProfileService _employeeProfileService;
         private readonly ICompanyService _companyService;
+        private readonly RequestDelegate _next;
+        private readonly IAntiforgery _antiforgery;
+        private readonly IConfiguration _config;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
@@ -56,7 +65,9 @@ namespace IdentityServer4.Quickstart.UI
             IServiceProvider serviceProvider,
             IRoleService roleService,
             IEmployeeProfileService employeeProfileService,
-            ICompanyService companyService)
+            ICompanyService companyService,
+            IAntiforgery antiforgery,
+            IConfiguration config)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -68,6 +79,8 @@ namespace IdentityServer4.Quickstart.UI
             _roleService = roleService;
             _employeeProfileService = employeeProfileService;
             _companyService = companyService;
+            _antiforgery = antiforgery;
+            _config = config;
         }
 
         /// <summary>
@@ -284,6 +297,40 @@ namespace IdentityServer4.Quickstart.UI
             var result = await _signInManager.PasswordSignInAsync(users, model.Password, model.RememberLogin, lockoutOnFailure: false);
             if (result.Succeeded)
             {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                var userRoles = await _userManager.GetRolesAsync(user);
+                var claims = new[]
+                       {
+                        new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                        new Claim(JwtRegisteredClaimNames.Jti, user.Id.ToString()),
+                    }.Union(userRoles.Select(m => new Claim(ClaimTypes.Role, m)));
+
+                var token = new JwtSecurityToken
+            (
+                issuer: "Arsalan",
+                audience: "You",
+                claims: claims,
+                expires: DateTime.UtcNow.AddDays(60),
+                notBefore: DateTime.UtcNow,
+                signingCredentials: new SigningCredentials(new SymmetricSecurityKey
+                            (Encoding.UTF8.GetBytes("rlyaKithdrYVl6Z80ODU350md")),
+                        SecurityAlgorithms.HmacSha256)
+            );
+
+                return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
+                System.Security.Claims.ClaimsPrincipal currentUser = this.User;
+                // var httpcontext = HttpContext.Request.Method;
+               
+                var info = await _signInManager.GetExternalLoginInfoAsync();
+                var claimsPrincipal = await this._signInManager.CreateUserPrincipalAsync(user);
+                ((ClaimsIdentity)claimsPrincipal.Identity).AddClaim(new Claim("accessToken", info.AuthenticationTokens.Single(t => t.Name == "access_token").Value));
+                await HttpContext.Authentication.SignInAsync("Identity.Application", claimsPrincipal);
+                var accessToken = info.AuthenticationTokens.Single(f => f.Name == "access_token").Value;
+                var tokenType = info.AuthenticationTokens.Single(f => f.Name == "token_type").Value;
+                var expiryDate = info.AuthenticationTokens.Single(f => f.Name == "expires_at").Value;
+                
+                //HttpContext.GetTokenAsync("token_Name")
+
                 return Json(GetUserid());
             }
             else
@@ -426,6 +473,36 @@ namespace IdentityServer4.Quickstart.UI
             }
 
             return RedirectToAction("Sign", "Home");
+        }
+
+        [HttpPost("Account/User/Logout")]
+        public async Task<IActionResult> UserLogOut(LogoutInputModel model)
+        {
+            // build a model so the logged out page knows what to display
+            var vm = await BuildLoggedOutViewModelAsync(model.LogoutId);
+
+            if (User?.Identity.IsAuthenticated == true)
+            {
+                // delete local authentication cookie
+                await _signInManager.SignOutAsync();
+
+                // raise the logout event
+                await _events.RaiseAsync(new UserLogoutSuccessEvent(User.GetSubjectId(), User.GetDisplayName()));
+            }
+
+            // check if we need to trigger sign-out at an upstream identity provider
+            if (vm.TriggerExternalSignout)
+            {
+                // build a return URL so the upstream provider will redirect back
+                // to us after the user has logged out. this allows us to then
+                // complete our single sign-out processing.
+                string url = Url.Action("Logout", new { logoutId = vm.LogoutId });
+
+                // this triggers a redirect to the external provider for sign-out
+                return SignOut(new AuthenticationProperties { RedirectUri = url }, vm.ExternalAuthenticationScheme);
+            }
+
+            return Json("User Logout Successfully");
         }
 
         /*****************************************/

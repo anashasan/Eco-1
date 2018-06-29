@@ -153,13 +153,13 @@ namespace Host.Business.DbServices
             var stationId = _context.StationLocation
                             .AsNoTracking()
                             .Where(i => i.Code == encrptCode)
-                            .Select(p => p.FkStationId)
+                            .Select(p => new { p.FkStationId, p.FkStation.Name })
                             .SingleOrDefault();
-            if(stationId != 0)
+            if(stationId !=null && stationId.FkStationId != 0)
             {
                 var activities = _context.StationActivity
                              .AsNoTracking()
-                             .Where(i => i.FkStationId == stationId)
+                             .Where(i => i.FkStationId == stationId.FkStationId)
                              .Select(p => new ActivityPerformDetailDto
                              {
                                  Name = p.FkActivity.Name,
@@ -172,13 +172,13 @@ namespace Host.Business.DbServices
                 return await Task.FromResult(new ActivityPerformDto
                 {
                     Activities = activities,
-                    StationId = stationId
+                    StationId = stationId.FkStationId,
+                    StationName = stationId.Name
                 });
             }
             return await Task.FromResult(new ActivityPerformDto
             {
-                Activities = null,
-                StationId = stationId
+              
             });
 
 

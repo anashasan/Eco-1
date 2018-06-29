@@ -990,6 +990,7 @@ namespace Host.Controllers
             }
         }
 
+        [Authorize]
        [HttpPost("Company/ActivityPerform")]
        public async Task<IActionResult> ActivityPerform([FromBody] ActivityPerformDto requestDto)
         {

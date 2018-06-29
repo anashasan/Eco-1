@@ -66,6 +66,26 @@
     var myArray = [];
     var url
     var tbody = document.getElementById("tbody");
+    const getBase64FromImageUrl = (url) =>{
+        var img = new Image();
+
+        img.setAttribute('crossOrigin', 'anonymous');
+
+        var canvas = document.createElement("canvas");
+        canvas.width = this.width;
+        canvas.height = this.height;
+
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+
+        ctx.drawImage(img, 0, 0, ctx.width, ctx.height, 0, 0, ctx.width, ctx.height);
+        var base64String = ctx.toDataURL();
+
+        var dataURL = canvas.toDataURL("image/png");
+
+        return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+        
+    };
 
     var model = @Html.Raw(JsonConvert.SerializeObject(Model));
     for (let m of model) {
@@ -75,14 +95,20 @@
             code : m.Code
         });
     }
-
+    var lstOfImage = [];
     for (let model of myArray) {
         const oImg = document.createElement("img");
         oImg.setAttribute('src', 'https://api.qrserver.com/v1/create-qr-code/?data=' + model.code + '&amp;size=50x50');
             oImg.style.width = '50px';
         oImg.style.height = '50px';
         const element = document.getElementById(String(model.id));
+       var qrcode =  getBase64FromImageUrl(oImg.src);
         element.appendChild(oImg);
+        lstOfImage.push({
+            id: model.id,
+            image: qrcode
+
+        });
         //var image = document.getElementById(string(model.id))
         }
     console.log(myArray);
