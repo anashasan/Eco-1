@@ -15,8 +15,9 @@ namespace Host.Helper
         private static string strtemp;
         private static string path;
         Document _document;
-         PdfWriter _pdfWriter;
-         Phrase _phrase;
+        PdfWriter _pdfWriter;
+        Phrase _phrase;
+        
 
 
         public static byte[] Download(int stationId,string stationName,string locationName)
@@ -27,8 +28,12 @@ namespace Host.Helper
                 System.IO.MemoryStream memoryStream = new System.IO.MemoryStream();
 
 
-                    Document document = new Document(PageSize.A4, 10, 10, 10, 10);
+                 Document document = new Document(PageSize.A4);
                 
+
+
+
+
               //  document.Add(new Paragraph("Title2", titleFont));
 
 
