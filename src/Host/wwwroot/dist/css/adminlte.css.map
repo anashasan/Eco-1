@@ -1,6 +1,7 @@
 {
 	"version": 3,
-	"file": "adminlte.css",
+  "file": "
+    .css",
 	"sources": [
 		"../../build/scss/AdminLTE.scss",
 		"../../build/scss/_bootstrap_variables.scss",

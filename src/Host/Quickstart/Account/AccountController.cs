@@ -202,6 +202,7 @@ namespace IdentityServer4.Quickstart.UI
 
         }
 
+        [Authorize(Roles="Admin")]
         public IActionResult NewHire()
         {
             var roleList = _roleService.GetAllRoles();
@@ -212,6 +213,7 @@ namespace IdentityServer4.Quickstart.UI
             return View("NewHire", userInfoModel);
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Role()
         {
             var scope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
@@ -221,6 +223,7 @@ namespace IdentityServer4.Quickstart.UI
             return View("AdminRole", roleModel);
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult AddRole()
         {
 
@@ -263,6 +266,8 @@ namespace IdentityServer4.Quickstart.UI
                 if (result.Succeeded)
                 {
                     var user = await _userManager.FindByNameAsync(users);
+                    var u = await _userManager.FindByEmailAsync(model.Email);
+                    var userRoles = await _userManager.GetRolesAsync(u);
                     await _events.RaiseAsync(new UserLoginSuccessEvent(users, user.Id, users));
 
                     // make sure the returnUrl is still valid, and if so redirect back to authorize endpoint or a local page

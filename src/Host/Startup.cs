@@ -58,10 +58,14 @@ namespace Host
             services.AddScoped<IStationLocationService, StationLocationService>();
             services.AddScoped<IActivityTypeService, ActivityTypeService>();
             services.AddScoped<IActivityPerformService, ActivityPerformService>();
+            services.AddScoped<IAuditDbContext, AuditDbContext>();
+            services.AddScoped<IEfHepler, EfHepler>();
+            services.AddScoped<IGraphService, GraphService>();
 
             services.AddMvc();
 
             
+
 
             services.AddIdentityServer()
                 .AddDeveloperSigningCredential()

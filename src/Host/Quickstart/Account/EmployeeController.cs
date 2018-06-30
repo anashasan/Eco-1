@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Host.Quickstart.Account
 {
+    [Authorize(Roles ="Admin")]
     public class EmployeeController : Controller
     {
         private readonly IEmployeesService _employeesService;

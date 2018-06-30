@@ -15,12 +15,14 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using iTextSharp.text.factories;
 using QRCoder;
 using System.Drawing;
+using Host.Business.DbServices;
 
 namespace Host.Controllers
 {
-    [Authorize]
+    [Authorize(Roles ="Admin")]
     public class CompanyController : BaseController
     {
+
         /// <summary>
         /// 
         /// </summary>
@@ -34,7 +36,7 @@ namespace Host.Controllers
         private readonly IStationLocationService _stationLocationService;
         private readonly IActivityTypeService _activityTypeService;
         private readonly IActivityPerformService _activityPerformService;
-        
+
 
 
         /// <summary>
@@ -51,7 +53,7 @@ namespace Host.Controllers
                                  IBranchService branchService,
                                  IBranchEmployeeService branchEmployeeService,
                                  ILocationService locationService,
-                                // QRCodeGenerator qRCodeGenerator,
+                                 // QRCodeGenerator qRCodeGenerator,
                                  IStationLocationService stationLocationService,
                                  IActivityTypeService activityTypeService,
                                  IActivityPerformService activityPerformService
@@ -83,6 +85,7 @@ namespace Host.Controllers
             return View("ExampleGraph");
         }
 
+       
         //[HttpPost]
         //public async Task<IActionResult> AddCompany(CompanyDto requestDto)
         //{
@@ -999,6 +1002,13 @@ namespace Host.Controllers
             var id = await _activityPerformService.ActivityPerform(requestDto);
             return  Json(id);
         }
-       
+
+        [HttpGet]
+        public IActionResult GetStationByBranchId(int branchId)
+        {
+            var stationbranch = _stationLocationService.GetStationLocationByBranchId(branchId);
+            return View("StationBranch", stationbranch);
+        }
+
     } 
 }

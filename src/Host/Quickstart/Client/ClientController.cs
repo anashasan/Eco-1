@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Host.Quickstart.Client
 {
-    [Authorize]
+    [Authorize(Roles ="Client")]
     public class ClientController : BaseController
     {
         private readonly IEmployeeProfileService _employeeProfileService;

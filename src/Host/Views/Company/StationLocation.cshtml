@@ -35,7 +35,6 @@
             <table id="example2" class="table table-bordered table-hover">
                 <thead id="th">
                     <tr>
-
                         <th>Station</th>
                         <th>Qr Code</th>
                         <th>Options</th>
@@ -45,14 +44,15 @@
                 <tbody id="tbody">
                     @foreach (var s in Model)
                     {
-                        <tr>
-                            <td>@s.StationName</td>
-                            <td id="@(s.StationLocationId)"> </td>
-                            <td>
-                                <a class="fa fa-download  " onClick='@($"window.location.href='/Company/Download?id={s.StationId}&locationId={ViewBag.LocationId}'")'>Download</a>
-                                <a class="fa fa-edit" href='#' onClick='@($"window.location.href='/Company/AddStationLocation?locationId={ViewBag.LocationId}&stationlocationId={s.StationLocationId}'")'>Edit</a>
-                            </td>
-                        </tr>
+                    <tr>
+                        
+                        <td class="right"><input type="checkbox" class="checkbox">@s.StationName</td>
+                        <td id="@(s.StationLocationId)"> </td>
+                        <td>
+                            <a class="fa fa-download  " onClick='@($"window.location.href='/Company/Download?id={s.StationId}&locationId={ViewBag.LocationId}'")'>Download</a>
+                            <a class="fa fa-edit" href='#' onClick='@($"window.location.href='/Company/AddStationLocation?locationId={ViewBag.LocationId}&stationlocationId={s.StationLocationId}'")'>Edit</a>
+                        </td>
+                    </tr>
                     }
             </table>
         </div>
@@ -66,26 +66,6 @@
     var myArray = [];
     var url
     var tbody = document.getElementById("tbody");
-    const getBase64FromImageUrl = (url) =>{
-        var img = new Image();
-
-        img.setAttribute('crossOrigin', 'anonymous');
-
-        var canvas = document.createElement("canvas");
-        canvas.width = this.width;
-        canvas.height = this.height;
-
-        var ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0);
-
-        ctx.drawImage(img, 0, 0, ctx.width, ctx.height, 0, 0, ctx.width, ctx.height);
-        var base64String = ctx.toDataURL();
-
-        var dataURL = canvas.toDataURL("image/png");
-
-        return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
-        
-    };
 
     var model = @Html.Raw(JsonConvert.SerializeObject(Model));
     for (let m of model) {
@@ -102,13 +82,12 @@
             oImg.style.width = '50px';
         oImg.style.height = '50px';
         const element = document.getElementById(String(model.id));
-       var qrcode =  getBase64FromImageUrl(oImg.src);
         element.appendChild(oImg);
-        lstOfImage.push({
-            id: model.id,
-            image: qrcode
+        //lstOfImage.push({
+        //    id: model.id,
+        //    image: qrcode
 
-        });
+        //});
         //var image = document.getElementById(string(model.id))
         }
     console.log(myArray);
@@ -118,3 +97,13 @@
 </script>
 
 
+@section Scripts{
+    <link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+    <script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#example2').DataTable();
+        });
+
+    </script>
+}

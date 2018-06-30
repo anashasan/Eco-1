@@ -12,13 +12,13 @@
 </style>
 
 
-
 <div class="col-xs-12">
 
     <ol class="breadcrumb">
         <li class="active"><i class="fa fa-dashboard"></i> Company</li>
 
     </ol>
+
     <div class="box">
 
         <div class="box-header">
@@ -32,7 +32,7 @@
 
         <!-- /.box-header -->
         <div class="box-body">
-            <table id="table" class="table table-bordered table-hover table-striped">
+            <table id="example2" class="table table-bordered table-hover table-striped">
                 <thead id="th">
                     <tr>
                         <th>Company Name</th>
@@ -41,7 +41,7 @@
                         <th>Options</th>
                     </tr>
                 </thead>
-                <tbody id="example2">
+                <tbody>
                     @foreach (var s in Model)
                     {
 
@@ -88,44 +88,15 @@
     </div>
 </div>
 
-
 @section Scripts{
-
-    <link rel="stylesheet" href="http://cdn.datatables.net/plug-ins/e9421181788/integration/bootstrap/3/dataTables.bootstrap.css" />
-    <script src="http://cdn.datatables.net/1.10.0/js/jquery.dataTables.min.js"></script>
-
-    <script src="http://cdn.datatables.net/plug-ins/e9421181788/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+    <link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+    <script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script>
-        var responsiveHelper;
-        var breakpointDefinition = {
-            tablet: 1024,
-            phone: 480
-        };
-
-        var tableElement = $('#table');
-        tableElement.dataTable({
-            autoWidth: false,
-            preDrawCallback: function () {
-                // Initialize the responsive datatables helper once.
-                if (!responsiveHelper) {
-                    responsiveHelper = new ResponsiveDatatablesHelper(tableElement, breakpointDefinition);
-                }
-            },
-            rowCallback: function (nRow) {
-                responsiveHelper.createExpandIcon(nRow);
-            },
-            drawCallback: function (oSettings) {
-                responsiveHelper.respond();
-            }
-        });
-
         $(document).ready(function () {
-            $("#search").on("keyup", function () {
-                var value = $(this).val().toLowerCase();
-                $("#example2 tr").filter(function () {
-                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-                });
-            });
+            $('#example2').DataTable();
         });
+
     </script>
 }
+
+

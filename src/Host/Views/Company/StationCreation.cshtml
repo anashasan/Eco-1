@@ -54,45 +54,45 @@
                 </thead>
                 <tbody>
                     @foreach (var s in Model.List)
-                {
-                    <tr>
-                        <td>@s.StationId</td>
-                        <td>@s.Name</td>
-                        <td>@s.Description</td>
-                        <td>
-                            <div class="dropdown" >
-                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
-                                    Options
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <a class="dropdown-item" href="#" onclick='@($"window.location.href='/Company/GetStationById?id={s.StationId}'")'>Edit</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href='#' onclick='@($"window.location.href='/Company/GetActivityById?stationId={s.StationId}'")'>Activities</a>
+                    {
+                        <tr>
+                            <td>@s.StationId</td>
+                            <td>@s.Name</td>
+                            <td>@s.Description</td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Options
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item fa fa-edit" href="#" onclick='@($"window.location.href='/Company/GetStationById?id={s.StationId}'")'>Edit</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href='#' onclick='@($"window.location.href='/Company/GetActivityById?stationId={s.StationId}'")'>Activities</a>
 
+                                    </div>
                                 </div>
-                            </div>
-                        </td>
-                    </tr>
-            }
+                            </td>
+                        </tr>
+                    }
 
             </table>
             @*@{
-            var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
-            var nextDisabled = !Model.HasNextPage ? "disabled" : "";
-            }
-            <nav class="navbar navbar-light bg-light">
-                <form class="form-inline">
-                    <a asp-action="Index"
-                       asp-route-page="@(Model.PageNumber - 1)">
-                        skip_previous
-                    </a>
-                    <a asp-action="Index"
-                       asp-route-page="@(Model.NextPageNumber + 1)"
-                       class="material-icons @nextDisabled">
-                        skip_next
-                    </a>
-                </form>
-            </nav>*@
+                var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+                var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+                }
+                <nav class="navbar navbar-light bg-light">
+                    <form class="form-inline">
+                        <a asp-action="Index"
+                           asp-route-page="@(Model.PageNumber - 1)">
+                            skip_previous
+                        </a>
+                        <a asp-action="Index"
+                           asp-route-page="@(Model.NextPageNumber + 1)"
+                           class="material-icons @nextDisabled">
+                            skip_next
+                        </a>
+                    </form>
+                </nav>*@
 
         </div>
         <!-- /.box-body -->
@@ -133,3 +133,13 @@
 </form>
 
 <script src="~/dist/js/Station.js"></script>
+@section Scripts{
+    <link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+    <script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#example2').DataTable();
+        });
+
+    </script>
+}
