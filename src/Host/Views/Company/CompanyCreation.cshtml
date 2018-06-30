@@ -31,7 +31,7 @@
         </div>
 
         <!-- /.box-header -->
-        <div class="box-body">
+        <div class="box-body" style="width: 100%; height: 400px; ">
             <table id="example2" class="table table-bordered table-hover table-striped">
                 <thead id="th">
                     <tr>
@@ -69,11 +69,11 @@
                                         Options
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item fa fa-edit" href="#" onClick='@($"window.location.href='/Company/GetCompanyById?id={s.CompanyId}'")'>&nbsp;&nbsp;&nbsp;&nbsp;Edit</a>
+                                        <a class="dropdown-item fa fa-edit" href="#" onClick='@($"window.location.href='/Company/GetCompanyById?id={s.CompanyId}'")'>Edit</a>
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item fa fa-delicious" href='#' onclick='@($"window.location.href='/Company/GetBranchByCompanyId?companyId={s.CompanyId}'")'>&nbsp;&nbsp;&nbsp;&nbsp;Branches</a>
+                                        <a class="dropdown-item fa fa-delicious" href='#' onclick='@($"window.location.href='/Company/GetBranchByCompanyId?companyId={s.CompanyId}'")'>Branches</a>
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item fa fa-comment-o" href='#' onclick='@($"window.location.href='/Company/GetBranchEmployeeByCompanyId?companyId={s.CompanyId}'")'>&nbsp;&nbsp;&nbsp;&nbsp;Correspondants</a>
+                                        <a class="dropdown-item fa fa-comment-o" href='#' onclick='@($"window.location.href='/Company/GetBranchEmployeeByCompanyId?companyId={s.CompanyId}'")'>Correspondants</a>
 
                                     </div>
                                 </div>

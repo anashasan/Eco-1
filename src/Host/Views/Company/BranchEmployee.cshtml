@@ -29,8 +29,8 @@
         </div>
 
         <!-- /.box-header -->
-        <div class="box-body">
-            <table id="example2" class="table table-bordered table-hover">
+        <div class="box-body" style="width: 100%; height: 400px;">
+            <table id="example2" class="table table-bordered table-hover " >
                 <thead id="th">
                     <tr>
                         <th>Employee Name</th>
@@ -39,8 +39,8 @@
                         <th>Designation</th>
                         <th>Phone</th>
                         <th>Email</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
+                        <th>Options</th>
+                        
 
                     </tr>
                 </thead>
@@ -57,8 +57,7 @@
 
                             <td>
                                 <a class="fa fa-edit" onClick='@($"window.location.href='/Company/AddBranchEmployee?branchId={ViewBag.BranchId}&branchemployeeId={s.BranchEmployeeId}'")'>Edit</a>
-                            </td>
-                            <td>
+                            
                                 <a class="fa fa-remove" onClick='DeleteBranchEmployee(@s.BranchEmployeeId,@ViewBag.BranchId)'>Delete</a>
                             </td>
                         </tr>
