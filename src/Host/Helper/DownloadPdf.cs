@@ -74,12 +74,12 @@ namespace Host.Helper
                 //document.Add(image);
 
 
-                /*    iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(@"C:\Users\home\source\repos\Eco-1\src\Host\wwwroot\images\Eco.jpg");
-                    image.ScaleAbsolute(149f, 110f);
-                    image.SetAbsolutePosition(50f, 725f);
+                    iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(@"C:\Users\home\source\repos\Eco-1\src\Host\wwwroot\images\Eco.jpg");
+                    image.ScaleAbsolute(75f, 75f);
+                    image.SetAbsolutePosition(30f, 345f);
                     image.Alignment = iTextSharp.text.Element.ALIGN_LEFT;
                     document.Add(image);
-                    */
+                    
 
                 string Phone = @"Phone:021-34829161/63";
 
@@ -170,12 +170,11 @@ namespace Host.Helper
                               document.NewPage();
 
 
-
-                              iTextSharp.text.Image image1 = iTextSharp.text.Image.GetInstance(@"C:\Users\home\source\repos\Eco-1\src\Host\wwwroot\images\Eco.jpg");
-                              image1.ScaleAbsolute(149f, 110f);
-                              image1.SetAbsolutePosition(50f, 725f);
-                              image1.Alignment = iTextSharp.text.Element.ALIGN_LEFT;
-                              document.Add(image1);
+                iTextSharp.text.Image image1 = iTextSharp.text.Image.GetInstance(@"C:\Users\home\source\repos\Eco-1\src\Host\wwwroot\images\Eco.jpg");
+                image1.ScaleAbsolute(75f, 75f);
+                image1.SetAbsolutePosition(30f, 345f);
+                image1.Alignment = iTextSharp.text.Element.ALIGN_LEFT;
+                document.Add(image);
 
                 string Phone1 = @"Phone:021-34829161/63";
 
