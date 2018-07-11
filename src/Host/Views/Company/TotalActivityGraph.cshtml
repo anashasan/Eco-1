@@ -1,0 +1,92 @@
+﻿@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Graph";
+}
+
+<script type="text/javascript" language="Javascript" src="//code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+
+
+<div>
+    <table id="example" class="display" width="100%"></table>
+</div>
+
+<div id="myDiv"><!-- Plotly chart will be drawn inside this DIV --></div>
+<button id="printChart">Print Chart</button>
+
+
+@section Scripts{
+    <link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+    <script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script type="text/javascript">
+
+
+
+
+        window.onload = function () {
+            var dataArray = [];
+            const headers = new Headers();
+            headers.append("Accept", "application/json");
+            headers.append("Content-Type", "application/json");
+            fetch(`/Company/TotalCountActivity`, {
+                credentials: "same-origin",
+                headers: headers,
+                method: "GET"
+            })
+                .then(function (response) {
+                    if (response.ok) {
+                        response
+                            .json()
+                            .then(data => {
+                                console.log(data.result)
+                                var graphdata = [];
+
+                                for (var i = 0; i < data.result.length; i++) {
+                                    graphdata.push({
+                                        type: "bar",
+                                        name: data.result[i].stationName,
+                                        x: [],
+                                        y: []
+                                    });
+                                    for (j = 0; j < data.result[i].totalActivities.length; j++) {
+                                        graphdata[i].x.push(data.result[i].totalActivities[j].activityName);
+                                        graphdata[i].y.push(data.result[i].totalActivities[j].totalNumberOfActivity);
+
+                                    }
+                                    var layout = { barmode: 'stack' };
+                                    Plotly.newPlot("myDiv", graphdata, layout);
+                                }
+                                console.log(graphdata)
+                            })
+                            .catch(ex => { });
+                    }
+                });
+
+        };
+
+        var dataSet = [
+            ["Prescott Bartlett", "Technical Author", "London", "3606", "2011/05/07", "$145,000"],
+            ["Gavin Cortez", "Team Leader", "San Francisco", "2860", "2008/10/26", "$235,500"],
+            ["Martena Mccray", "Post-Sales support", "Edinburgh", "8240", "2011/03/09", "$324,050"],
+            ["Unity Butler", "Marketing Designer", "San Francisco", "5384", "2009/12/09", "$85,675"]
+        ];
+
+        $(document).ready(function () {
+            $('#example').DataTable({
+                data: dataSet,
+                columns: [
+                    { title: "Name" },
+                    { title: "Position" },
+                    { title: "Office" },
+                    { title: "Extn." },
+                    { title: "Start date" },
+                    { title: "Salary" }
+                ]
+            });
+        });
+
+    </script>
+
+    }

@@ -32,7 +32,7 @@ namespace Host.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         public string Getuserrole()
         {
-            var s = User.Claims.FirstOrDefault(p => p.Type == "http://schemas.microsoft.com/ws/2008/06/identity/claims/role")?.Value;
+            var s = User.Claims.FirstOrDefault(p => p.Type == "role")?.Value;
             return s;
         }
 

@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Dapper;
+using System.Data;
 
 namespace Host.Business.DbServices
 {
@@ -137,6 +139,23 @@ namespace Host.Business.DbServices
                            Name = p.Name
                            
                        }).SingleOrDefault();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public void DeleteLocation(int id)
+        {
+            try
+            {
+                var connection = _context.Database.GetDbConnection();
+                connection.Execute(
+                   "[dbo].[usp_DeleteLocation]"
+                   , new { @paramlocationId= id }
+                   , commandType: CommandType.StoredProcedure);
             }
             catch (Exception e)
             {

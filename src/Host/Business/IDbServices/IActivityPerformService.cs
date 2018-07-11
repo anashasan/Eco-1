@@ -9,5 +9,8 @@ namespace Host.Business.IDbServices
     public interface IActivityPerformService
     {
         Task<int> ActivityPerform(ActivityPerformDto requestDto);
+        Task<List<GroupActivityReports>> ActivityFilterReport();
+        Task<List<GroupActivityReports>> ActivityFilterReporByBranchIdt(int branchId, int locationId);
+
     }
 }

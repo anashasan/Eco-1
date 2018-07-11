@@ -1,8 +1,11 @@
-﻿using Host.Business.IDbServices;
+﻿using Dapper;
+using Host.Business.IDbServices;
 using Host.DataContext;
 using Host.DataModel;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,13 +20,62 @@ namespace Host.Business.DbServices
             _context = context;
         }
 
+        public async Task<List<GroupActivityReports>> ActivityFilterReport()
+        {
+            var connection = _context.Database.GetDbConnection();
+            var model = (await connection.QueryAsync<ActivityFilterReportsDto>(
+
+                "[dbo].[usp_DailyReport]"
+                ,
+                commandType: CommandType.StoredProcedure)
+               ).ToList();
+            var abc = model.GroupBy(x => x.StationName).Select(i => new GroupActivityReports
+            {
+                StatioName = i.Key,
+                DailyReports = i.ToList()
+            }).ToList()
+            ;
+            var modelGroup = model.OrderBy(x => x.StationName)
+                       .GroupBy(x => x.StationName).ToList();
+            
+            return abc;
+
+                                       
+        }
+
+        public async Task<List<GroupActivityReports>> ActivityFilterReporByBranchIdt(int branchId, int locationId)
+        {
+            try
+            {
+                var connection = _context.Database.GetDbConnection();
+                var model = (await connection.QueryAsync<ActivityFilterReportsDto>(
+
+                    "[dbo].[usp_DailyReport]"
+                    ,
+                    commandType: CommandType.StoredProcedure)
+                   ).ToList();
+                var abc = model.GroupBy(x => x.StationName).Select(i => new GroupActivityReports
+                {
+                    StatioName = i.Key,
+                    DailyReports = i.ToList()
+                }).ToList()
+                ;
+                return abc;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
         public async Task<int> ActivityPerform(ActivityPerformDto requestDto)
         {
             try
             {
                 var activityPerform = new ActivityPerform
                 {
-                    FkStationId = requestDto.StationId,
+                    FkStationLocationId = requestDto.StationId,
                     FkEmployeeId = requestDto.EmployeeId,
                     CreatedOn = DateTime.Now,
                    

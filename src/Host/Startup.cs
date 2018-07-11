@@ -99,15 +99,19 @@ namespace Host
             services.AddMvc();
 
 
-            services.AddSwaggerGen(c =>
+            services.AddSwaggerGen(options =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+                options.DescribeAllEnumsAsStrings();
+                options.SwaggerDoc("v1", new Swashbuckle.AspNetCore.Swagger.Info
+                {
+                    Title = "Eco App - EcoApp HTTP API",
+                    Version = "v1",
+                    Description = "The EcoApp Microservice HTTP API. This is a Data-Driven/CRUD microservice sample",
+                    TermsOfService = "Terms Of Service",
+                });
             });
-            // for testing security stamp claims generation
-            //services.Configure<SecurityStampValidatorOptions>(options =>
-            //{
-            //    options.ValidationInterval = TimeSpan.FromSeconds(30);
-            //});
+
+            // Other ConfigureServices() code...
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

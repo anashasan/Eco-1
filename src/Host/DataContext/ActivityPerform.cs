@@ -14,19 +14,19 @@ namespace Host.DataContext
 
         [Key]
         public int PkActivityPerformId { get; set; }
-        public int FkStationId { get; set; }
         [Required]
         [StringLength(450)]
         public string FkEmployeeId { get; set; }
         [Column(TypeName = "date")]
         public DateTime CreatedOn { get; set; }
+        public int FkStationLocationId { get; set; }
 
         [ForeignKey("FkEmployeeId")]
         [InverseProperty("ActivityPerform")]
         public AspNetUsers FkEmployee { get; set; }
-        [ForeignKey("FkStationId")]
+        [ForeignKey("FkStationLocationId")]
         [InverseProperty("ActivityPerform")]
-        public Station FkStation { get; set; }
+        public StationLocation FkStationLocation { get; set; }
         [InverseProperty("FkActivityPerform")]
         public ICollection<ActivityPerformDetail> ActivityPerformDetail { get; set; }
     }

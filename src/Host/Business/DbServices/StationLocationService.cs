@@ -185,7 +185,7 @@ namespace Host.Business.DbServices
             var stationId = _context.StationLocation
                             .AsNoTracking()
                             .Where(i => i.Code == encrptCode)
-                            .Select(p => new { p.FkStationId, p.FkStation.Name })
+                            .Select(p => new { p.FkStationId, p.FkStation.Name, p.PkStationLocationId })
                             .SingleOrDefault();
             if(stationId !=null && stationId.FkStationId != 0)
             {
@@ -204,7 +204,7 @@ namespace Host.Business.DbServices
                 return await Task.FromResult(new ActivityPerformDto
                 {
                     Activities = activities,
-                    StationId = stationId.FkStationId,
+                    StationId = stationId.PkStationLocationId,
                     StationName = stationId.Name
                 });
             }
@@ -216,7 +216,25 @@ namespace Host.Business.DbServices
 
         }
 
-       
+        public void DeleteStationLocation(int id)
+        {
+            try
+            {
+                var deleteModel = _context.StationLocation
+                                              .Where(i => i.PkStationLocationId == id)
+                                              .Single();
+                _context.StationLocation.Remove(deleteModel);
+                _context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            
+        }
+
+
 
         /*  public List<StationLocationDto> GetStationByLocationId(int id)
 

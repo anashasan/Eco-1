@@ -322,21 +322,30 @@ namespace IdentityServer4.Quickstart.UI
                         SecurityAlgorithms.HmacSha256)
             );
 
-                return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
+               
                 System.Security.Claims.ClaimsPrincipal currentUser = this.User;
+                var employeProfile = new UserInfoDto
+                {
+                    UserName = user.UserName,
+                    Id = user.Id,
+                    RoleName = userRoles.Select(i => i).FirstOrDefault()
+
+                };
+                return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) , employeProfile});
+                
                 // var httpcontext = HttpContext.Request.Method;
                
-                var info = await _signInManager.GetExternalLoginInfoAsync();
-                var claimsPrincipal = await this._signInManager.CreateUserPrincipalAsync(user);
-                ((ClaimsIdentity)claimsPrincipal.Identity).AddClaim(new Claim("accessToken", info.AuthenticationTokens.Single(t => t.Name == "access_token").Value));
-                await HttpContext.Authentication.SignInAsync("Identity.Application", claimsPrincipal);
-                var accessToken = info.AuthenticationTokens.Single(f => f.Name == "access_token").Value;
-                var tokenType = info.AuthenticationTokens.Single(f => f.Name == "token_type").Value;
-                var expiryDate = info.AuthenticationTokens.Single(f => f.Name == "expires_at").Value;
+                //var info = await _signInManager.GetExternalLoginInfoAsync();
+                //var claimsPrincipal = await this._signInManager.CreateUserPrincipalAsync(user);
+                //((ClaimsIdentity)claimsPrincipal.Identity).AddClaim(new Claim("accessToken", info.AuthenticationTokens.Single(t => t.Name == "access_token").Value));
+                //await HttpContext.Authentication.SignInAsync("Identity.Application", claimsPrincipal);
+                //var accessToken = info.AuthenticationTokens.Single(f => f.Name == "access_token").Value;
+                //var tokenType = info.AuthenticationTokens.Single(f => f.Name == "token_type").Value;
+                //var expiryDate = info.AuthenticationTokens.Single(f => f.Name == "expires_at").Value;
                 
                 //HttpContext.GetTokenAsync("token_Name")
 
-                return Json(GetUserid());
+                //return Json(GetUserid(), user());
             }
             else
             {
@@ -480,32 +489,18 @@ namespace IdentityServer4.Quickstart.UI
             return RedirectToAction("Sign", "Home");
         }
 
+        [AllowAnonymous]
         [HttpPost("Account/User/Logout")]
-        public async Task<IActionResult> UserLogOut(LogoutInputModel model)
+        public async Task<IActionResult> UserLogOut([FromBody]string userId)
         {
-            // build a model so the logged out page knows what to display
-            var vm = await BuildLoggedOutViewModelAsync(model.LogoutId);
 
             if (User?.Identity.IsAuthenticated == true)
             {
-                // delete local authentication cookie
                 await _signInManager.SignOutAsync();
 
                 // raise the logout event
-                await _events.RaiseAsync(new UserLogoutSuccessEvent(User.GetSubjectId(), User.GetDisplayName()));
             }
 
-            // check if we need to trigger sign-out at an upstream identity provider
-            if (vm.TriggerExternalSignout)
-            {
-                // build a return URL so the upstream provider will redirect back
-                // to us after the user has logged out. this allows us to then
-                // complete our single sign-out processing.
-                string url = Url.Action("Logout", new { logoutId = vm.LogoutId });
-
-                // this triggers a redirect to the external provider for sign-out
-                return SignOut(new AuthenticationProperties { RedirectUri = url }, vm.ExternalAuthenticationScheme);
-            }
 
             return Json("User Logout Successfully");
         }

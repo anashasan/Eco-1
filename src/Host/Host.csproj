@@ -26,18 +26,24 @@
 
 
   <ItemGroup>
+    <PackageReference Include="AspNetCore.ReportViewer" Version="2.0.3.58" />
+    <PackageReference Include="Chart.Mvc" Version="1.0.0.2" />
+    <PackageReference Include="Dapper" Version="1.50.5" />
     <PackageReference Include="GemBox.Document" Version="29.0.0.1000" />
     <PackageReference Include="IdentityServer4" Version="2.1.3" />
     <PackageReference Include="iTextSharp" Version="5.5.13" />
     <PackageReference Include="MailKit" Version="2.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
+    <PackageReference Include="Microsoft.Chart.Controls" Version="4.7.2046" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.1" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Report.Viewer" Version="11.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.2" PrivateAssets="All" />
     <PackageReference Include="MimeKit" Version="2.0.4" />
     <PackageReference Include="NETCoreBarcode" Version="1.0.0" />
     <PackageReference Include="NETStandardBarcode" Version="1.0.1" />
     <PackageReference Include="NETStandardQRCode" Version="0.9.7" />
+    <PackageReference Include="NReco.PivotData" Version="1.3.6" />
     <PackageReference Include="QRCoder" Version="1.3.3" />
 
     <PackageReference Include="Serilog" Version="2.6.0" />
@@ -46,6 +52,7 @@
     <PackageReference Include="Serilog.Sinks.File" Version="4.0.0" />
     <PackageReference Include="Stimulsoft.Reports.Web.NetCore" Version="2018.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="2.4.0" />
+    <PackageReference Include="System-Web-Helpers.dll" Version="1.0.0" />
     <PackageReference Include="ZXing.Net" Version="0.15.0" />
     <PackageReference Include="ZXing.Net.Core" Version="0.2.7" />
   </ItemGroup>
@@ -117,6 +124,10 @@
     <Content Update="Views\Shared\_Layout.cshtml">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Reports\" />
   </ItemGroup>
 
 </Project>

@@ -69,6 +69,8 @@
                                         Options
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item fa fa-edit" href="#" onClick='@($"window.location.href='/Company/DeleteCompany?companyId={s.CompanyId}'")'>Delete</a>
+                                        <div class="dropdown-divider"></div>
                                         <a class="dropdown-item fa fa-edit" href="#" onClick='@($"window.location.href='/Company/GetCompanyById?id={s.CompanyId}'")'>Edit</a>
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item fa fa-delicious" href='#' onclick='@($"window.location.href='/Company/GetBranchByCompanyId?companyId={s.CompanyId}'")'>Branches</a>

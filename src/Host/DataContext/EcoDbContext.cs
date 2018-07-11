@@ -37,6 +37,11 @@ namespace Host.DataContext
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            if (!optionsBuilder.IsConfigured)
+            {
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+                optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-CCKC9UA;Initial Catalog=Eco;Integrated Security=True;;");
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -67,11 +72,11 @@ namespace Host.DataContext
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Fk_ActivityPerform_AspNetUsers_FkEmployeeId");
 
-                entity.HasOne(d => d.FkStation)
+                entity.HasOne(d => d.FkStationLocation)
                     .WithMany(p => p.ActivityPerform)
-                    .HasForeignKey(d => d.FkStationId)
+                    .HasForeignKey(d => d.FkStationLocationId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("Fk_ActivityPerform_Station_StationId");
+                    .HasConstraintName("Fk_ActivityPerform_StationLocation_FkStationLocationId");
             });
 
             modelBuilder.Entity<ActivityPerformDetail>(entity =>
@@ -89,49 +94,23 @@ namespace Host.DataContext
                     .HasConstraintName("Fk_ActivityPerformDetail_ActivityPerfrom_FkActivityPerformId");
             });
 
-            modelBuilder.Entity<AspNetRoleClaims>(entity =>
-            {
-                entity.HasIndex(e => e.RoleId);
-            });
-
             modelBuilder.Entity<AspNetRoles>(entity =>
             {
-                entity.HasIndex(e => e.NormalizedName)
-                    .HasName("RoleNameIndex");
-
                 entity.Property(e => e.Id).ValueGeneratedNever();
-            });
-
-            modelBuilder.Entity<AspNetUserClaims>(entity =>
-            {
-                entity.HasIndex(e => e.UserId);
             });
 
             modelBuilder.Entity<AspNetUserLogins>(entity =>
             {
                 entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
-
-                entity.HasIndex(e => e.UserId);
             });
 
             modelBuilder.Entity<AspNetUserRoles>(entity =>
             {
                 entity.HasKey(e => new { e.UserId, e.RoleId });
-
-                entity.HasIndex(e => e.RoleId);
-
-                entity.HasIndex(e => e.UserId);
             });
 
             modelBuilder.Entity<AspNetUsers>(entity =>
             {
-                entity.HasIndex(e => e.NormalizedEmail)
-                    .HasName("EmailIndex");
-
-                entity.HasIndex(e => e.NormalizedUserName)
-                    .HasName("UserNameIndex")
-                    .IsUnique();
-
                 entity.Property(e => e.Id).ValueGeneratedNever();
             });
 

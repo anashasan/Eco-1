@@ -109,6 +109,8 @@
                                         Options
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a class="dropdown-item fa fa-edit" href="#" onClick='@($"window.location.href='/Company/DeleteBranch?branchId={s.BranchId}&companyId={ViewBag.CompanyId}'")'>Delete</a>
+                                        <div class="dropdown-divider"></div>
                                         <a class="dropdown-item fa fa-edit" href="#" onClick='@($"window.location.href='/Company/AddBranch?companyId={ViewBag.CompanyId}&branchId={s.BranchId}'")'>Edit</a>
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item fa fa-location-arrow" href='#' onclick='@($"window.location.href='/Company/GetLocationById?id={s.BranchId}'")'>Location</a>

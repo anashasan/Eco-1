@@ -49,6 +49,7 @@
                         <td class="right"><input type="checkbox" class="checkbox">@s.StationName</td>
                         <td id="@(s.StationLocationId)"> </td>
                         <td>
+                            <a class="fa fa-edit" href='#' onClick='@($"window.location.href='/Company/DeleteStationLocation?stationLocationId={s.StationLocationId}&locationId={ViewBag.LocationId}'")'>Delete</a>
                             <a class="fa fa-download  " onClick='@($"window.location.href='/Company/Download?id={s.StationId}&locationId={ViewBag.LocationId}'")'>Download</a>
                             <a class="fa fa-edit" href='#' onClick='@($"window.location.href='/Company/AddStationLocation?locationId={ViewBag.LocationId}&stationlocationId={s.StationLocationId}'")'>Edit</a>
                         </td>

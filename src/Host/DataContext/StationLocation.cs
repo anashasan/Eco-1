@@ -7,6 +7,11 @@ namespace Host.DataContext
 {
     public partial class StationLocation
     {
+        public StationLocation()
+        {
+            ActivityPerform = new HashSet<ActivityPerform>();
+        }
+
         [Key]
         public int PkStationLocationId { get; set; }
         public int FkLocationId { get; set; }
@@ -21,5 +26,7 @@ namespace Host.DataContext
         [ForeignKey("FkStationId")]
         [InverseProperty("StationLocation")]
         public Station FkStation { get; set; }
+        [InverseProperty("FkStationLocation")]
+        public ICollection<ActivityPerform> ActivityPerform { get; set; }
     }
 }
