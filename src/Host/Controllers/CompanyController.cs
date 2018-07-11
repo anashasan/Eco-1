@@ -845,7 +845,7 @@ namespace Host.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Download(int id,int locationId)
+        public async Task<IActionResult> Download(int id, int locationId, string code)
         {
             try
             {
@@ -853,13 +853,13 @@ namespace Host.Controllers
                 var stationLocation = _locationService.GetLocationById(locationId);
                 ViewBag.LocationId = locationId;
                 System.IO.MemoryStream memoryStream = new System.IO.MemoryStream();
-                var bytes = DownloadPdf.Download(id, stationName, stationLocation.Name);
+                var bytes = DownloadPdf.Download(id, stationName, stationLocation.Name, code);
                 memoryStream.Close();
                 Response.Clear();
                 Response.ContentType = "application/pdf";
-                
+
                 var response = File(bytes, "application/pdf", $"{stationName + stationLocation.Name}.pdf");
-                Response.Headers.Add("Content-Disposition", "attachment; filename=" + stationName + stationLocation.Name+ ".pdf");
+                Response.Headers.Add("Content-Disposition", "attachment; filename=" + stationName + stationLocation.Name + ".pdf");
                 Response.ContentType = "application/pdf";
                 return response;
             }
