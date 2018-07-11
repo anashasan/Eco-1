@@ -13,6 +13,7 @@ using Host.Business.DbServices;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
 using Host.Helper;
+using Rotativa.AspNetCore;
 
 namespace Host
 {
@@ -119,6 +120,8 @@ namespace Host
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+           
         }
     }
 }

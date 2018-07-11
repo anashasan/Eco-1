@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using iTextSharp.text.factories;
 using QRCoder;
 using System.Drawing;
+using Rotativa;
 
 namespace Host.Controllers
 {
@@ -30,11 +31,11 @@ namespace Host.Controllers
         private readonly IBranchService _branchService;
         private readonly IBranchEmployeeService _branchEmployeeService;
         private readonly ILocationService _locationService;
-       // private readonly QRCodeGenerator _qRCodeGenerator;
+        // private readonly QRCodeGenerator _qRCodeGenerator;
         private readonly IStationLocationService _stationLocationService;
         private readonly IActivityTypeService _activityTypeService;
         private readonly IActivityPerformService _activityPerformService;
-        
+
 
 
         /// <summary>
@@ -51,7 +52,7 @@ namespace Host.Controllers
                                  IBranchService branchService,
                                  IBranchEmployeeService branchEmployeeService,
                                  ILocationService locationService,
-                                // QRCodeGenerator qRCodeGenerator,
+                                 // QRCodeGenerator qRCodeGenerator,
                                  IStationLocationService stationLocationService,
                                  IActivityTypeService activityTypeService,
                                  IActivityPerformService activityPerformService
@@ -63,7 +64,7 @@ namespace Host.Controllers
             _branchService = branchService;
             _branchEmployeeService = branchEmployeeService;
             _locationService = locationService;
-           // _qRCodeGenerator = qRCodeGenerator;
+            // _qRCodeGenerator = qRCodeGenerator;
             _stationLocationService = stationLocationService;
             _activityTypeService = activityTypeService;
             _activityPerformService = activityPerformService;
@@ -367,7 +368,7 @@ namespace Host.Controllers
 
 
             return View("AddBranch", branches);
-            
+
 
         }
 
@@ -512,11 +513,11 @@ namespace Host.Controllers
         }
 
         [HttpDelete("Company/DeleteBranchEmployee/id/{id}/branchId/{branchId}")]
-        public async Task<IActionResult> DeleteBrancEmployee([FromRoute]int id,[FromRoute]int branchId)
+        public async Task<IActionResult> DeleteBrancEmployee([FromRoute]int id, [FromRoute]int branchId)
         {
             try
             {
-               await _branchEmployeeService.DeleteBranchEmployeeById(id);
+                await _branchEmployeeService.DeleteBranchEmployeeById(id);
                 return RedirectToAction("GetBranchEmployeeByBranchId", new { branchId = branchId });
             }
             catch (Exception e)
@@ -596,7 +597,7 @@ namespace Host.Controllers
             {
                 if (!ModelState.IsValid)
                     return View(requestDto);
-                if(requestDto.BranchEmployeeId !=null && requestDto.BranchEmployeeId != 0)
+                if (requestDto.BranchEmployeeId != null && requestDto.BranchEmployeeId != 0)
                 {
                     _branchEmployeeService.UpdateBranchEmployee(requestDto);
                     return RedirectToAction("GetBranchEmployeeByBranchId", new { branchId = requestDto.BranchId });
@@ -646,11 +647,11 @@ namespace Host.Controllers
         }
         #endregion
 
-      /*  public IActionResult QrCode()
-        {
-            var qrCode = _qRCodeGenerator.QrCode();
-            return View("QRCode", qrCode);
-        }*/
+        /*  public IActionResult QrCode()
+          {
+              var qrCode = _qRCodeGenerator.QrCode();
+              return View("QRCode", qrCode);
+          }*/
 
         public IActionResult Activity()
         {
@@ -772,7 +773,7 @@ namespace Host.Controllers
                 //    Stations = new SelectList(stationlist, "StationId", "Name"),
                 //    LocationId = locationId
                 //};
-                model.Stations = new SelectList(stationlist,"StationId","Name",model.StationId);
+                model.Stations = new SelectList(stationlist, "StationId", "Name", model.StationId);
                 model.LocationId = stationlocationId;
                 ViewBag.LocationId = locationId;
                 return View("AddStationLocation", model);
@@ -827,7 +828,7 @@ namespace Host.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Download(int id,int locationId)
+        public async Task<IActionResult> Download(int id, int locationId,string code)
         {
             try
             {
@@ -835,13 +836,13 @@ namespace Host.Controllers
                 var stationLocation = _locationService.GetLocationById(locationId);
                 ViewBag.LocationId = locationId;
                 System.IO.MemoryStream memoryStream = new System.IO.MemoryStream();
-                var bytes = DownloadPdf.Download(id, stationName, stationLocation.Name);
+                var bytes = DownloadPdf.Download(id, stationName, stationLocation.Name,code);
                 memoryStream.Close();
                 Response.Clear();
                 Response.ContentType = "application/pdf";
-                
+
                 var response = File(bytes, "application/pdf", $"{stationName + stationLocation.Name}.pdf");
-                Response.Headers.Add("Content-Disposition", "attachment; filename=" + stationName + stationLocation.Name+ ".pdf");
+                Response.Headers.Add("Content-Disposition", "attachment; filename=" + stationName + stationLocation.Name + ".pdf");
                 Response.ContentType = "application/pdf";
                 return response;
             }
@@ -915,15 +916,20 @@ namespace Host.Controllers
         //[HttpDelete("Company/StationDelete/id/{id}")]
         //public IActionResult DeleteStationActivity(int id)
         //{
-            
+
         //    //var activity= _activityService.DeleteActivityById(id);
         //    //return View("AddActivity",activity);
         //}
 
-        public IActionResult Station(PagingParams pagingParams)
-        {   
-            var stations = _stationService.GetAllStationPagination(pagingParams);
-            return View("StationCreation", stations);
+        /* public IActionResult Station(PagingParams pagingParams)
+         {   
+             var stations = _stationService.GetAllStationPagination(pagingParams);
+             return View("StationCreation", stations);
+         }*/
+        public IActionResult Station()
+        {
+            var station = _stationService.GetAllStation();
+            return View("StationCreation", station);
         }
 
         [HttpPost]
@@ -975,7 +981,7 @@ namespace Host.Controllers
         {
             try
             {
-                var activities =await _stationLocationService.GetStationActivityByCode(code);
+                var activities = await _stationLocationService.GetStationActivityByCode(code);
                 if (activities.Activities != null)
                 {
 
@@ -990,13 +996,13 @@ namespace Host.Controllers
             }
         }
 
-       [HttpPost("Company/ActivityPerform")]
-       public async Task<IActionResult> ActivityPerform([FromBody] ActivityPerformDto requestDto)
+        [HttpPost("Company/ActivityPerform")]
+        public async Task<IActionResult> ActivityPerform([FromBody] ActivityPerformDto requestDto)
         {
             if (!ModelState.IsValid)
                 return Json(requestDto);
             var id = await _activityPerformService.ActivityPerform(requestDto);
-            return  Json(id);
+            return Json(id);
         }
 
         [HttpGet]
@@ -1006,5 +1012,16 @@ namespace Host.Controllers
             return View("StationBranch", stationbranch);
         }
 
-    } 
+        public IActionResult GraphPlot()
+        {
+            return View("Graph");
+        }
+        public IActionResult ObservationReport()
+        {
+            return View("Observation");
+
+        }
+
+       
+    }
 }

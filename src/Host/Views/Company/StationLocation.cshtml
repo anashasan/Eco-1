@@ -10,13 +10,15 @@
         background-color: #191919;
         color: white
     }
+
+   
 </style>
 
 <div class="col-xs-12">
     <ol class="breadcrumb">
-        <li class="fa fa-dashboard"><a href="@Url.Action("CompanyCreation","Company")">Company</a></li>
-        <li><i class="fa fa-delicious"></i><a href="@Url.Action("Branch","Company")">Branch</a></li>
-        <li><i class="fa fa-location-arrow"></i><a href="@Url.Action("LocationCreation","Company")">Location</a></li>
+        <li class="fa fa-dashboard"><a href="@Url.Action(" CompanyCreation","Company")">Company</a></li>
+        <li><i class="fa fa-delicious"></i><a href="@Url.Action(" Branch","Company")">Branch</a></li>
+        <li><i class="fa fa-location-arrow"></i><a href="@Url.Action(" LocationCreation","Company")">Location</a></li>
         <li class="active"><i class="fa fa-suitcase "></i>Station Location</li>
 
     </ol>
@@ -46,10 +48,11 @@
                     @foreach (var s in Model)
                     {
                         <tr>
+
                             <td>@s.StationName</td>
                             <td id="@(s.StationLocationId)"> </td>
                             <td>
-                                <a class="fa fa-download  " onClick='@($"window.location.href='/Company/Download?id={s.StationId}&locationId={ViewBag.LocationId}'")'>Download</a>
+                                <a class="fa fa-download  " onClick='@($"window.location.href='/Company/Download?id={s.StationId}&locationId={ViewBag.LocationId}&code={s.Code}'")'>Download</a>
                                 <a class="fa fa-edit" href='#' onClick='@($"window.location.href='/Company/AddStationLocation?locationId={ViewBag.LocationId}&stationlocationId={s.StationLocationId}'")'>Edit</a>
                             </td>
                         </tr>
@@ -83,22 +86,78 @@
         oImg.style.height = '50px';
         const element = document.getElementById(String(model.id));
         element.appendChild(oImg);
-        //var image = document.getElementById(string(model.id))
+    //    var image = document.getElementById(string(model.id).oImg.setAttribute('src', 'https://api.qrserver.com/v1/create-qr-code/?data=' + model.code + '&amp;size=50x50'))
         }
     console.log(myArray);
 
+    /*jQuery(function () {
+        $('#output').qrcode("https://api.qrserver.com/v1/create-qr-code/?data=");
 
+        var canvas = $('#output canvas');
+        console.log(canvas);
+        var img = canvas.get(0).toDataURL("image/png");
+        //or
+        //var img = $(canvas)[0].toDataURL("image/png");
+        document.write('<img src="' + img + '"/>');
+    });*/
 
+</script>
+<script>
+    function getBase64FromImageUrl(url, callback) {
+        var img = new Image();
+
+        img.setAttribute('crossOrigin', 'anonymous');
+
+        img.onload = function () {
+            var canvas = document.createElement("canvas");
+            canvas.width = this.width;
+            canvas.height = this.height;
+
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(this, 0, 0);
+
+            var dataURL = canvas.toDataURL("'https://api.qrserver.com/v1/create-qr-code/?data=' + model.code/png");
+            callback(dataURL);
+            // alert(dataURL.replace(/^data:image\/(png|jpg);base64,/, ""));
+        };
+
+        img.src = url;
+    }
 </script>
 
 
 @section Scripts{
     <link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
-    <script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('#example2').DataTable();
-        });
+    <link rel="stylesheet" href="https://cdn.datatables.net/select/1.2.7/css/select.dataTables.min.css" />
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
 
+    <script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
+    
+    <script>
+        /*  $(document).ready(function () {
+              $('#example2').DataTable();
+          });
+          */
+        $(document).ready(function () {
+            $('#example2').DataTable({
+                columnDefs: [{
+                    orderable: true,
+                    className: 'select-checkbox',
+                    targets: 0
+                }],
+
+                select: {
+                    style: 'multi',
+                    selector: 'td:first-child'
+                },
+                order: [[1, 'asc']]
+
+            });
+        });
+        
+        
+       
     </script>
+
 }

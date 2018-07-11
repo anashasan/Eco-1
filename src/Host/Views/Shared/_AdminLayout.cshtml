@@ -38,6 +38,7 @@
         <!-- bootstrap wysihtml5 - text editor -->
         <link href="~/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css" rel="stylesheet" />
 
+        
     </environment>
 
     <environment exclude="Development">
@@ -50,7 +51,7 @@
         <!-- Theme style -->
         <link href="~/dist/css/AdminLTE.min.css" rel="stylesheet" />
         <!-- AdminLTE Skins. Choose a skin from the css/skins
-     folder instead of downloading all of them to reduce the load. -->
+    folder instead of downloading all of them to reduce the load. -->
         <link href="~/dist/css/skins/_all-skins.min.css" rel="stylesheet" />
         <!-- Morris chart -->
         <!-- jvectormap -->
@@ -70,9 +71,14 @@
 
         <link rel="stylesheet" href="~/css/datatables.responsive.css" />
 
+       
+
+
     </environment>
 
     @RenderSection("Styles", required: false)
+
+    
 
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -142,6 +148,7 @@
                                 <i class="fa fa-angle-left pull-right"></i>
                             </span>
                         </a>
+                        
                         <ul class="treeview-menu">
                             <li class="active"><a href="index.html"><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
                             <li><a href="index2.html"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
@@ -233,7 +240,7 @@
                             <input class="btn-flat" type="submit" name="Logout" value="Logout" />
                         </form>
                     </li>
-
+                    </ul>
             </section>
             <!-- /.sidebar -->
         </aside>
@@ -508,9 +515,15 @@
         <script src="~/dist/js/pages/dashboard.js"></script>
         <!-- AdminLTE for demo purposes -->
         <script src="~/dist/js/demo.js"></script>
+
+      
+
+        
     </environment>
 
     @RenderSection("Scripts", required: false)
+    @RenderSection("Script",required:false)
+   
 </body>
 </html>
 
