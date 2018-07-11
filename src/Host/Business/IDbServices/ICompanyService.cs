@@ -13,6 +13,7 @@ namespace Host.Business.IDbServices
         CompanyDto GetCompanyById(int id);
         Task<List<CompanyDto>> GetAllCompany();
         List<GetCompanyViewDto> GetCompanyList();
+        void DeleteCompany(int companyId);
 
     }
 }

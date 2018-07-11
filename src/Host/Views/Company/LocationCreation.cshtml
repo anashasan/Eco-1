@@ -51,6 +51,8 @@
                                     Option
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item fa fa-edit" href='#' onClick='@($"window.location.href='/Company/DeleteLocation?locationId={a.LocationId}&branchId={ViewBag.BranchId}'")'>Delete</a>
+                                    <div class="dropdown-divider"></div>
                                     <a class="dropdown-item fa fa-edit" href='#' onClick='@($"window.location.href='/Company/AddLocation?id={ViewBag.BranchId}&locationId={a.LocationId}'")'>Edit</a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item fa fa-suitcase" href='#' onClick='@($"window.location.href='/Company/StationLocation?locationId={a.LocationId}'")'>Stations</a>

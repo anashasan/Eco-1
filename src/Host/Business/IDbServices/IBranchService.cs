@@ -14,6 +14,7 @@ namespace Host.Business.IDbServices
         BranchDto GetBranchById(int id);
         List<BranchDto> GetAllBranch();
         List<BranchDto> GetBranchByCompanyId(int id);
+        void DeleteBranch(int id);
         //List<BranchDto> GetBranchByBranchEmployeeId(int id);
        // SelectList GetBranchByCompanyId(int id);
     }

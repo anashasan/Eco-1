@@ -17,5 +17,6 @@ namespace Host.Business.IDbServices
         string LastCodeStationLocation();
         Task<ActivityPerformDto> GetStationActivityByCode(string code);
         List<BranchStationLocationDto> GetStationLocationByBranchId(int branchId);
+        void DeleteStationLocation(int id);
     }
 }

@@ -12,7 +12,6 @@ namespace Host.DataModel
         [Required]
         [StringLength(250)]
         public string Name { get; set; }
-        public int StationId { get; set; }
         public int ActivityTypeId { get; set; }
         public string Type { get; set; }
         public int StationActivityId { get; set; }

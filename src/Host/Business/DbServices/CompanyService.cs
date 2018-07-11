@@ -1,9 +1,11 @@
-﻿using Host.Business.IDbServices;
+﻿using Dapper;
+using Host.Business.IDbServices;
 using Host.DataContext;
 using Host.DataModel;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -47,6 +49,24 @@ namespace Host.Business.DbServices
                 _context.SaveChanges();
                 return await Task.FromResult(company.PkCompanyId);
 
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public void DeleteCompany(int companyId)
+        {
+            try
+            {
+                var connection = _context.Database.GetDbConnection();
+                connection.Execute(
+                    "[dbo].[usp_DeleteCompany]"
+                    , new { @paramCompanyId  = companyId},
+                    commandType: CommandType.StoredProcedure);
+               
             }
             catch (Exception e)
             {

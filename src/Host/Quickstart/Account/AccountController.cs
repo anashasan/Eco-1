@@ -14,19 +14,25 @@ using IdentityServer4.Events;
 using IdentityServer4.Extensions;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
+using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace IdentityServer4.Quickstart.UI
@@ -45,6 +51,9 @@ namespace IdentityServer4.Quickstart.UI
         private readonly IRoleService _roleService;
         private readonly IEmployeeProfileService _employeeProfileService;
         private readonly ICompanyService _companyService;
+        private readonly RequestDelegate _next;
+        private readonly IAntiforgery _antiforgery;
+        private readonly IConfiguration _config;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
@@ -56,7 +65,9 @@ namespace IdentityServer4.Quickstart.UI
             IServiceProvider serviceProvider,
             IRoleService roleService,
             IEmployeeProfileService employeeProfileService,
-            ICompanyService companyService)
+            ICompanyService companyService,
+            IAntiforgery antiforgery,
+            IConfiguration config)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -68,6 +79,8 @@ namespace IdentityServer4.Quickstart.UI
             _roleService = roleService;
             _employeeProfileService = employeeProfileService;
             _companyService = companyService;
+            _antiforgery = antiforgery;
+            _config = config;
         }
 
         /// <summary>
@@ -189,6 +202,7 @@ namespace IdentityServer4.Quickstart.UI
 
         }
 
+        [Authorize(Roles="Admin")]
         public IActionResult NewHire()
         {
             var roleList = _roleService.GetAllRoles();
@@ -199,6 +213,7 @@ namespace IdentityServer4.Quickstart.UI
             return View("NewHire", userInfoModel);
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Role()
         {
             var scope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
@@ -208,6 +223,7 @@ namespace IdentityServer4.Quickstart.UI
             return View("AdminRole", roleModel);
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult AddRole()
         {
 
@@ -250,6 +266,8 @@ namespace IdentityServer4.Quickstart.UI
                 if (result.Succeeded)
                 {
                     var user = await _userManager.FindByNameAsync(users);
+                    var u = await _userManager.FindByEmailAsync(model.Email);
+                    var userRoles = await _userManager.GetRolesAsync(u);
                     await _events.RaiseAsync(new UserLoginSuccessEvent(users, user.Id, users));
 
                     // make sure the returnUrl is still valid, and if so redirect back to authorize endpoint or a local page
@@ -284,7 +302,50 @@ namespace IdentityServer4.Quickstart.UI
             var result = await _signInManager.PasswordSignInAsync(users, model.Password, model.RememberLogin, lockoutOnFailure: false);
             if (result.Succeeded)
             {
-                return Json(GetUserid());
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                var userRoles = await _userManager.GetRolesAsync(user);
+                var claims = new[]
+                       {
+                        new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
+                        new Claim(JwtRegisteredClaimNames.Jti, user.Id.ToString()),
+                    }.Union(userRoles.Select(m => new Claim(ClaimTypes.Role, m)));
+
+                var token = new JwtSecurityToken
+            (
+                issuer: "Arsalan",
+                audience: "You",
+                claims: claims,
+                expires: DateTime.UtcNow.AddDays(60),
+                notBefore: DateTime.UtcNow,
+                signingCredentials: new SigningCredentials(new SymmetricSecurityKey
+                            (Encoding.UTF8.GetBytes("rlyaKithdrYVl6Z80ODU350md")),
+                        SecurityAlgorithms.HmacSha256)
+            );
+
+               
+                System.Security.Claims.ClaimsPrincipal currentUser = this.User;
+                var employeProfile = new UserInfoDto
+                {
+                    UserName = user.UserName,
+                    Id = user.Id,
+                    RoleName = userRoles.Select(i => i).FirstOrDefault()
+
+                };
+                return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) , employeProfile});
+                
+                // var httpcontext = HttpContext.Request.Method;
+               
+                //var info = await _signInManager.GetExternalLoginInfoAsync();
+                //var claimsPrincipal = await this._signInManager.CreateUserPrincipalAsync(user);
+                //((ClaimsIdentity)claimsPrincipal.Identity).AddClaim(new Claim("accessToken", info.AuthenticationTokens.Single(t => t.Name == "access_token").Value));
+                //await HttpContext.Authentication.SignInAsync("Identity.Application", claimsPrincipal);
+                //var accessToken = info.AuthenticationTokens.Single(f => f.Name == "access_token").Value;
+                //var tokenType = info.AuthenticationTokens.Single(f => f.Name == "token_type").Value;
+                //var expiryDate = info.AuthenticationTokens.Single(f => f.Name == "expires_at").Value;
+                
+                //HttpContext.GetTokenAsync("token_Name")
+
+                //return Json(GetUserid(), user());
             }
             else
             {
@@ -426,6 +487,22 @@ namespace IdentityServer4.Quickstart.UI
             }
 
             return RedirectToAction("Sign", "Home");
+        }
+
+        [AllowAnonymous]
+        [HttpPost("Account/User/Logout")]
+        public async Task<IActionResult> UserLogOut([FromBody]string userId)
+        {
+
+            if (User?.Identity.IsAuthenticated == true)
+            {
+                await _signInManager.SignOutAsync();
+
+                // raise the logout event
+            }
+
+
+            return Json("User Logout Successfully");
         }
 
         /*****************************************/

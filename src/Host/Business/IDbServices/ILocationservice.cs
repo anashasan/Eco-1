@@ -15,6 +15,7 @@ namespace Host.Business.IDbServices
         SelectList GetLocationByStationId(int id);
         Task<int> UpdateLocation(LocationDto requestDto);
         LocationDto GetLocationById(int id);
+        void DeleteLocation(int id);
             
     }
 }

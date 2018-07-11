@@ -8,6 +8,7 @@ namespace Host.DataModel
 {
     public class EmployeeProfileDto
     {
+        public string Id { get; set; }
         public int EmployeeProfileId { get; set; }
         [Required]
         [StringLength(50)]

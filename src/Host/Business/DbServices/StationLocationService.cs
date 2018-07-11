@@ -185,13 +185,13 @@ namespace Host.Business.DbServices
             var stationId = _context.StationLocation
                             .AsNoTracking()
                             .Where(i => i.Code == encrptCode)
-                            .Select(p => p.FkStationId)
+                            .Select(p => new { p.FkStationId, p.FkStation.Name, p.PkStationLocationId })
                             .SingleOrDefault();
-            if(stationId != 0)
+            if(stationId !=null && stationId.FkStationId != 0)
             {
                 var activities = _context.StationActivity
                              .AsNoTracking()
-                             .Where(i => i.FkStationId == stationId)
+                             .Where(i => i.FkStationId == stationId.FkStationId)
                              .Select(p => new ActivityPerformDetailDto
                              {
                                  Name = p.FkActivity.Name,
@@ -204,19 +204,37 @@ namespace Host.Business.DbServices
                 return await Task.FromResult(new ActivityPerformDto
                 {
                     Activities = activities,
-                    StationId = stationId
+                    StationId = stationId.PkStationLocationId,
+                    StationName = stationId.Name
                 });
             }
             return await Task.FromResult(new ActivityPerformDto
             {
-                Activities = null,
-                StationId = stationId
+              
             });
 
 
         }
 
-       
+        public void DeleteStationLocation(int id)
+        {
+            try
+            {
+                var deleteModel = _context.StationLocation
+                                              .Where(i => i.PkStationLocationId == id)
+                                              .Single();
+                _context.StationLocation.Remove(deleteModel);
+                _context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            
+        }
+
+
 
         /*  public List<StationLocationDto> GetStationByLocationId(int id)
 

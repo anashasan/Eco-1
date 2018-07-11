@@ -141,7 +141,7 @@
                 <!-- sidebar menu: : style can be found in sidebar.less -->
                 <ul class="sidebar-menu" data-widget="tree">
                     <li class="header">MAIN NAVIGATION</li>
-                    <li class=" treeview">
+                    @*<li class=" treeview">
                         <a href="#">
                             <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                             <span class="pull-right-container">
@@ -153,7 +153,7 @@
                             <li class="active"><a href="index.html"><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
                             <li><a href="index2.html"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
                         </ul>
-                    </li>
+                    </li>*@
                     <li class="treeview">
                         <a href="#">
                             <i class="fa fa-files-o"></i>
@@ -210,7 +210,7 @@
                     <!--    <li><a href="@Url.Action("ViewCompany","Company")"><i class="fa fa-circle-o"></i> Company Info</a></li>-->
 
                     <li>
-                        <a href="pages/widgets.html">
+                        <a href="#">
                             <i class="fa fa-th"></i> <span>Reports</span>
                             <span class="pull-right-container">
 
@@ -218,9 +218,9 @@
                         </a>
                     </li>
 
-                    <li><a href="@Url.Action("Employee","Client")"><i class="fa fa-dashboard"></i> Profile</a></li>
+                    @*<li><a href="@Url.Action("Employee","Client")"><i class="fa fa-dashboard"></i> Profile</a></li>*@
 
-                    <li class="treeview">
+                    @*<li class="treeview">
                         <a href="#">
                             <i class="fa fa-pie-chart"></i>
                             <span>Graphs</span>
@@ -234,7 +234,7 @@
                             <li><a href="pages/charts/flot.html"><i class="fa fa-circle-o"></i> Company Wise</a></li>
 
                         </ul>
-                    </li>
+                    </li>*@
                     <li>
                         <form asp-controller="Account" asp-action="Logout" method="post">
                             <input class="btn-flat" type="submit" name="Logout" value="Logout" />
@@ -266,8 +266,7 @@
             <div class="pull-right hidden-xs">
                 <b>Version</b>
             </div>
-            <strong>Copyright &copy;  <a href="#">Eco Service</a>.</strong> All rights
-            reserved.
+            <strong>&copy; 2018 Developed by  <a href="https://www.linkedin.com/in/muhammadarsalan0312">Muhammad Arsalan</a> - </strong>All Rights Reserved
         </footer>
         <!-- Control Sidebar -->
         @*<aside class="control-sidebar control-sidebar-dark">

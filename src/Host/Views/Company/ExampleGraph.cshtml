@@ -1,4 +1,4 @@
-﻿
+﻿@model List<Host.DataModel.GroupActivityReports>
 @{
     Layout = "_AdminLayout";
     ViewData["Title"] = "Graph";
@@ -11,7 +11,148 @@
     <script src="~/chart/series-label.js"></script>
     <script src="~/chart/exporting.js"></script>
 
+    @*<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>*@
+
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/data.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+
+
+    <section class="main-contents">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <p>Search Filter:</p>
+                        <form class="form-inline" asp-action="EmployeeHistory" method="post">
+                            <div class="form-group">
+                                <label class="control-label"> From</label>
+                                <input type="text" class="datepicker" />
+                                <label class="control-label"> To</label>
+                                <input type="text" class="datepicker" />
+                                <input type="submit" value="Submit">
+                            </div>
+                        </form>
+                        <div class="panel-controls">
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table id="EmployeeHistory" class="table table-hover table-striped table-bordered text-center">
+                                <colgroup>
+                                    <col />
+                                    <col />
+                                    <col />
+                                    <col />
+                                    <col />
+                                    <col />
+                                    <col />
+                                    <col />
+                                    <col />
+                                    <col />
+                                    <col />
+                                </colgroup>
+                                
+                                <thead>
+                                    <tr>
+                                        <th>StationName</th>
+                                    </tr>
+                                    <tr>
+                                        <th>StationNumber</th>
+                                        <th>LocationName</th>
+                                        <th>ActivityName</th>
+                                        <th>Perform</th>
+                                        <th>IsPerform</th>
+
+                                    </tr>
+                                    <tbody>
+                                        @foreach (var a in Model)
+        {
+                                <tr>
+                                    <td style="background-color:rebe">
+                                        @a.StatioName
+                                    </td>
+                                </tr>
+
+                                @foreach (var s in a.DailyReports)
+{
+                                <tr>
+
+                                    <td style="text-align: left" class="text-primary">
+                                        @s.StationNO
+                                    </td>
+
+                                    <td style="text-align: left" class="text-primary">
+                                        @s.LocationName
+                                    </td>
+                                    <td style="text-align: left" class="text-primary">
+                                        @s.ActivityName
+                                    </td>
+                                    <td style="text-align: left" class="text-primary">
+                                        @s.Perform
+                                    </td>
+                                    <td style="text-align: left" class="text-primary">
+                                        @s.IsPerform
+                                    </td>
+
+                                </tr>
+}
+}
+                                </thead>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--end panel -->
+        </div>
+    </section>
+
+    @section styles{
+        <link rel="stylesheet" href="//cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
+        <link rel="stylesheet" href="~/assets/plugins/datepicker/dist/css/bootstrap-datepicker.min.css" />
+        td {
+        cursor: pointer !important;
+        }
+
+    }
     <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
+
 </div>
-<script src="~/dist/js/ExampleGraph.js"></script>
+<script src="~/dist/js/BarChart.js"></script>
+@section scripts{
+    <script type="text/javascript" src="//cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="~/assets/plugins/datepicker/dist/js/bootstrap-datepicker.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#EmployeeHistory').DataTable();
+            $('.datepicker').datepicker();
+        });
+
+        $(document).ready(function () {
+            var table = $('#EmployeeHistory').DataTable();
+
+            $('#EmployeeHistory tbody').on('click', 'tr', function () {
+                var data = table.row(this).data();
+                //  alert('You clicked on ' + data[0] );
+                var payDate = data[0];
+                var documentNumber = data[1];
+
+                window.location = `/Company/DailyReport`;
+                //const response = fetch(, {
+                //    credentials: 'same-origin'
+                //});
+            });
+
+            //$('#button').click(function () {
+            //    table.row('.selected').remove().draw(false);
+            //});
+        });
+    </script>
+}
+
+
+@*<script src="~/dist/js/ExampleGraph.js"></script>*@

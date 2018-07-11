@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using Dapper;
 
 namespace Host.Business.DbServices
 {
@@ -66,7 +68,7 @@ namespace Host.Business.DbServices
         }
         */
 
-            public async Task<int> AddBranch(BranchDto requestDto)
+        public async Task<int> AddBranch(BranchDto requestDto)
         {
 
             try
@@ -105,6 +107,16 @@ namespace Host.Business.DbServices
                 throw;
             }
         }
+
+        public void DeleteBranch(int branchId)
+        {
+            var connection = _context.Database.GetDbConnection();
+            connection.Execute(
+                   "[dbo].[usp_DeleteBranch]"
+                   , new { @paramBranchId = branchId }
+                   ,commandType: CommandType.StoredProcedure);
+        }
+
         /// <summary>
         /// 
         /// </summary>

@@ -15,13 +15,14 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using iTextSharp.text.factories;
 using QRCoder;
 using System.Drawing;
-using Rotativa;
+using Host.Business.DbServices;
 
 namespace Host.Controllers
 {
-    [Authorize]
+    [Authorize(Roles ="Admin")]
     public class CompanyController : BaseController
     {
+
         /// <summary>
         /// 
         /// </summary>
@@ -31,10 +32,11 @@ namespace Host.Controllers
         private readonly IBranchService _branchService;
         private readonly IBranchEmployeeService _branchEmployeeService;
         private readonly ILocationService _locationService;
-        // private readonly QRCodeGenerator _qRCodeGenerator;
+       // private readonly QRCodeGenerator _qRCodeGenerator;
         private readonly IStationLocationService _stationLocationService;
         private readonly IActivityTypeService _activityTypeService;
         private readonly IActivityPerformService _activityPerformService;
+        private readonly IGraphService _graphService;
 
 
 
@@ -55,7 +57,8 @@ namespace Host.Controllers
                                  // QRCodeGenerator qRCodeGenerator,
                                  IStationLocationService stationLocationService,
                                  IActivityTypeService activityTypeService,
-                                 IActivityPerformService activityPerformService
+                                 IActivityPerformService activityPerformService,
+                                 IGraphService graphService
                                  )
         {
             _companyService = companyService;
@@ -64,10 +67,11 @@ namespace Host.Controllers
             _branchService = branchService;
             _branchEmployeeService = branchEmployeeService;
             _locationService = locationService;
-            // _qRCodeGenerator = qRCodeGenerator;
+           // _qRCodeGenerator = qRCodeGenerator;
             _stationLocationService = stationLocationService;
             _activityTypeService = activityTypeService;
             _activityPerformService = activityPerformService;
+            _graphService = graphService;
         }
 
         /// <summary>
@@ -79,9 +83,22 @@ namespace Host.Controllers
             return View();
         }
 
-        public IActionResult Graph()
+        public async Task<IActionResult> Graph()
         {
-            return View("ExampleGraph");
+            var report = await _activityPerformService.ActivityFilterReport();
+            return View("ExampleGraph", report);
+        }
+        public IActionResult TotalActivityGraph()
+        {
+
+            return View("TotalActivityGraph");
+        }
+
+        [HttpGet("Company/TotalCountActivity")]
+        public IActionResult TotalCountActivity()
+        {
+            var models = _graphService.GetTotalCountActivity();
+            return Json(models);
         }
 
         //[HttpPost]
@@ -368,7 +385,7 @@ namespace Host.Controllers
 
 
             return View("AddBranch", branches);
-
+            
 
         }
 
@@ -513,11 +530,11 @@ namespace Host.Controllers
         }
 
         [HttpDelete("Company/DeleteBranchEmployee/id/{id}/branchId/{branchId}")]
-        public async Task<IActionResult> DeleteBrancEmployee([FromRoute]int id, [FromRoute]int branchId)
+        public async Task<IActionResult> DeleteBrancEmployee([FromRoute]int id,[FromRoute]int branchId)
         {
             try
             {
-                await _branchEmployeeService.DeleteBranchEmployeeById(id);
+               await _branchEmployeeService.DeleteBranchEmployeeById(id);
                 return RedirectToAction("GetBranchEmployeeByBranchId", new { branchId = branchId });
             }
             catch (Exception e)
@@ -597,7 +614,7 @@ namespace Host.Controllers
             {
                 if (!ModelState.IsValid)
                     return View(requestDto);
-                if (requestDto.BranchEmployeeId != null && requestDto.BranchEmployeeId != 0)
+                if(requestDto.BranchEmployeeId !=null && requestDto.BranchEmployeeId != 0)
                 {
                     _branchEmployeeService.UpdateBranchEmployee(requestDto);
                     return RedirectToAction("GetBranchEmployeeByBranchId", new { branchId = requestDto.BranchId });
@@ -647,11 +664,11 @@ namespace Host.Controllers
         }
         #endregion
 
-        /*  public IActionResult QrCode()
-          {
-              var qrCode = _qRCodeGenerator.QrCode();
-              return View("QRCode", qrCode);
-          }*/
+      /*  public IActionResult QrCode()
+        {
+            var qrCode = _qRCodeGenerator.QrCode();
+            return View("QRCode", qrCode);
+        }*/
 
         public IActionResult Activity()
         {
@@ -773,7 +790,7 @@ namespace Host.Controllers
                 //    Stations = new SelectList(stationlist, "StationId", "Name"),
                 //    LocationId = locationId
                 //};
-                model.Stations = new SelectList(stationlist, "StationId", "Name", model.StationId);
+                model.Stations = new SelectList(stationlist,"StationId","Name",model.StationId);
                 model.LocationId = stationlocationId;
                 ViewBag.LocationId = locationId;
                 return View("AddStationLocation", model);
@@ -828,7 +845,7 @@ namespace Host.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Download(int id, int locationId,string code)
+        public async Task<IActionResult> Download(int id, int locationId, string code)
         {
             try
             {
@@ -836,7 +853,7 @@ namespace Host.Controllers
                 var stationLocation = _locationService.GetLocationById(locationId);
                 ViewBag.LocationId = locationId;
                 System.IO.MemoryStream memoryStream = new System.IO.MemoryStream();
-                var bytes = DownloadPdf.Download(id, stationName, stationLocation.Name,code);
+                var bytes = DownloadPdf.Download(id, stationName, stationLocation.Name, code);
                 memoryStream.Close();
                 Response.Clear();
                 Response.ContentType = "application/pdf";
@@ -916,20 +933,15 @@ namespace Host.Controllers
         //[HttpDelete("Company/StationDelete/id/{id}")]
         //public IActionResult DeleteStationActivity(int id)
         //{
-
+            
         //    //var activity= _activityService.DeleteActivityById(id);
         //    //return View("AddActivity",activity);
         //}
 
-        /* public IActionResult Station(PagingParams pagingParams)
-         {   
-             var stations = _stationService.GetAllStationPagination(pagingParams);
-             return View("StationCreation", stations);
-         }*/
-        public IActionResult Station()
-        {
-            var station = _stationService.GetAllStation();
-            return View("StationCreation", station);
+        public IActionResult Station(PagingParams pagingParams)
+        {   
+            var stations = _stationService.GetAllStationPagination(pagingParams);
+            return View("StationCreation", stations);
         }
 
         [HttpPost]
@@ -981,7 +993,7 @@ namespace Host.Controllers
         {
             try
             {
-                var activities = await _stationLocationService.GetStationActivityByCode(code);
+                var activities =await _stationLocationService.GetStationActivityByCode(code);
                 if (activities.Activities != null)
                 {
 
@@ -996,13 +1008,14 @@ namespace Host.Controllers
             }
         }
 
+        [AllowAnonymous]
         [HttpPost("Company/ActivityPerform")]
-        public async Task<IActionResult> ActivityPerform([FromBody] ActivityPerformDto requestDto)
+       public async Task<IActionResult> ActivityPerform([FromBody] ActivityPerformDto requestDto)
         {
             if (!ModelState.IsValid)
-                return Json(requestDto);
+                return Json("data is not valid");
             var id = await _activityPerformService.ActivityPerform(requestDto);
-            return Json(id);
+            return  Json(id);
         }
 
         [HttpGet]
@@ -1012,16 +1025,86 @@ namespace Host.Controllers
             return View("StationBranch", stationbranch);
         }
 
-        public IActionResult GraphPlot()
+        [HttpGet("Company/DailyReport")]
+        public IActionResult DailyReport([FromQuery]DateTime to, [FromQuery]DateTime from)
         {
-            return View("Graph");
-        }
-        public IActionResult ObservationReport()
-        {
-            return View("Observation");
-
+            var report = _activityPerformService.ActivityFilterReport();
+            return Json(report);
         }
 
-       
-    }
+        [HttpGet]
+        public IActionResult DeleteCompany(int companyId)
+        {
+            try
+            {
+               _companyService.DeleteCompany(companyId);
+                return RedirectToAction("CompanyCreation");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        [HttpGet]
+        public IActionResult DeleteBranch(int branchId, int companyId)
+        {
+            try
+            {
+                _branchService.DeleteBranch(branchId);
+                return RedirectToAction("GetBranchByCompanyId",new {companyId = companyId });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        [HttpGet]
+        public IActionResult DeleteLocation(int locationId, int branchId)
+        {
+            try
+            {
+                _locationService.DeleteLocation(locationId);
+                return RedirectToAction("GetLocationById", new { id = branchId });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        [HttpGet]
+        public IActionResult DeleteStationLocation(int stationLocationId, int locationId)
+        {
+            try
+            {
+                _stationLocationService.DeleteStationLocation(stationLocationId);
+                return RedirectToAction("StationLocation", new { locationId = locationId });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        [HttpGet("Company/Report/BranchId/{branchId}/locationId/{locationId}")]
+        public IActionResult GetActivityPerformReport([FromRoute]int branchId,[FromRoute] int locationId)
+        {
+            try
+            {
+                var model = _activityPerformService.ActivityFilterReporByBranchIdt(branchId, locationId);
+                return Json(model);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+    } 
 }

@@ -11,6 +11,7 @@ namespace Host.DataContext
         public string ProviderKey { get; set; }
         public string ProviderDisplayName { get; set; }
         [Required]
+        [StringLength(450)]
         public string UserId { get; set; }
 
         [ForeignKey("UserId")]
