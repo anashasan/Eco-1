@@ -7,15 +7,19 @@
 
   <ItemGroup>
     <Compile Remove="Hepler\**" />
+    <Compile Remove="Reports\**" />
     <Compile Remove="Views\CompanyCreation\**" />
     <Compile Remove="Views\Manage\**" />
     <Content Remove="Hepler\**" />
+    <Content Remove="Reports\**" />
     <Content Remove="Views\CompanyCreation\**" />
     <Content Remove="Views\Manage\**" />
     <EmbeddedResource Remove="Hepler\**" />
+    <EmbeddedResource Remove="Reports\**" />
     <EmbeddedResource Remove="Views\CompanyCreation\**" />
     <EmbeddedResource Remove="Views\Manage\**" />
     <None Remove="Hepler\**" />
+    <None Remove="Reports\**" />
     <None Remove="Views\CompanyCreation\**" />
     <None Remove="Views\Manage\**" />
   </ItemGroup>
@@ -126,10 +130,6 @@
     <Content Update="Views\Shared\_Layout.cshtml">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Reports\" />
   </ItemGroup>
 
 </Project>
