@@ -19,7 +19,7 @@ using Host.Business.DbServices;
 
 namespace Host.Controllers
 {
-    [Authorize(Roles ="Admin")]
+    [Authorize(Roles = "Admin")]
     public class CompanyController : BaseController
     {
 
@@ -32,7 +32,7 @@ namespace Host.Controllers
         private readonly IBranchService _branchService;
         private readonly IBranchEmployeeService _branchEmployeeService;
         private readonly ILocationService _locationService;
-       // private readonly QRCodeGenerator _qRCodeGenerator;
+        // private readonly QRCodeGenerator _qRCodeGenerator;
         private readonly IStationLocationService _stationLocationService;
         private readonly IActivityTypeService _activityTypeService;
         private readonly IActivityPerformService _activityPerformService;
@@ -67,7 +67,7 @@ namespace Host.Controllers
             _branchService = branchService;
             _branchEmployeeService = branchEmployeeService;
             _locationService = locationService;
-           // _qRCodeGenerator = qRCodeGenerator;
+            // _qRCodeGenerator = qRCodeGenerator;
             _stationLocationService = stationLocationService;
             _activityTypeService = activityTypeService;
             _activityPerformService = activityPerformService;
@@ -385,7 +385,7 @@ namespace Host.Controllers
 
 
             return View("AddBranch", branches);
-            
+
 
         }
 
@@ -530,11 +530,11 @@ namespace Host.Controllers
         }
 
         [HttpDelete("Company/DeleteBranchEmployee/id/{id}/branchId/{branchId}")]
-        public async Task<IActionResult> DeleteBrancEmployee([FromRoute]int id,[FromRoute]int branchId)
+        public async Task<IActionResult> DeleteBrancEmployee([FromRoute]int id, [FromRoute]int branchId)
         {
             try
             {
-               await _branchEmployeeService.DeleteBranchEmployeeById(id);
+                await _branchEmployeeService.DeleteBranchEmployeeById(id);
                 return RedirectToAction("GetBranchEmployeeByBranchId", new { branchId = branchId });
             }
             catch (Exception e)
@@ -614,7 +614,7 @@ namespace Host.Controllers
             {
                 if (!ModelState.IsValid)
                     return View(requestDto);
-                if(requestDto.BranchEmployeeId !=null && requestDto.BranchEmployeeId != 0)
+                if (requestDto.BranchEmployeeId != null && requestDto.BranchEmployeeId != 0)
                 {
                     _branchEmployeeService.UpdateBranchEmployee(requestDto);
                     return RedirectToAction("GetBranchEmployeeByBranchId", new { branchId = requestDto.BranchId });
@@ -664,11 +664,11 @@ namespace Host.Controllers
         }
         #endregion
 
-      /*  public IActionResult QrCode()
-        {
-            var qrCode = _qRCodeGenerator.QrCode();
-            return View("QRCode", qrCode);
-        }*/
+        /*  public IActionResult QrCode()
+          {
+              var qrCode = _qRCodeGenerator.QrCode();
+              return View("QRCode", qrCode);
+          }*/
 
         public IActionResult Activity()
         {
@@ -733,6 +733,17 @@ namespace Host.Controllers
             return View("LocationCreation", location);
         }
 
+        [HttpGet]
+        public IActionResult GetBranchByLocationId(int id)
+        {
+            var branch = _branchService.GetBranchByLocationId(id);
+            ViewBag.BranchId = id;
+          //  ViewBag.LocationId = id;
+            return View("BranchCreation", branch);
+
+            
+        }
+        
         [HttpGet]
         public IActionResult StationLocation(int locationId)
         {
@@ -1106,5 +1117,6 @@ namespace Host.Controllers
                 throw;
             }
         }
+
     } 
 }

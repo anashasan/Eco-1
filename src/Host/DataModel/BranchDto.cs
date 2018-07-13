@@ -24,6 +24,7 @@ namespace Host.DataModel
         public DateTime CreatedOn { get; set; }
         public DateTime? UpdatedOn { get; set; }
         public int CompanyId { get; set; }
+        public int LocationId { get; set; }
         public SelectList Companies { get; set; }
         
     }

@@ -253,6 +253,34 @@ namespace Host.Business.DbServices
             }
         }
 
+        public List<BranchDto> GetBranchByLocationId(int id)
+        {
+            try
+            {
+
+                var Locationbranch = _context.BranchLocation
+                    .AsNoTracking()
+                    .Where(i => i.FkLocationId == id)
+                    .Select(i => new BranchDto
+                    {
+                        BranchId = i.FkBranch.PkBranchId,
+                        Name = i.FkBranch.Name,
+                        Location =i.FkBranch.Location,
+                        Address =i.FkBranch.Address,
+                        Phone =i.FkBranch.Phone,
+                        Email=i.FkBranch.Email,
+                        
+                    }).ToList();
+                return Locationbranch;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+
+                throw;
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
