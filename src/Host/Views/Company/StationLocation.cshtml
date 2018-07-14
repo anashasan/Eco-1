@@ -27,10 +27,11 @@
             <!-- Trigger the modal with a button -->
 
             <a class="btn  btn-primary " style="background-color:#323232" onclick='@($"window.location.href='/Company/AddStationLocation?locationId={ViewBag.LocationId}'")'>Add Station</a>
+            <a class="btn btn-primary">AllDownload</a>
         </div>
         <div>
             <form id="download">
-                <button type="submit" class="btn btn-primary">AllDownload</button>
+               
             </form>
         </div>
         <!-- /.box-header -->
@@ -140,10 +141,10 @@
     <script>
       
         //$(document).ready(function () {
-        //    $('#example2').DataTable({
-        //        columnDefs: [{
+        //    $('#example2').datatable({
+        //        columndefs: [{
         //            orderable: true,
-        //            className: 'select-checkbox',
+        //            classname: 'select-checkbox',
         //            targets: 0
         //        }],
 
@@ -156,6 +157,9 @@
         //    });
         //});
 
+        $(document).ready(function () {
+            $('#example2').DataTable();
+        });
 
 
     </script>

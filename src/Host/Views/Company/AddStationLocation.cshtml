@@ -3,6 +3,13 @@
     Layout = "_AdminLayout";
 }
 
+<style>
+    #message {
+        position: relative;
+         /* This will move it 20px up */
+        left: 130px; /* This will move it 20px to the right */
+    }
+</style>
 <!-- Main content -->
 <div class="page-header">
     <div class="row">
@@ -23,15 +30,18 @@
                                 <input type="hidden" asp-for="LocationId" />
                                 <input type="hidden" asp-for="StationLocationId" />
                                 <div class="form-group">
-                                    <label class="col-md-2 control-label" for="Company">Station Name</label>
+                                    <label class="col-md-2 control-label" for="Company">Station No</label>
                                     <div class="col-md-4">
-                                        <input id="sno" type="text" asp-for="Sno" onchange="CheckAvailability()" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57" required />
+                                        <input class="col-md-5" id="sno" type="text" asp-for="Sno" onchange="CheckAvailability()" onkeypress="return (event.charCode == 8 || event.charCode == 0 || event.charCode == 13) ? null : event.charCode >= 48 && event.charCode <= 57" required />
                                         <br />
-                                        <span id="message"></span>
+
                                     </div>
 
+                                </div>
+                                <span id="message" ></span>
+                                <div class="form-group">
                                     <label class="col-md-2 control-label" for="Company">Station Name</label>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <select class="form-control" asp-items="@Model.Stations" asp-for="StationId" placeholder="Select Business Name..."></select>
                                     </div>
                                 </div>
@@ -70,13 +80,13 @@
 
                                 if (bool) {
                                     message.css("color", "red");
-                                    message.css("fontSize", "large")
+                                    message.css("fontSize", "small")
                                     message.html("Number is NOT available");
                                     document.getElementById('btn').setAttribute("disabled", "disabled");
                                 }
                                 else {
                                     message.css("color", "green");
-                                    message.css("fontSize", "large")
+                                    message.css("fontSize", "small")
                                     message.html("Number is  available");
                                     document.getElementById('btn').removeAttribute("disabled");
 

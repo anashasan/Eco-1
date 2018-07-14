@@ -967,12 +967,17 @@ namespace Host.Controllers
         //    //return View("AddActivity",activity);
         //}
 
-        public IActionResult Station(PagingParams pagingParams)
-        {
-            var stations = _stationService.GetAllStationPagination(pagingParams);
-            return View("StationCreation", stations);
-        }
+        //public IActionResult Station(PagingParams pagingParams)
+        //{
+        //    var stations = _stationService.GetAllStationPagination(pagingParams);
+        //    return View("StationCreation", stations);
+        //}
 
+       public IActionResult Station()
+        {
+            var station = _stationService.GetAllStation();
+            return View("StationCreation", station);
+        }
         [HttpPost]
         public async Task<IActionResult> AddStation(StationDto requestDto)
         {

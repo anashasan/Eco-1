@@ -12,9 +12,15 @@
 
 <div class="col-xs-12">
     <ol class="breadcrumb">
+
+
+       
+       
+
         <li><a href="@Url.Action("CompanyCreation","Company")">Company</a></li>
-        <li><a href="@Url.Action("Branch","Company")">Branch</a></li>
+        <li><a href="#" onclick='@($"window.location.href='/Company/GetBranchByCompanyId?companyId={@ViewBag.CompanyId}'")'>Branch</a></li>
         <li class="active"><i class="fa fa-location-arrow"></i>LocationCreation</a></li>
+
     </ol>
     <div class="box">
         <div class="box-header">

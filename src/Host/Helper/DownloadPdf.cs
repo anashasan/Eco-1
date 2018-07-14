@@ -40,7 +40,7 @@ namespace Host.Helper
                     document.Add(phrase);
 
 
-                    iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(@"D:\Eco\Eco\src\Host\wwwroot\images\Eco.jpg");
+                    iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(@"C:\Users\home\source\repos\Eco-1\src\Host\wwwroot\images\Eco.jpg");
                     image.ScaleAbsolute(75f, 75f);
                     image.SetAbsolutePosition(30f, 345f);
                     image.Alignment = iTextSharp.text.Element.ALIGN_LEFT;
@@ -97,13 +97,13 @@ namespace Host.Helper
        
                                   cb.Rectangle(Rectangular);
                                   cb.Stroke();
-
+                                  
 
                                   cb.SetLineWidth(1);
                                   cb.Rectangle(15, 230, 140, 50); //left width,top height,right width,bottom height
                                   cb.BeginText();
                                   BaseFont f_cn = BaseFont.CreateFont("c:\\windows\\fonts\\calibri.ttf", BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-                                  cb.SetFontAndSize(f_cn, 10);
+                                  cb.SetFontAndSize(f_cn, 18);
                                   cb.SetTextMatrix(28, 250);
                                   cb.ShowText("StationID:  " + stationLocationId);
                                   cb.EndText();
@@ -113,7 +113,7 @@ namespace Host.Helper
                                   cb.Stroke();
                                   cb.BeginText();
                                   BaseFont f_cnn = BaseFont.CreateFont("c:\\windows\\fonts\\calibri.ttf", BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-                                  cb.SetFontAndSize(f_cnn, 10);
+                                  cb.SetFontAndSize(f_cnn, 18);
                                   cb.SetTextMatrix(22, 180);
                                   cb.ShowText("Station Name:  " + stationName);
                                   cb.EndText();
@@ -124,7 +124,7 @@ namespace Host.Helper
                                   cb.Stroke();
                                   cb.BeginText();
                                   BaseFont f_cnnn = BaseFont.CreateFont("c:\\windows\\fonts\\calibri.ttf", BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-                                  cb.SetFontAndSize(f_cnnn, 10);
+                                  cb.SetFontAndSize(f_cnnn, 18);
                                   cb.SetTextMatrix(19, 110);
                                   cb.ShowText("Location Name: " + locationName);
                                   cb.EndText();
@@ -136,7 +136,7 @@ namespace Host.Helper
                               document.NewPage();
 
 
-                iTextSharp.text.Image image1 = iTextSharp.text.Image.GetInstance(@"D:\Eco\Eco\src\Host\wwwroot\images\Eco.jpg");
+                iTextSharp.text.Image image1 = iTextSharp.text.Image.GetInstance(@"C:\Users\home\source\repos\Eco-1\src\Host\wwwroot\images\Eco.jpg");
                 image1.ScaleAbsolute(75f, 75f);
                 image1.SetAbsolutePosition(30f, 345f);
                 image1.Alignment = iTextSharp.text.Element.ALIGN_LEFT;
@@ -430,8 +430,8 @@ namespace Host.Helper
                     cb.SetTextMatrix(85, 110);
                     cb.ShowText("Location Name: " + s.LocationName);
                     cb.EndText();
-
                     document.NewPage();
+
                 }
                 document.Close();
                 bytes = memoryStream.ToArray();
