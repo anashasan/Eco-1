@@ -43,7 +43,11 @@
         .sticky + .content {
             padding-top: 102px;
         }
+
+
 </style>
+    
+     
 <script>
     window.onscroll = function () { myFunction() };
 
@@ -59,10 +63,22 @@
     }
 </script>
     -->
+<style>
+    #th {
+        background-color: #323232;
+        color: white;
+        font-size: xx-small;
+    }
+
+    table {
+        text-align: left !important;
+        font-size: small;
+    }
+</style>
 <div class="col-xs-12">
     <ol class="breadcrumb">
         <li><a href="@Url.Action("CompanyCreation","Company")">Company</a></li>
-        <li class="active"><i class="fa fa-delicious">Branch</a></i></li>
+        <li class="active"><i class="fa fa-delicious">Branch</i></li>
 
 
 
@@ -113,7 +129,7 @@
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item fa fa-edit" href="#" onClick='@($"window.location.href='/Company/AddBranch?companyId={ViewBag.CompanyId}&branchId={s.BranchId}'")'>Edit</a>
                                         <div class="dropdown-divider"></div>
-c                                        <a class="dropdown-item fa fa-location-arrow" href='#' onclick='@($"window.location.href='/Company/GetLocationById?id={s.BranchId}&companyId={s.CompanyId}'")'>Location</a>
+                                        <a class="dropdown-item fa fa-location-arrow" href='#' onclick='@($"window.location.href='/Company/GetLocationById?id={s.BranchId}&companyId={s.CompanyId}'")'>Location</a>
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item fa fa-user-o" href='#' onclick='@($"window.location.href='/Company/GetBranchEmployeeByBranchId?branchId={s.BranchId}'")'>BranchEmployee</a>
                                         <div class="dropdown-divider"></div>

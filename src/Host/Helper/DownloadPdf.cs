@@ -89,7 +89,7 @@ namespace Host.Helper
                 document.Add(codeQrImage);
 
                 PdfContentByte cb = writer.DirectContent;
-                                /* var Rectangular = new Rectangle(7, 420, 280, 25); //left width,top height,right width,bottom height
+                                 var Rectangular = new Rectangle(7, 420, 280, 25); //left width,top height,right width,bottom height
                                   Rectangular.BorderWidthLeft = 1.1f;
                                   Rectangular.BorderWidthRight = 1.1f;
                                   Rectangular.BorderWidthTop = 1.1f;
@@ -97,7 +97,7 @@ namespace Host.Helper
        
                                   cb.Rectangle(Rectangular);
                                   cb.Stroke();
-                                  */
+                                  
 
                                   cb.SetLineWidth(1);
                                   cb.Rectangle(15, 230, 140, 50); //left width,top height,right width,bottom height
@@ -430,8 +430,8 @@ namespace Host.Helper
                     cb.SetTextMatrix(85, 110);
                     cb.ShowText("Location Name: " + s.LocationName);
                     cb.EndText();
-
                     document.NewPage();
+
                 }
                 document.Close();
                 bytes = memoryStream.ToArray();
