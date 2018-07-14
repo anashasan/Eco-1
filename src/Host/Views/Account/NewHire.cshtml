@@ -16,6 +16,11 @@
             <div class="box">
                 <div class="box-header">
                     <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <small id="sevenCharacter">Passwords must be at least 7 characters.</small><br />
+                            <small id="nonAlphaNumeric">Passwords must have at least one non alphanumeric character.</small><br />
+                            <small id="numbers">Passwords must have at least one digit ( 0 - 9 )</small><br />
+                        </div>
                         <div class="panel-body">
                             <form asp-controller="Account" asp-action="CreateUser" class="form-horizontal" method="post">
                                 <input type="hidden" data-val="true" data-val-required="The UserId field is required." id="UserId" name="UserId" value="00000000-0000-0000-0000-000000000000">
@@ -23,8 +28,9 @@
                                 <div class="form-group">
                                     <label class="col-md-2 control-label" for="Email">Email</label>
                                     <div class="col-md-10">
-                                        <input class="form-control" type="email" asp-for="Email">
-                                        <span class="text-danger field-validation-valid" data-valmsg-for="Email" data-valmsg-replace="true"></span>
+                                        <input id="email" class="form-control" type="email" asp-for="Email" onchange="CheckEmailAvailability()">
+                                        <br />
+                                        <span id="message"></span>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -41,24 +47,12 @@
                                         <span class="text-danger field-validation-valid" data-valmsg-for="DisplayName" data-valmsg-replace="true"></span>
                                     </div>
                                 </div>
-                                @*<div class="form-group">
-                        <label class="col-md-2 control-label">First Name</label>
-                        <div class="col-md-10">
-                            <input class="form-control" type="text" asp-for="" id="FirstName" name="FirstName" value="">
-                        </div>
-                    </div>*@
                                 <div class="form-group">
                                     <label class="col-md-2 control-label" for="Role">Role</label>
                                     <div class="col-md-10">
                                         <select class="form-control" asp-items="@Model.Roles" asp-for="RoleId" placeholder="Select Business Name..."></select>
                                     </div>
                                 </div>
-                                @*<div class="form-group">
-                        <label class="col-md-2 control-label" for="LastName">Last Name</label>
-                        <div class="col-md-10">
-                            <input class="form-control" type="text" id="LastName" name="LastName" value="">
-                        </div>
-                    </div>*@
                                 <div class="form-group">
                                     <label class="col-md-2 control-label" for="Password">Password</label>
                                     <div class="col-md-10">
@@ -67,22 +61,16 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-md-2 control-label" for="ConfirmPassword">Confirm Password</label>
+                                    <label class="col-md-2 control-label">Confirm Password</label>
                                     <div class="col-md-10">
-                                        <input type="password" asp-for="ConfrimedPassword" class="form-control" data-val="true" data-val-equalto="Confirm password doesn't match password" data-val-equalto-other="*.Password" id="ConfirmPassword" name="ConfirmPassword">
-                                        <span class="text-danger field-validation-valid" data-valmsg-for="ConfirmPassword" data-valmsg-replace="true"></span>
+                                        <input type="password" name="ConfirmPassword" required="required" id="ConfirmPassword" class="form-control" onblur="checkEquality(this.value)" />
+                                        <span id="msgConfirmPassword" style="display: none;color: red;">Password does match</span>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label class="col-md-2 control-label" for="DateOfBirth">Date of Birth</label>
-                                    <div class="col-md-10">
-                                        <input name="DateOfBirth" value="" class="form-control" data-bs-datepicker="true" data-bs-datepicker-debug="false" data-bs-datepicker-keepopen="false" data-bs-datepicker-allowinputtoggle="true" data-bs-datepicker-format="L" data-bs-datepicker-viewmode="years" data-bs-datepicker-usecurrent="false" data-bs-datepicker-mindate="1898-04-19T13:10:23.2287647Z" data-bs-datepicker-maxdate="2008-04-19T13:10:23.2287771Z" data-bs-datepicker-viewdate="2008-04-19T13:10:23.2287796Z" data-cs-datepicker-timeformat="">
-                                        <span class="text-danger field-validation-valid" data-valmsg-for="DateOfBirth" data-valmsg-replace="true"></span>
-                                    </div>
-                                </div>
+
                                 <div class="form-group">
                                     <div class="col-md-offset-2 col-md-10">
-                                        <input type="submit" class="btn btn-default" value="Save">
+                                        <input id="btn" type="submit" class="btn btn-default" value="Save">
                                     </div>
                                 </div>
                             </form>
@@ -93,6 +81,144 @@
         </div>
     </div>
 </div>
+
+@section scripts {
+    <script type="text/javascript">
+
+        const CheckEmailAvailability = () => {
+            var sno = document.getElementById("email").value;
+            var message = $("#message");
+            const headers = new Headers();
+            headers.append("Accept", "application/json");
+            headers.append("Content-Type", "application/json");
+            fetch(`/Company/Employee/CheckEmail/email/${email}`, {
+                credentials: "same-origin",
+                headers: headers,
+                method: "GET"
+            })
+                .then(function (response) {
+                    if (response.ok) {
+                        response.json()
+                            .then(bool => {
+
+                                if (bool) {
+                                    message.css("color", "red");
+                                    message.css("fontSize", "large")
+                                    message.html("Email is NOT available");
+                                    document.getElementById('btn').setAttribute("disabled", "disabled");
+                                }
+                                else {
+                                    message.css("color", "green");
+                                    message.css("fontSize", "large")
+                                    message.html("Email is  available");
+                                    document.getElementById('btn').removeAttribute("disabled");
+
+                                }
+                            });
+
+                    }
+
+                })
+                .catch(ex => { });
+        };
+
+
+        function ClearMessage() {
+            $("#message").html("");
+        };
+
+        const checkEquality = (confirmPasswordText) => {
+            const password = document.getElementById('Password').value;
+            if (password === confirmPasswordText) {
+                const btRegister = document.getElementById('btRegister');
+                btRegister.disabled = "";
+                const validationMessage = document.getElementById('msgConfirmPassword');
+                validationMessage.style = 'display:none';
+                return;
+            } else {
+                const btRegister = document.getElementById('btRegister');
+                btRegister.disabled = "disabled";
+                const validationMessage = document.getElementById('msgConfirmPassword');
+                validationMessage.style = 'display:inline';
+                return;
+            }
+        };
+
+        const checkPasswordStrength = () => {
+            let isPasswordStrenghtValid = true;
+            const password = document.getElementById('Password').value;
+
+            if (!password) {
+                return false;
+            }
+
+            //const lowerCaseLetters = /[a-z]/g;
+            //if (!lowerCaseLetters.test(password)) {
+            //    const lowerCaseTextBox = document.getElementById('lowerCase');
+            //    lowerCaseTextBox.style = 'color: red;';
+            //    isPasswordStrenghtValid = false;
+            //} else {
+            //    const lowerCaseTextBox = document.getElementById('lowerCase');
+            //    lowerCaseTextBox.style = 'color: black;';
+            //}
+
+            //// Validate capital letters
+            //const upperCaseLetters = /[A-Z]/g;
+            //if (!upperCaseLetters.test(password)) {
+            //    const upperCaseTextBox = document.getElementById('upperCase');
+            //    upperCaseTextBox.style = 'color: red;';
+            //    isPasswordStrenghtValid = false;
+            //} else {
+            //    const upperCaseTextBox = document.getElementById('upperCase');
+            //    upperCaseTextBox.style = 'color: black;';
+            //}
+
+            // Validate Non Alpha numeric
+            const nonAlphaNumeric = /[^A-z\s\d][\\\^]?/g;
+            if (!nonAlphaNumeric.test(password)) {
+                const nonAlphaNumericCaseTextBox = document.getElementById('nonAlphaNumeric');
+                nonAlphaNumericCaseTextBox.style = 'color: red;';
+                isPasswordStrenghtValid = false;
+            } else {
+                const nonAlphaNumericCaseTextBox = document.getElementById('nonAlphaNumeric');
+                nonAlphaNumericCaseTextBox.style = 'color: black;';
+            }
+
+            // Validate numer
+            const number = /\d/;
+            if (!number.test(password)) {
+                const numericTestCase = document.getElementById('numbers');
+                numericTestCase.style = 'color: red;';
+                isPasswordStrenghtValid = false;
+            } else {
+                const numericTestCase = document.getElementById('numbers');
+                numericTestCase.style = 'color: black;';
+            }
+
+            // Validate length
+            if (password.length < 7) {
+                const lenghtCaseTextBox = document.getElementById('sevenCharacter');
+                lenghtCaseTextBox.style = 'color: red;';
+                isPasswordStrenghtValid = false;
+            } else {
+                const lenghtCaseTextBox = document.getElementById('sevenCharacter');
+                lenghtCaseTextBox.style = 'color: black;';
+            }
+            return isPasswordStrenghtValid;
+        };
+
+        $('form').on('submit',
+            () => {
+                const isPasswordStrenghtValid = checkPasswordStrength();
+                if (isPasswordStrenghtValid) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+
+    </script>
+}
 
 
 

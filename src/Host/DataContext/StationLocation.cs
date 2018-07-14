@@ -19,6 +19,8 @@ namespace Host.DataContext
         [Required]
         [StringLength(250)]
         public string Code { get; set; }
+        [Column("SNo")]
+        public int Sno { get; set; }
 
         [ForeignKey("FkLocationId")]
         [InverseProperty("StationLocation")]

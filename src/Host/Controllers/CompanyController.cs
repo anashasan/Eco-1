@@ -37,6 +37,7 @@ namespace Host.Controllers
         private readonly IActivityTypeService _activityTypeService;
         private readonly IActivityPerformService _activityPerformService;
         private readonly IGraphService _graphService;
+        private readonly IEmployeesService _employeeService;
 
 
 
@@ -58,7 +59,8 @@ namespace Host.Controllers
                                  IStationLocationService stationLocationService,
                                  IActivityTypeService activityTypeService,
                                  IActivityPerformService activityPerformService,
-                                 IGraphService graphService
+                                 IGraphService graphService,
+                                 IEmployeesService employeesService
                                  )
         {
             _companyService = companyService;
@@ -72,6 +74,7 @@ namespace Host.Controllers
             _activityTypeService = activityTypeService;
             _activityPerformService = activityPerformService;
             _graphService = graphService;
+            _employeeService = employeesService;
         }
 
         /// <summary>
@@ -1131,6 +1134,20 @@ namespace Host.Controllers
                 Console.WriteLine(e);
                 throw;
             }
+        }
+
+
+        [HttpGet("Company/StationLocation/CheckSno/sno/{sno}")]
+        public bool CheckSnoExist([FromRoute] int sno)
+        {
+            var snoExist = _stationLocationService.CheckSnoExist(sno);
+            return snoExist;
+        }
+
+        [HttpGet("Company/Employee/CheckEmail/email/{emai}")]
+        public bool CheckEmailAddress([FromRoute]string email)
+        {
+            return _employeeService.CheckEmailIsExist(email);
         }
     }
 }

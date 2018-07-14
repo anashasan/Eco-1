@@ -430,8 +430,8 @@ namespace Host.Helper
                     cb.SetTextMatrix(85, 110);
                     cb.ShowText("Location Name: " + s.LocationName);
                     cb.EndText();
-                    document.NewPage();
 
+                    document.NewPage();
                 }
                 document.Close();
                 bytes = memoryStream.ToArray();
