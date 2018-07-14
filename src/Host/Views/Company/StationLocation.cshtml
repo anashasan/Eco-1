@@ -10,8 +10,6 @@
         background-color: #191919;
         color: white
     }
-
-   
 </style>
 
 <div class="col-xs-12">
@@ -30,7 +28,11 @@
 
             <a class="btn  btn-primary " style="background-color:#323232" onclick='@($"window.location.href='/Company/AddStationLocation?locationId={ViewBag.LocationId}'")'>Add Station</a>
         </div>
-
+        <div>
+            <form id="download">
+                <button type="submit" class="btn btn-primary">AllDownload</button>
+            </form>
+        </div>
         <!-- /.box-header -->
         <div class="box-body" style="width: 100%; height: 400px;">
             @Html.Hidden("locationId", (int)ViewBag.LocationId)
@@ -52,7 +54,7 @@
                             <td>@s.StationName</td>
                             <td id="@(s.StationLocationId)"> </td>
                             <td>
-                                <a class="fa fa-download  " onClick='@($"window.location.href='/Company/Download?id={s.StationId}&locationId={ViewBag.LocationId}&code={s.Code}'")'>Download</a>
+                                <a class="fa fa-download  " onClick='@($"window.location.href='/Company/Download?id={s.StationLocationId}&locationId={ViewBag.LocationId}&code={s.Code}'")'>Download</a>
                                 <a class="fa fa-edit" href='#' onClick='@($"window.location.href='/Company/AddStationLocation?locationId={ViewBag.LocationId}&stationlocationId={s.StationLocationId}'")'>Edit</a>
                             </td>
                         </tr>
@@ -65,7 +67,10 @@
 <link href="~/dist/css/font-awesome.css" rel="stylesheet" />
 <!--<link href="~/dist/css/material-bootstrap-wizard.css" rel="stylesheet" />-->
 <!--<script src="~/dist/js/material-bootstrap-wizard.js"></script>-->
-<script type="text/javascript">
+
+@section script {
+    <script src="~/dist/js/download.js"></script>
+    <script type="text/javascript">
     var myArray = [];
     var url
     var tbody = document.getElementById("tbody");
@@ -73,18 +78,47 @@
     var model = @Html.Raw(JsonConvert.SerializeObject(Model));
     for (let m of model) {
         myArray.push({
-            id: m.StationLocationId,
-            name: m.StationName,
-            code : m.Code
+            stationLocationId: m.StationLocationId,
+            stationName: m.StationName,
+            code: m.Code,
+            locationId: '@ViewBag.LocationId',
+            locationName:""
         });
-    }
+    };
+
+        $("#download")
+            .submit(function (event) {
+            event.stopPropagation();
+            event.preventDefault();
+            const stationData = {};
+            const headers = new Headers();
+            headers.append("Accept", "application/pdf");
+            headers.append("Content-Type", "application/json");
+            fetch(`/Company/DownloadAllPdf`, {
+                credentials: "same-origin",
+                headers: headers,
+                method: "Post",
+                body: JSON.stringify(myArray)
+            })
+                .then(function (response) {
+                    if (response.ok) {
+                        response.blob()
+                            .then(blob => {
+                                download(blob, "abc.pdf", "application/pdf");
+                            });
+                    }
+                })
+                .catch(ex => { });
+            return false;
+    });
+
 
     for (let model of myArray) {
         const oImg = document.createElement("img");
         oImg.setAttribute('src', 'https://api.qrserver.com/v1/create-qr-code/?data=' + model.code + '&amp;size=50x50');
             oImg.style.width = '50px';
         oImg.style.height = '50px';
-        const element = document.getElementById(String(model.id));
+        const element = document.getElementById(String(model.stationLocationId));
         element.appendChild(oImg);
     //    var image = document.getElementById(string(model.id).oImg.setAttribute('src', 'https://api.qrserver.com/v1/create-qr-code/?data=' + model.code + '&amp;size=50x50'))
         }
@@ -101,28 +135,29 @@
         document.write('<img src="' + img + '"/>');
     });*/
 
-</script>
+    </script>
+}
 <script>
-/*    function getBase64FromImageUrl(url, callback) {
-        var img = new Image();
+    /*    function getBase64FromImageUrl(url, callback) {
+            var img = new Image();
 
-        img.setAttribute('crossOrigin', 'anonymous');
+            img.setAttribute('crossOrigin', 'anonymous');
 
-        img.onload = function () {
-            var canvas = document.createElement("canvas");
-            canvas.width = this.width;
-            canvas.height = this.height;
+            img.onload = function () {
+                var canvas = document.createElement("canvas");
+                canvas.width = this.width;
+                canvas.height = this.height;
 
-            var ctx = canvas.getContext("2d");
-            ctx.drawImage(this, 0, 0);
+                var ctx = canvas.getContext("2d");
+                ctx.drawImage(this, 0, 0);
 
-            var dataURL = canvas.toDataURL("'https://api.qrserver.com/v1/create-qr-code/?data=' + model.code/png");
-            callback(dataURL);
-            // alert(dataURL.replace(/^data:image\/(png|jpg);base64,/, ""));
-        };
+                var dataURL = canvas.toDataURL("'https://api.qrserver.com/v1/create-qr-code/?data=' + model.code/png");
+                callback(dataURL);
+                // alert(dataURL.replace(/^data:image\/(png|jpg);base64,/, ""));
+            };
 
-        img.src = url;
-    }*/
+            img.src = url;
+        }*/
 </script>
 
 
@@ -133,7 +168,7 @@
 
     <script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
-    
+
     <script>
         /*  $(document).ready(function () {
               $('#example2').DataTable();
@@ -155,9 +190,9 @@
 
             });
         });
-        
-        
-       
+
+
+
     </script>
 
 }
