@@ -7,9 +7,11 @@ namespace Host.DataModel
 {
     public class BranchStationLocationDto
     {
-        public int StationId { get; set; }
+        public int StationLocationId { get; set; }
         public int LocationId { get; set; }
         public string LocationName { get; set; }
         public string StationName { get; set; }
+        public int Sno { get; set; }
+        public string Code { get; set; }
     }
 }

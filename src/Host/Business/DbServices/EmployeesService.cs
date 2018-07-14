@@ -17,6 +17,22 @@ namespace Host.Business.DbServices
         {
             _context = context;
         }
+
+        public bool CheckEmailIsExist(string email)
+        {
+            try
+            {
+                return _context.AspNetUsers
+                       .AsNoTracking()
+                       .Any(i => i.Email == email);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
         public List<UserInfoModel> GetAllEmployee()
         {
             try

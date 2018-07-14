@@ -39,7 +39,7 @@
             <table id="example2" class="table table-bordered table-hover">
                 <thead id="th">
                     <tr>
-
+                        <th>S-NO</th>
                         <th>Station</th>
                         <th>Qr Code</th>
                         <th>Options</th>
@@ -50,7 +50,7 @@
                     @foreach (var s in Model)
                     {
                         <tr>
-
+                            <td class="glyphicon-align-center">@s.Sno</td>
                             <td>@s.StationName</td>
                             <td id="@(s.StationLocationId)"> </td>
                             <td>
@@ -124,42 +124,10 @@
         }
     console.log(myArray);
 
-    /*jQuery(function () {
-        $('#output').qrcode("https://api.qrserver.com/v1/create-qr-code/?data=");
-
-        var canvas = $('#output canvas');
-        console.log(canvas);
-        var img = canvas.get(0).toDataURL("image/png");
-        //or
-        //var img = $(canvas)[0].toDataURL("image/png");
-        document.write('<img src="' + img + '"/>');
-    });*/
-
+        
+   
     </script>
 }
-<script>
-    /*    function getBase64FromImageUrl(url, callback) {
-            var img = new Image();
-
-            img.setAttribute('crossOrigin', 'anonymous');
-
-            img.onload = function () {
-                var canvas = document.createElement("canvas");
-                canvas.width = this.width;
-                canvas.height = this.height;
-
-                var ctx = canvas.getContext("2d");
-                ctx.drawImage(this, 0, 0);
-
-                var dataURL = canvas.toDataURL("'https://api.qrserver.com/v1/create-qr-code/?data=' + model.code/png");
-                callback(dataURL);
-                // alert(dataURL.replace(/^data:image\/(png|jpg);base64,/, ""));
-            };
-
-            img.src = url;
-        }*/
-</script>
-
 
 @section Scripts{
     <link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
@@ -170,26 +138,23 @@
     <script src="https://cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
 
     <script>
-        /*  $(document).ready(function () {
-              $('#example2').DataTable();
-          });
-          */
-        $(document).ready(function () {
-            $('#example2').DataTable({
-                columnDefs: [{
-                    orderable: true,
-                    className: 'select-checkbox',
-                    targets: 0
-                }],
+      
+        //$(document).ready(function () {
+        //    $('#example2').DataTable({
+        //        columnDefs: [{
+        //            orderable: true,
+        //            className: 'select-checkbox',
+        //            targets: 0
+        //        }],
 
-                select: {
-                    style: 'multi',
-                    selector: 'td:first-child'
-                },
-                order: [[1, 'asc']]
+        //        select: {
+        //            style: 'multi',
+        //            selector: 'td:first-child'
+        //        },
+        //        order: [[1, 'asc']]
 
-            });
-        });
+        //    });
+        //});
 
 
 

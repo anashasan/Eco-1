@@ -10,5 +10,6 @@ namespace Host.Business.IDbServices
     {
         List<UserInfoModel> GetAllEmployee();
         string GetUserName(string userId);
+        bool CheckEmailIsExist(string email);
     }
 }

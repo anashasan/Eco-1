@@ -31,7 +31,8 @@ namespace Host.Business.DbServices
                 {
                     FkStationId = requestDto.StationId,
                     FkLocationId = requestDto.LocationId,
-                    Code = decriptCode
+                    Code = decriptCode,
+                    Sno =requestDto.Sno
 
                 };
 
@@ -58,7 +59,8 @@ namespace Host.Business.DbServices
                                           StationId = p.FkStation.PkStationId,
                                           StationName = p.FkStation.Name,
                                           StationLocationId = p.PkStationLocationId,
-                                          Code = EncoderAgent.DecryptString(p.Code)
+                                          Code = EncoderAgent.DecryptString(p.Code),
+                                          Sno = p.Sno
                                       }).ToList();
                 return stationLocation;
             }
@@ -68,6 +70,7 @@ namespace Host.Business.DbServices
                 throw;
             }
         }
+
         public List<BranchStationLocationDto> GetStationLocationByBranchId(int branchId)
         {
             try
@@ -82,12 +85,12 @@ namespace Host.Business.DbServices
                             .Where(i => locationId.Contains(i.FkLocationId))
                             .Select(p => new BranchStationLocationDto
                             {
-                                StationId = p.FkStation.PkStationId,
+                                StationLocationId = p.PkStationLocationId,
+                                Sno = p.Sno,
+                                Code = p.Code,
                                 StationName=p.FkStation.Name,
                                 LocationId = p.FkLocationId,
-                                LocationName = p.FkLocation.Name
-                                
-
+                                LocationName = p.FkLocation.Name,
                                 
                             }).ToList();
 
@@ -185,7 +188,7 @@ namespace Host.Business.DbServices
             var stationId = _context.StationLocation
                             .AsNoTracking()
                             .Where(i => i.Code == encrptCode)
-                            .Select(p => new { p.FkStationId, p.FkStation.Name, p.PkStationLocationId })
+                            .Select(p => new { p.FkStationId, p.FkStation.Name, p.PkStationLocationId, p.Sno })
                             .SingleOrDefault();
             if(stationId !=null && stationId.FkStationId != 0)
             {
@@ -232,6 +235,13 @@ namespace Host.Business.DbServices
                 throw;
             }
             
+        }
+
+        public bool CheckSnoExist(int sno)
+        {
+            return _context.StationLocation
+                    .AsNoTracking()
+                    .Any(i => i.Sno == sno);
         }
 
 
