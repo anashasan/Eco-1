@@ -14,7 +14,7 @@
 <div class="col-xs-12">
     <ol class="breadcrumb">
         <li><a href="@Url.Action("CompanyCreation","Company")">Company</a></li>
-        <li><a href='#' onclick='@($"window.location.href='/Company/GetBranchEmployeeByCompanyId?companyId={@ViewBag.CompanyId}'")'>Branch</a></li>
+        <li><a href='#' onclick='@($"window.location.href='/Company/GetBranchByCompanyId?companyId={@ViewBag.CompanyId}'")'>Branch</a></li>
         <li class="active"><i class="fa fa-user-o"></i>BranchEmployee</li>
 
     </ol>
@@ -30,7 +30,8 @@
 
         <!-- /.box-header -->
         <div class="box-body" style="width: 100%; height: 400px;">
-            <table id="example2" class="table table-bordered table-hover " >
+            @Html.Hidden("companyId", (int)ViewBag.CompanyId)
+            <table id="example2" class="table table-bordered table-hover ">
                 <thead id="th">
                     <tr>
                         <th>Employee Name</th>
@@ -40,28 +41,28 @@
                         <th>Phone</th>
                         <th>Email</th>
                         <th>Options</th>
-                        
+
 
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var s in Model)
-                    {
-                        <tr>
-                            <td>@s.EmployeeName</td>
-                            <td>@s.BranchName</td>
-                            <td>@s.CompanyName</td>
-                            <td>@s.Designation</td>
-                            <td>@s.Phone</td>
-                            <td>@s.Email</td>
+            {
+                <tr>
+                    <td>@s.EmployeeName</td>
+                    <td>@s.BranchName</td>
+                    <td>@s.CompanyName</td>
+                    <td>@s.Designation</td>
+                    <td>@s.Phone</td>
+                    <td>@s.Email</td>
 
-                            <td>
-                                <a class="fa fa-edit" onClick='@($"window.location.href='/Company/AddBranchEmployee?branchId={ViewBag.BranchId}&branchemployeeId={s.BranchEmployeeId}'")'>Edit</a>
-                            
-                                <a class="fa fa-remove" onClick='DeleteBranchEmployee(@s.BranchEmployeeId,@ViewBag.BranchId)'>Delete</a>
-                            </td>
-                        </tr>
-                    }
+                    <td>
+                        <a class="fa fa-edit" onClick='@($"window.location.href='/Company/AddBranchEmployee?branchId={ViewBag.BranchId}&branchemployeeId={s.BranchEmployeeId}'")'>Edit</a>
+
+                        <a class="fa fa-remove" onClick='DeleteBranchEmployee(@s.BranchEmployeeId,@ViewBag.BranchId)'>Delete</a>
+                    </td>
+                </tr>
+    }
             </table>
         </div>
         <!-- /.box-body -->
