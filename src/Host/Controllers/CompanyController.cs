@@ -655,10 +655,11 @@ namespace Host.Controllers
           }*/
 
         [HttpGet]
-        public IActionResult GetBranchEmployeeByBranchId(int branchId)
+        public IActionResult GetBranchEmployeeByBranchId(int branchId,int companyId)
         {
             var branchemployee = _branchEmployeeService.GetBranchEmployeeByBranchId(branchId);
             ViewBag.BranchId = branchId;
+            ViewBag.CompanyId = companyId;
             return View("BranchEmployee", branchemployee);
         }
 
@@ -733,24 +734,30 @@ namespace Host.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetLocationById(int id)
+        public IActionResult GetLocationById(int id,int companyId)
         {
             var location = _locationService.GetLocationByBranchId(id);
             ViewBag.BranchId = id;
+            ViewBag.CompanyId = companyId;
             return View("LocationCreation", location);
         }
 
         [HttpGet]
-        public IActionResult StationLocation(int locationId)
+        public IActionResult StationLocation(int locationId, int companyId,int id)
         {
             var stationLocation = _stationLocationService.GetStationLocationByLocationId(locationId);
             if (!stationLocation.Any())
             {
                 var stations = new List<StationLocationDto>();
                 ViewBag.LocationId = locationId;
+                ViewBag.CompanyId = companyId;
+                ViewBag.BranchId = id;
                 return View("StationLocation", stations);
             }
             ViewBag.LocationId = locationId;
+            ViewBag.CompanyId = companyId;
+            ViewBag.BranchId = id;
+
 
             return View("StationLocation", stationLocation);
 
@@ -1058,10 +1065,12 @@ namespace Host.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetStationByBranchId(int branchId)
+        public IActionResult GetStationByBranchId(int branchId,int companyId)
         {
             var stationbranch = _stationLocationService.GetStationLocationByBranchId(branchId);
+            ViewBag.CompanyId = companyId;
             return View("StationBranch", stationbranch);
+
         }
 
         [HttpGet("Company/DailyReport")]

@@ -14,10 +14,11 @@
 <div class="col-xs-12">
     <ol class="breadcrumb">
         <li><a href="@Url.Action("CompanyCreation","Company")">Company</a></li>
-        <li><a href="@Url.Action("Branch","Company")">Branch</a></li>
-        <li class="active"><i class="fa fa-location-arrow"></i>LocationCreation</a></li>
+        <li><a href="#" onclick='@($"window.location.href='/Company/GetBranchByCompanyId?companyId={@ViewBag.CompanyId}'")'>Branch</a></li>
+        
     </ol>
     <div class="box">
+        @Html.Hidden("companyId", (int)ViewBag.CompanyId)
         <div class="box-header">
             <h3 class="box-title" style="font-family:'Times New Roman'">Branch Station Data Table</h3></br>
             </br>
@@ -52,17 +53,17 @@
                 </thead>
                 <tbody id="tbody">
                     @foreach (var a in Model)
-                    {
-                        <tr>
-                            <td><input type="checkbox" /></td>
-                            <td>@a.Sno</td>
-                            <td>@a.StationName</td>
-                            <td>@a.LocationName</td>
-                            <td>@a.StationLocationId</td>
-                            <td id="@(a.StationLocationId)"> </td>
-                        </tr>
+                {
+                    <tr>
+                        <td><input type="checkbox" /></td>
+                        <td>@a.Sno</td>
+                        <td>@a.StationName</td>
+                        <td>@a.LocationName</td>
+                        <td>@a.StationLocationId</td>
+                        <td id="@(a.StationLocationId)"> </td>
+                    </tr>
 
-                    }
+            }
             </table>
         </div>
         <!-- /.box-body -->

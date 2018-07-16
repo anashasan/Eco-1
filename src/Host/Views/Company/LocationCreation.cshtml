@@ -35,6 +35,8 @@
         <!-- /.box-header -->
         <div class="box-body">
             @Html.Hidden("id", (int)ViewBag.BranchId)
+            @Html.Hidden("companyId",(int)ViewBag.CompanyId)
+          
             <div class="table-responsive" style="width: 100%; height: 400px;">
                 <table id="example2" class="table table-bordered table-hover">
                     <thead id="th">
@@ -48,7 +50,8 @@
                     </thead>
                     <tbody>
                         @foreach (var a in Model)
-                {
+    {
+                   
                     <tr>
                         <td>@a.Name</td>
                         <td>
@@ -61,7 +64,7 @@
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item fa fa-edit" href='#' onClick='@($"window.location.href='/Company/AddLocation?id={ViewBag.BranchId}&locationId={a.LocationId}'")'>Edit</a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item fa fa-suitcase" href='#' onClick='@($"window.location.href='/Company/StationLocation?locationId={a.LocationId}'")'>Stations</a>
+                                    <a class="dropdown-item fa fa-suitcase" href='#' onClick='@($"window.location.href='/Company/StationLocation?locationId={a.LocationId}&companyId={ViewBag.CompanyId}&id={ViewBag.BranchId}'")'>Stations</a>
 
 
                                 </div>
@@ -70,8 +73,8 @@
                         </td>
                     </tr>
 
-        }
-                </table>
+}
+</table>
                 </div>
             </div>
             <!-- /.box-body -->
