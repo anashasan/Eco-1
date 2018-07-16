@@ -17,9 +17,9 @@
                 <div class="box-header">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <small id="sevenCharacter">Passwords must be at least 7 characters.</small><br />
+                            @*<small id="sevenCharacter">Passwords must be at least 7 characters.</small><br />
                             <small id="nonAlphaNumeric">Passwords must have at least one non alphanumeric character.</small><br />
-                            <small id="numbers">Passwords must have at least one digit ( 0 - 9 )</small><br />
+                            <small id="numbers">Passwords must have at least one digit ( 0 - 9 )</small><br />*@
                         </div>
                         <div class="panel-body">
                             <form asp-controller="Account" asp-action="CreateUser" class="form-horizontal" method="post">
@@ -53,6 +53,7 @@
                                         <select class="form-control" asp-items="@Model.Roles" asp-for="RoleId" placeholder="Select Business Name..."></select>
                                     </div>
                                 </div>
+
                                 <div class="form-group">
                                     <label class="col-md-2 control-label" for="Password">Password</label>
                                     <div class="col-md-10">
@@ -67,12 +68,22 @@
                                         <span id="msgConfirmPassword" style="display: none;color: red;">Password does match</span>
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label" for="Role">Status</label>
+                                    <div class="col-md-10">
+                                        <select class="form-control" asp-for="Status">
+                                            <option value=1>Active</option>
+                                            <option value=0>InActive</option>
+                                        </select>
+                                    </div>
+                                </div>
 
                                 <div class="form-group">
                                     <div class="col-md-offset-2 col-md-10">
                                         <input id="btn" type="submit" class="btn btn-default" value="Save">
                                     </div>
                                 </div>
+
                             </form>
                         </div>
                     </div>
@@ -82,7 +93,8 @@
     </div>
 </div>
 
-@section scripts {
+@*@section scripts {
+<script src="~/plugins/jQueryUI/jquery-ui.js"></script>
     <script type="text/javascript">
 
         const CheckEmailAvailability = () => {
@@ -218,7 +230,7 @@
             });
 
     </script>
-}
+}*@
 
 
 

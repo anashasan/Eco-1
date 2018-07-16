@@ -27,11 +27,10 @@
             <!-- Trigger the modal with a button -->
 
             <a class="btn  btn-primary " style="background-color:#323232" onclick='@($"window.location.href='/Company/AddStationLocation?locationId={ViewBag.LocationId}'")'>Add Station</a>
-            <a class="btn btn-primary">AllDownload</a>
         </div>
         <div>
             <form id="download">
-               
+                <button type="submit" class="btn btn-primary">AllDownload</button>
             </form>
         </div>
         <!-- /.box-header -->
@@ -83,6 +82,7 @@
             stationName: m.StationName,
             code: m.Code,
             locationId: '@ViewBag.LocationId',
+            sno: m.Sno,
             locationName:""
         });
     };

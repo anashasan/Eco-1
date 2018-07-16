@@ -37,6 +37,7 @@ namespace Host.DataContext
         public bool TwoFactorEnabled { get; set; }
         [StringLength(256)]
         public string UserName { get; set; }
+        public bool? Status { get; set; }
 
         [InverseProperty("FkEmployee")]
         public ICollection<ActivityPerform> ActivityPerform { get; set; }

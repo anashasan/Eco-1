@@ -19,10 +19,8 @@ namespace Host.Helper
         Document _document;
         PdfWriter _pdfWriter;
         Phrase _phrase;
-        
-
-
-        public static byte[] Download(int stationLocationId,string stationName,string locationName, string code)
+      
+        public static  byte[] Download(int stationLocationId,string stationName,string locationName, string code, IHostingEnvironment _hostingEnvironment)
         {
             try
             {
@@ -39,8 +37,9 @@ namespace Host.Helper
                     Phrase phrase = new Phrase();
                     document.Add(phrase);
 
+                var path = Path.Combine(_hostingEnvironment.WebRootPath, @"images\Eco.jpg");
 
-                    iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(@"C:\Users\home\source\repos\Eco-1\src\Host\wwwroot\images\Eco.jpg");
+                iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(path);
                     image.ScaleAbsolute(75f, 75f);
                     image.SetAbsolutePosition(30f, 345f);
                     image.Alignment = iTextSharp.text.Element.ALIGN_LEFT;
@@ -136,7 +135,7 @@ namespace Host.Helper
                               document.NewPage();
 
 
-                iTextSharp.text.Image image1 = iTextSharp.text.Image.GetInstance(@"C:\Users\home\source\repos\Eco-1\src\Host\wwwroot\images\Eco.jpg");
+                iTextSharp.text.Image image1 = iTextSharp.text.Image.GetInstance(path);
                 image1.ScaleAbsolute(75f, 75f);
                 image1.SetAbsolutePosition(30f, 345f);
                 image1.Alignment = iTextSharp.text.Element.ALIGN_LEFT;
@@ -236,7 +235,7 @@ namespace Host.Helper
            
         }
 
-        public static byte[] DownloadAllPdf (List<DownloadPdfDto> downloadAllPdf)
+        public  static byte[] DownloadAllPdf (List<DownloadPdfDto> downloadAllPdf,  IHostingEnvironment _hostingEnvironment)
         {
             try
             {
@@ -244,6 +243,7 @@ namespace Host.Helper
                 System.IO.MemoryStream memoryStream = new System.IO.MemoryStream();
                 byte[] bytes;
                 PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
+                var path = Path.Combine(_hostingEnvironment.WebRootPath, @"images\Eco.jpg");
                 foreach (var s in downloadAllPdf)
                 {
                    
@@ -251,8 +251,8 @@ namespace Host.Helper
                     Phrase phrase = new Phrase();
                     document.Add(phrase);
 
-
-                    iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(@"D:\Eco\Eco\src\Host\wwwroot\images\Eco.jpg");
+                   
+                    iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(path);
                     image.ScaleAbsolute(75f, 75f);
                     image.SetAbsolutePosition(30f, 345f);
                     image.Alignment = iTextSharp.text.Element.ALIGN_LEFT;
@@ -293,6 +293,7 @@ namespace Host.Helper
                     web.Add(Web);
                     document.Add(web);
 
+                    
                     BarcodeQRCode barcodeQRCode = new BarcodeQRCode(s.Code, 1000, 1000, null);
                     Image codeQrImage = barcodeQRCode.GetImage();
                     codeQrImage.ScaleAbsolute(75, 75);
@@ -348,7 +349,7 @@ namespace Host.Helper
                     document.NewPage();
 
 
-                    iTextSharp.text.Image image1 = iTextSharp.text.Image.GetInstance(@"D:\Eco\Eco\src\Host\wwwroot\images\Eco.jpg");
+                    iTextSharp.text.Image image1 = iTextSharp.text.Image.GetInstance(path);
                     image1.ScaleAbsolute(75f, 75f);
                     image1.SetAbsolutePosition(30f, 345f);
                     image1.Alignment = iTextSharp.text.Element.ALIGN_LEFT;

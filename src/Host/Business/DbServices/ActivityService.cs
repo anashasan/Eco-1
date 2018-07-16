@@ -63,14 +63,14 @@ namespace Host.Business.DbServices
             }
         }
 
-       /* public ActivityDto DeleteActivityById(int id)
+        public async Task<int> DeleteActivityById(int id)
         {
             var listOfActivityIds = _context.StationActivity.Find(id);
             _context.StationActivity.Remove(listOfActivityIds);
             _context.SaveChanges();
             return (listOfActivityIds.PkStationActivityId);
 
-        }*/
+        }
 
         /// <summary>
         /// 

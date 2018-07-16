@@ -16,6 +16,7 @@ using iTextSharp.text.factories;
 using QRCoder;
 using System.Drawing;
 using Host.Business.DbServices;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Host.Controllers
 {
@@ -38,6 +39,7 @@ namespace Host.Controllers
         private readonly IActivityPerformService _activityPerformService;
         private readonly IGraphService _graphService;
         private readonly IEmployeesService _employeeService;
+        private readonly IHostingEnvironment _hostingEnvironment;
 
 
 
@@ -60,7 +62,8 @@ namespace Host.Controllers
                                  IActivityTypeService activityTypeService,
                                  IActivityPerformService activityPerformService,
                                  IGraphService graphService,
-                                 IEmployeesService employeesService
+                                 IEmployeesService employeesService,
+                                 IHostingEnvironment hostingEnvironment
                                  )
         {
             _companyService = companyService;
@@ -75,6 +78,7 @@ namespace Host.Controllers
             _activityPerformService = activityPerformService;
             _graphService = graphService;
             _employeeService = employeesService;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         /// <summary>
@@ -852,11 +856,12 @@ namespace Host.Controllers
         {
             try
             {
+                
                 var stationName = _stationLocationService.GetStationNameById(id);
                 var stationLocation = _locationService.GetLocationById(locationId);
                 ViewBag.LocationId = locationId;
                 System.IO.MemoryStream memoryStream = new System.IO.MemoryStream();
-                var bytes = DownloadPdf.Download(id, stationName, stationLocation.Name, code);
+                var bytes = DownloadPdf.Download(id, stationName, stationLocation.Name, code, _hostingEnvironment);
                 memoryStream.Close();
                 Response.Clear();
                 Response.ContentType = "application/pdf";
@@ -881,7 +886,7 @@ namespace Host.Controllers
                 var list = new List<FileContentResult>();
                 var stationLocation = _locationService.GetLocationById(downloadPdf.Select(i => i.LocationId).FirstOrDefault());
                 System.IO.MemoryStream memoryStream = new System.IO.MemoryStream();
-                var bytes = DownloadPdf.DownloadAllPdf(downloadPdf);
+                var bytes = DownloadPdf.DownloadAllPdf(downloadPdf,_hostingEnvironment);
                 memoryStream.Close();
                 Response.Clear();
                 Response.ContentType = "application/pdf";
@@ -959,13 +964,13 @@ namespace Host.Controllers
             return View("ActivityCreation", activity);
         }
 
-        //[HttpDelete("Company/StationDelete/id/{id}")]
-        //public IActionResult DeleteStationActivity(int id)
-        //{
+        [HttpDelete("Company/StationDelete/id/{id}")]
+        public IActionResult DeleteStationActivity(int id)
+        {
 
-        //    //var activity= _activityService.DeleteActivityById(id);
-        //    //return View("AddActivity",activity);
-        //}
+            var activity = _activityService.DeleteActivityById(id);
+            return View("AddActivity", activity);
+        }
 
         //public IActionResult Station(PagingParams pagingParams)
         //{
@@ -973,7 +978,7 @@ namespace Host.Controllers
         //    return View("StationCreation", stations);
         //}
 
-       public IActionResult Station()
+        public IActionResult Station()
         {
             var station = _stationService.GetAllStation();
             return View("StationCreation", station);
