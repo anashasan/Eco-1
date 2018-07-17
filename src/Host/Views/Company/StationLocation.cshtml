@@ -26,7 +26,7 @@
             </br>
             <!-- Trigger the modal with a button -->
 
-            <a class="btn  btn-primary " style="background-color:#323232" onclick='@($"window.location.href='/Company/AddStationLocation?locationId={ViewBag.LocationId}&branchId={ViewBag.BranchId}'")'>Add Station</a>
+            <a class="btn  btn-primary " style="background-color:#323232" onclick='@($"window.location.href='/Company/AddStationLocation?locationId={ViewBag.LocationId}&companyId={ViewBag.CompanyId}&id={ViewBag.BranchId}'")'>Add Station</a>
         </div>
         <div>
             <form id="download">
@@ -57,7 +57,7 @@
                     <td id="@(s.StationLocationId)"> </td>
                     <td>
                         <a class="fa fa-download  " onClick='@($"window.location.href='/Company/Download?id={s.StationLocationId}&locationId={ViewBag.LocationId}&code={s.Code}&sno={s.Sno}'")'>Download</a>
-                        <a class="fa fa-edit" href='#' onClick='@($"window.location.href='/Company/AddStationLocation?locationId={ViewBag.LocationId}&stationlocationId={s.StationLocationId}&branchId={ViewBag.BranchId}'")'>Edit</a>
+                        <a class="fa fa-edit" href='#' onClick='@($"window.location.href='/Company/AddStationLocation?locationId={ViewBag.LocationId}&stationlocationId={s.StationLocationId}&branchId={ViewBag.BranchId}&companyid={ViewBag.CompanyId}'")'>Edit</a>
                     </td>
                 </tr>
     }
