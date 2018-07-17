@@ -4,9 +4,8 @@
 }
 <div class="page-header">
     <div class="row">
-        <div class="col-sm-9 col-xs-6">
-            <h1>New User</h1>
-        </div>
+       
+       
     </div>
 </div>
 
@@ -17,6 +16,8 @@
                 <div class="box-header">
                     <div class="panel panel-default">
                         <div class="panel-heading">
+
+                            <h3>New User</h3>
                             <small id="sevenCharacter">Passwords must be at least 7 characters.</small><br />
                             <small id="nonAlphaNumeric">Passwords must have at least one non alphanumeric character.</small><br />
                             <small id="numbers">Passwords must have at least one digit ( 0 - 9 )</small><br />
@@ -30,21 +31,21 @@
                                     <div class="col-md-10">
                                         <input id="email" class="form-control" type="email" asp-for="Email" onchange="CheckEmailAvailability()">
                                         <br />
-                                        <span id="message"></span>
+                                        <span asp-validation-for="Email" id="message"></span>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-md-2 control-label" asp-for="UserName">Username</label>
                                     <div class="col-md-10">
                                         <input class="form-control" type="text" data-val="true" data-val-remote="Username not available, please try another value" data-val-remote-additionalfields="*.Username,*.UserId" data-val-remote-type="Post" data-val-remote-url="/account/usernameavailable" data-val-required="Username is required." id="Username" name="Username" value="">
-                                        <span class="text-danger field-validation-valid" data-valmsg-for="Username" data-valmsg-replace="true"></span>
+                                        <span asp-validation-for="UserName"class="text-danger field-validation-valid" data-valmsg-for="Username" data-valmsg-replace="true"></span>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-md-2 control-label">Display Name</label>
                                     <div class="col-md-10">
                                         <input class="form-control" type="text" asp-for="NormalizeUserName">
-                                        <span class="text-danger field-validation-valid" data-valmsg-for="DisplayName" data-valmsg-replace="true"></span>
+                                        <span asp-validation-for="NormalizeUserName" class="text-danger field-validation-valid" data-valmsg-for="DisplayName" data-valmsg-replace="true"></span>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -57,14 +58,14 @@
                                     <label class="col-md-2 control-label" for="Password">Password</label>
                                     <div class="col-md-10">
                                         <input type="password" asp-for="Password" class="form-control">
-                                        <span class="text-danger field-validation-valid" data-valmsg-for="Password" data-valmsg-replace="true"></span>
+                                        <span asp-validation-for="Password" class="text-danger field-validation-valid" data-valmsg-for="Password" data-valmsg-replace="true"></span>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-md-2 control-label">Confirm Password</label>
                                     <div class="col-md-10">
                                         <input type="password" name="ConfirmPassword" required="required" id="ConfirmPassword" class="form-control" onblur="checkEquality(this.value)" />
-                                        <span id="msgConfirmPassword" style="display: none;color: red;">Password does match</span>
+                                        <span asp-validation-for="ConfrimedPassword" id="msgConfirmPassword" style="display: none;color: red;">Password does match</span>
                                     </div>
                                 </div>
 

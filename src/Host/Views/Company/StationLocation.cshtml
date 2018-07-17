@@ -16,7 +16,7 @@
     <ol class="breadcrumb">
         <li><a href="@Url.Action("CompanyCreation","Company")">Company</a></li>
         <li><a href="#" onclick='@($"window.location.href='/Company/GetBranchByCompanyId?companyId={@ViewBag.CompanyId}'")'>Branch</a></li>
-        <li><a href="#" onclick='@($"window.location.href='/Company/GetLocationById?id={@ViewBag.BranchId}'")'>Location</a></li>
+        <li><a href="#" onclick='@($"window.location.href='/Company/GetLocationById?id={@ViewBag.BranchId}&companyId={ViewBag.CompanyId}'")'>Location</a></li>
         <li class="active"><i class="fa fa-suitcase "></i>Station Location</li>
 
     </ol>
@@ -26,7 +26,7 @@
             </br>
             <!-- Trigger the modal with a button -->
 
-            <a class="btn  btn-primary " style="background-color:#323232" onclick='@($"window.location.href='/Company/AddStationLocation?locationId={ViewBag.LocationId}'")'>Add Station</a>
+            <a class="btn  btn-primary " style="background-color:#323232" onclick='@($"window.location.href='/Company/AddStationLocation?locationId={@ViewBag.LocationId}&companyId={@ViewBag.CompanyId}&id={@ViewBag.BranchId}'")'>Add Station</a>
             <a class="btn btn-primary">AllDownload</a>
         </div>
         <div>
