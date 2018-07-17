@@ -556,7 +556,7 @@ namespace Host.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        public async Task<IActionResult> AddBranchEmployee(int branchId, int branchemployeeId)
+        public async Task<IActionResult> AddBranchEmployee(int branchId, int branchemployeeId,int companyId)
         {
             if (branchemployeeId != 0)
             {
@@ -572,6 +572,7 @@ namespace Host.Controllers
                 model.Companies = branchEmployee.Companies;
                 model.BranchId = branchId;
                 ViewBag.BranchId = branchId;
+                ViewBag.CompanyId = companyId;
                 return View("AddBranchEmployee", model);
             }
 
@@ -582,7 +583,8 @@ namespace Host.Controllers
                 BranchId = branchId
 
             };
-
+            ViewBag.BranchId = branchId;
+            ViewBag.CompanyId = companyId;
             return View("AddBranchEmployee", branchEmployeeModel);
         }
 
@@ -624,12 +626,12 @@ namespace Host.Controllers
                 if (requestDto.BranchEmployeeId != null && requestDto.BranchEmployeeId != 0)
                 {
                     _branchEmployeeService.UpdateBranchEmployee(requestDto);
-                    return RedirectToAction("GetBranchEmployeeByBranchId", new { branchId = requestDto.BranchId });
+                    return RedirectToAction("GetBranchEmployeeByBranchId", new { branchId = requestDto.BranchId, companyId = requestDto.CompanyId });
                 }
                 else
                 {
                     _branchEmployeeService.AddBranchEmployee(requestDto);
-                    return RedirectToAction("GetBranchEmployeeByBranchId", new { branchId = requestDto.BranchId });
+                    return RedirectToAction("GetBranchEmployeeByBranchId", new { branchId = requestDto.BranchId, companyId = requestDto.CompanyId });
                 }
             }
             catch (Exception e)
@@ -689,19 +691,24 @@ namespace Host.Controllers
             return View("LocationCreation", location);
         }
 
-        public IActionResult AddLocation(int id, int locationId)
+        public IActionResult AddLocation(int id, int companyId, int locationId)
         {
             if (locationId != 0)
             {
                 var model = _locationService.GetLocationById(locationId);
                 model.BranchId = id;
+                model.CompanyId = companyId;
                 return View("AddLocation", model);
             }
 
             var location = new LocationDto
             {
-                BranchId = id
+                BranchId = id,
+                
             };
+            ViewBag.CompanyId = companyId;
+
+
             return View("AddLocation", location);
         }
 
@@ -716,11 +723,11 @@ namespace Host.Controllers
                 if (requestDto.LocationId != 0)
                 {
                     await _locationService.UpdateLocation(requestDto);
-                    return RedirectToAction("GetLocationById", new { id = requestDto.BranchId });
+                    return RedirectToAction("GetLocationById", new { id = requestDto.BranchId, companyId = requestDto.CompanyId });
                 }
-
+                
                 await _locationService.AddLocation(requestDto);
-                return RedirectToAction("GetLocationById", new { id = requestDto.BranchId });
+                return RedirectToAction("GetLocationById", new { id = requestDto.BranchId ,companyId=requestDto.CompanyId});
 
 
 
@@ -776,10 +783,11 @@ namespace Host.Controllers
                 if (requestDto.StationLocationId != 0)
                 {
                     await _stationLocationService.UpdateStationLocation(requestDto);
-                    return RedirectToAction("StationLocation", new { locationId = requestDto.LocationId });
+                    return RedirectToAction("StationLocation", new { locationId = requestDto.LocationId, companyId = requestDto.CompanyId,id = requestDto.BranchId });
                 }
+               
                 await _stationLocationService.AddStationLocation(requestDto);
-                return RedirectToAction("StationLocation", new { locationId = requestDto.LocationId });
+                return RedirectToAction("StationLocation", new { locationId = requestDto.LocationId,companyId =requestDto.CompanyId, id = requestDto.BranchId });
 
 
             }
@@ -791,7 +799,7 @@ namespace Host.Controllers
 
         }
 
-        public IActionResult AddStationLocation(int locationId, int stationlocationId,int branchId)
+        public IActionResult AddStationLocation(int locationId, int stationlocationId, int companyId, int id)
         {
             if (stationlocationId != 0)
             {
@@ -807,6 +815,8 @@ namespace Host.Controllers
                 model.Stations = new SelectList(stationlist, "StationId", "Name", model.StationId);
                 model.LocationId = stationlocationId;
                 ViewBag.LocationId = locationId;
+                ViewBag.BranchId = id;
+                ViewBag.CompanyId = companyId;
                 return View("AddStationLocation", model);
             }
 
@@ -820,10 +830,11 @@ namespace Host.Controllers
             {
                 Stations = new SelectList(station, "StationId", "Name"),
                 LocationId = locationId,
-                BranchId = branchId
+                BranchId = id
             };
 
-
+           
+            ViewBag.CompanyId = companyId;
             return View("AddStationLocation", stationlocation);
         }
 
@@ -864,12 +875,12 @@ namespace Host.Controllers
         {
             try
             {
-                
+
                 var stationName = _stationLocationService.GetStationNameById(id);
                 var stationLocation = _locationService.GetLocationById(locationId);
                 ViewBag.LocationId = locationId;
                 System.IO.MemoryStream memoryStream = new System.IO.MemoryStream();
-                var bytes = DownloadPdf.Download(id, stationName, stationLocation.Name, code,sno, _hostingEnvironment);
+                var bytes = DownloadPdf.Download(id, stationName, stationLocation.Name, code, sno, _hostingEnvironment);
                 memoryStream.Close();
                 Response.Clear();
                 Response.ContentType = "application/pdf";
@@ -887,15 +898,16 @@ namespace Host.Controllers
         }
 
         [HttpPost]
+        [HttpPost]
         public async Task<IActionResult> DownloadAllPdf([FromBody]List<DownloadPdfDto> downloadPdf)
         {
             try
             {
                 var list = new List<FileContentResult>();
                 var stationLocation = _locationService.GetLocationById(downloadPdf.Select(i => i.LocationId).FirstOrDefault());
-                
+
                 System.IO.MemoryStream memoryStream = new System.IO.MemoryStream();
-                var bytes = DownloadPdf.DownloadAllPdf(downloadPdf, stationLocation.Name,_hostingEnvironment);
+                var bytes = DownloadPdf.DownloadAllPdf(downloadPdf, stationLocation.Name, _hostingEnvironment);
                 memoryStream.Close();
                 Response.Clear();
                 Response.ContentType = "application/pdf";
@@ -912,6 +924,7 @@ namespace Host.Controllers
                 throw;
             }
         }
+
 
 
 
@@ -973,13 +986,13 @@ namespace Host.Controllers
             return View("ActivityCreation", activity);
         }
 
-        [HttpDelete("Company/StationDelete/id/{id}")]
-        public IActionResult DeleteStationActivity(int id)
-        {
+        //[HttpDelete("Company/StationDelete/id/{id}")]
+        //public IActionResult DeleteStationActivity(int id)
+        //{
 
-            var activity = _activityService.DeleteActivityById(id);
-            return View("AddActivity", activity);
-        }
+        //    //var activity= _activityService.DeleteActivityById(id);
+        //    //return View("AddActivity",activity);
+        //}
 
         //public IActionResult Station(PagingParams pagingParams)
         //{
@@ -987,7 +1000,7 @@ namespace Host.Controllers
         //    return View("StationCreation", stations);
         //}
 
-        public IActionResult Station()
+       public IActionResult Station()
         {
             var station = _stationService.GetAllStation();
             return View("StationCreation", station);
@@ -1164,6 +1177,7 @@ namespace Host.Controllers
             var snoExist = _stationLocationService.CheckSnoExist(sno, branchId);
             return snoExist;
         }
+
 
         [HttpGet("Company/Employee/CheckEmail/email/{emai}")]
         public bool CheckEmailAddress([FromRoute]string email)

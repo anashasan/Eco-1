@@ -16,7 +16,7 @@
     <ol class="breadcrumb">
         <li><a href="@Url.Action("CompanyCreation","Company")">Company</a></li>
         <li><a href="#" onclick='@($"window.location.href='/Company/GetBranchByCompanyId?companyId={@ViewBag.CompanyId}'")'>Branch</a></li>
-        <li><a href="#" onclick='@($"window.location.href='/Company/GetLocationById?id={@ViewBag.BranchId}'")'>Location</a></li>
+        <li><a href="#" onclick='@($"window.location.href='/Company/GetLocationById?id={@ViewBag.BranchId}&companyId={ViewBag.CompanyId}'")'>Location</a></li>
         <li class="active"><i class="fa fa-suitcase "></i>Station Location</li>
 
     </ol>

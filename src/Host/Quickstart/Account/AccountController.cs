@@ -92,7 +92,7 @@ namespace IdentityServer4.Quickstart.UI
         public async Task<IActionResult> CreateUser(Host.Models.AccountViewModels.UserInfoModel user)
         {
             if (!ModelState.IsValid)
-                return null;
+                return View("NewHire",user);
             using (var scope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
@@ -205,6 +205,7 @@ namespace IdentityServer4.Quickstart.UI
         [Authorize(Roles="Admin")]
         public IActionResult NewHire()
         {
+            
             var roleList = _roleService.GetAllRoles();
             var userInfoModel = new UserInfoModel
             {

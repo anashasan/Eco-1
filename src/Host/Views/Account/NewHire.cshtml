@@ -2,11 +2,16 @@
 @{
     Layout = "_AdminLayout";
 }
+
+<style>
+    .error {
+        color: red;
+    }
+</style>
 <div class="page-header">
     <div class="row">
-        <div class="col-sm-9 col-xs-6">
-            <h1>New User</h1>
-        </div>
+       
+       
     </div>
 </div>
 
@@ -17,34 +22,36 @@
                 <div class="box-header">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            @*<small id="sevenCharacter">Passwords must be at least 7 characters.</small><br />
+
+                            <h3>New User</h3>
+                            <small id="sevenCharacter">Passwords must be at least 7 characters.</small><br />
                             <small id="nonAlphaNumeric">Passwords must have at least one non alphanumeric character.</small><br />
-                            <small id="numbers">Passwords must have at least one digit ( 0 - 9 )</small><br />*@
+                            <small id="numbers">Passwords must have at least one digit ( 0 - 9 )</small><br />
                         </div>
                         <div class="panel-body">
                             <form asp-controller="Account" asp-action="CreateUser" class="form-horizontal" method="post">
                                 <input type="hidden" data-val="true" data-val-required="The UserId field is required." id="UserId" name="UserId" value="00000000-0000-0000-0000-000000000000">
                                 <input type="hidden" data-val="true" data-val-required="The SiteId field is required." id="SiteId" name="SiteId" value="a9d9c0b8-1930-4059-a58c-e52648bee1ba">
                                 <div class="form-group">
-                                    <label class="col-md-2 control-label" for="Email">Email</label>
+                                    <label class="col-md-2 control-label" for="Email">Email<i class="fa fa-asterisk" style="color:red" aria-hidden="true"></i></label>
                                     <div class="col-md-10">
                                         <input id="email" class="form-control" type="email" asp-for="Email" onchange="CheckEmailAvailability()">
                                         <br />
-                                        <span id="message"></span>
+                                        <span asp-validation-for="Email" class="text-danger" id="message"></span>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-md-2 control-label" asp-for="UserName">Username</label>
+                                    <label class="col-md-2 control-label" asp-for="UserName">Username<i class="fa fa-asterisk" style="color:red" aria-hidden="true"></i></label>
                                     <div class="col-md-10">
-                                        <input class="form-control" type="text" data-val="true" data-val-remote="Username not available, please try another value" data-val-remote-additionalfields="*.Username,*.UserId" data-val-remote-type="Post" data-val-remote-url="/account/usernameavailable" data-val-required="Username is required." id="Username" name="Username" value="">
-                                        <span class="text-danger field-validation-valid" data-valmsg-for="Username" data-valmsg-replace="true"></span>
+                                        <input class="form-control" type="text" asp-for="UserName">
+                                        <span asp-validation-for="UserName"class="text-danger" ></span>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-md-2 control-label">Display Name</label>
+                                    <label class="col-md-2 control-label">Display Name<i class="fa fa-asterisk" style="color:red" aria-hidden="true"></i></label>
                                     <div class="col-md-10">
                                         <input class="form-control" type="text" asp-for="NormalizeUserName">
-                                        <span class="text-danger field-validation-valid" data-valmsg-for="DisplayName" data-valmsg-replace="true"></span>
+                                        <span asp-validation-for="NormalizeUserName" class="text-danger" ></span>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -53,28 +60,18 @@
                                         <select class="form-control" asp-items="@Model.Roles" asp-for="RoleId" placeholder="Select Business Name..."></select>
                                     </div>
                                 </div>
-
                                 <div class="form-group">
-                                    <label class="col-md-2 control-label" for="Password">Password</label>
+                                    <label class="col-md-2 control-label" for="Password">Password<i class="fa fa-asterisk" style="color:red" aria-hidden="true"></i></label>
                                     <div class="col-md-10">
                                         <input type="password" asp-for="Password" class="form-control">
-                                        <span class="text-danger field-validation-valid" data-valmsg-for="Password" data-valmsg-replace="true"></span>
+                                        <span asp-validation-for="Password" class="text-danger "> </span>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-md-2 control-label">Confirm Password</label>
+                                    <label class="col-md-2 control-label">Confirm Password<i class="fa fa-asterisk" style="color:red" aria-hidden="true"></i></label>
                                     <div class="col-md-10">
-                                        <input type="password" name="ConfirmPassword" required="required" id="ConfirmPassword" class="form-control" onblur="checkEquality(this.value)" />
-                                        <span id="msgConfirmPassword" style="display: none;color: red;">Password does match</span>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label class="col-md-2 control-label" for="Role">Status</label>
-                                    <div class="col-md-10">
-                                        <select class="form-control" asp-for="Status">
-                                            <option value=1>Active</option>
-                                            <option value=0>InActive</option>
-                                        </select>
+                                        <input type="password" name="ConfirmPassword" id="ConfirmPassword" class="form-control" onblur="checkEquality(this.value)" />
+                                        <span asp-validation-for="ConfrimedPassword" class="text-danger" ></span>
                                     </div>
                                 </div>
 
@@ -83,7 +80,6 @@
                                         <input id="btn" type="submit" class="btn btn-default" value="Save">
                                     </div>
                                 </div>
-
                             </form>
                         </div>
                     </div>
@@ -93,8 +89,7 @@
     </div>
 </div>
 
-@*@section scripts {
-<script src="~/plugins/jQueryUI/jquery-ui.js"></script>
+@section scripts {
     <script type="text/javascript">
 
         const CheckEmailAvailability = () => {
@@ -230,7 +225,7 @@
             });
 
     </script>
-}*@
+}
 
 
 
