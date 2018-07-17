@@ -17,6 +17,7 @@ namespace Host.Models.AccountViewModels
         public bool EmailConfirmed { get; set; }
         public bool LockedoutEnable { get; set; }
         public string NormalizeEmail { get; set; }
+        [Required]
         public string NormalizeUserName { get; set; }
         [Required]
         public string Password { get; set; }
@@ -25,6 +26,7 @@ namespace Host.Models.AccountViewModels
         public string PhoneNumber { get; set; }
         public bool PhoneNumberConfirmed { get; set; }
         public bool TwoFactorEnable { get; set; }
+        [Required]
         public string UserName { get; set; }
         public string RoleName { get; set; }
         public string RoleId { get; set; }
