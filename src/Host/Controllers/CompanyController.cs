@@ -830,11 +830,12 @@ namespace Host.Controllers
             {
                 Stations = new SelectList(station, "StationId", "Name"),
                 LocationId = locationId,
-                BranchId = id
+                BranchId=id,
+                CompanyId=companyId
             };
 
            
-            ViewBag.CompanyId = companyId;
+           
             return View("AddStationLocation", stationlocation);
         }
 
