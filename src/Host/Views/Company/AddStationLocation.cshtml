@@ -27,6 +27,7 @@
                         <div class="panel-body">
                             <form class="form-horizontal" asp-controller="Company" asp-action="AddStationLocation" method="post">
 
+                                <input type="hidden" asp-for="BranchId"  id="branchId"/>
                                 <input type="hidden" asp-for="LocationId" />
                                 <input type="hidden" asp-for="StationLocationId" />
                                 <div class="form-group">
@@ -64,11 +65,12 @@
 
         const CheckAvailability = () => {
             var sno = document.getElementById("sno").value;
+            var branchId = document.getElementById("branchId").value;
             var message = $("#message");
             const headers = new Headers();
             headers.append("Accept", "application/json");
             headers.append("Content-Type", "application/json");
-            fetch(`/Company/StationLocation/CheckSno/sno/${sno}`, {
+            fetch(`/Company/StationLocation/CheckSno/sno/${sno}/branchId/${branchId}`, {
                 credentials: "same-origin",
                 headers: headers,
                 method: "GET"

@@ -20,7 +20,7 @@ namespace Host.Helper
         PdfWriter _pdfWriter;
         Phrase _phrase;
       
-        public static  byte[] Download(int stationLocationId,string stationName,string locationName, string code, IHostingEnvironment _hostingEnvironment)
+        public static  byte[] Download( int stationLocationId,string stationName,string locationName, string code,int Sno, IHostingEnvironment _hostingEnvironment)
         {
             try
             {
@@ -104,7 +104,7 @@ namespace Host.Helper
                                   BaseFont f_cn = BaseFont.CreateFont("c:\\windows\\fonts\\calibri.ttf", BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
                                   cb.SetFontAndSize(f_cn, 18);
                                   cb.SetTextMatrix(28, 250);
-                                  cb.ShowText("StationID:  " + stationLocationId);
+                                  cb.ShowText("StationID:  " + Sno);
                                   cb.EndText();
 
                                   cb.Rectangle(15, 160, 140, 50);
@@ -194,7 +194,7 @@ namespace Host.Helper
                 BaseFont f_cn1 = BaseFont.CreateFont("c:\\windows\\fonts\\calibri.ttf", BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
                 cb.SetFontAndSize(f_cn, 10);
                 cb.SetTextMatrix(95, 250);
-                cb.ShowText("StationID:  " + stationLocationId);
+                cb.ShowText("StationID:  " + Sno);
                 cb.EndText();
 
                 cb.Rectangle(45, 160, 190, 50);
@@ -235,7 +235,7 @@ namespace Host.Helper
            
         }
 
-        public  static byte[] DownloadAllPdf (List<DownloadPdfDto> downloadAllPdf,  IHostingEnvironment _hostingEnvironment)
+        public  static byte[] DownloadAllPdf (List<DownloadPdfDto> downloadAllPdf,string locationName , IHostingEnvironment _hostingEnvironment)
         {
             try
             {
@@ -318,7 +318,7 @@ namespace Host.Helper
                     BaseFont f_cn = BaseFont.CreateFont("c:\\windows\\fonts\\calibri.ttf", BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
                     cb.SetFontAndSize(f_cn, 10);
                     cb.SetTextMatrix(28, 250);
-                    cb.ShowText("StationID:  " + s.StationLocationId);
+                    cb.ShowText("StationID:  " + s.SNo);
                     cb.EndText();
 
                     cb.Rectangle(15, 160, 140, 50);
@@ -339,7 +339,7 @@ namespace Host.Helper
                     BaseFont f_cnnn = BaseFont.CreateFont("c:\\windows\\fonts\\calibri.ttf", BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
                     cb.SetFontAndSize(f_cnnn, 10);
                     cb.SetTextMatrix(19, 110);
-                    cb.ShowText("Location Name: " + s.LocationName);
+                    cb.ShowText("Location Name: " + locationName);
                     cb.EndText();
 
 
@@ -408,7 +408,7 @@ namespace Host.Helper
                     BaseFont f_cn1 = BaseFont.CreateFont("c:\\windows\\fonts\\calibri.ttf", BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
                     cb.SetFontAndSize(f_cn, 10);
                     cb.SetTextMatrix(95, 250);
-                    cb.ShowText("StationID:  " + s.StationLocationId);
+                    cb.ShowText("StationID:  " + s.SNo);
                     cb.EndText();
 
                     cb.Rectangle(45, 160, 190, 50);
@@ -429,7 +429,7 @@ namespace Host.Helper
                     BaseFont f_cnnn1 = BaseFont.CreateFont("c:\\windows\\fonts\\calibri.ttf", BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
                     cb.SetFontAndSize(f_cnnn, 10);
                     cb.SetTextMatrix(85, 110);
-                    cb.ShowText("Location Name: " + s.LocationName);
+                    cb.ShowText("Location Name: " + locationName);
                     cb.EndText();
                     document.NewPage();
 

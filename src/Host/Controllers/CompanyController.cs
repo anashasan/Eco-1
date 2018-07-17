@@ -791,7 +791,7 @@ namespace Host.Controllers
 
         }
 
-        public IActionResult AddStationLocation(int locationId, int stationlocationId)
+        public IActionResult AddStationLocation(int locationId, int stationlocationId,int branchId)
         {
             if (stationlocationId != 0)
             {
@@ -819,7 +819,8 @@ namespace Host.Controllers
             var stationlocation = new StationLocationDto
             {
                 Stations = new SelectList(station, "StationId", "Name"),
-                LocationId = locationId
+                LocationId = locationId,
+                BranchId = branchId
             };
 
 
@@ -859,7 +860,7 @@ namespace Host.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Download(int id, int locationId, string code)
+        public async Task<IActionResult> Download(int id, int locationId, string code, int sno)
         {
             try
             {
@@ -868,7 +869,7 @@ namespace Host.Controllers
                 var stationLocation = _locationService.GetLocationById(locationId);
                 ViewBag.LocationId = locationId;
                 System.IO.MemoryStream memoryStream = new System.IO.MemoryStream();
-                var bytes = DownloadPdf.Download(id, stationName, stationLocation.Name, code, _hostingEnvironment);
+                var bytes = DownloadPdf.Download(id, stationName, stationLocation.Name, code,sno, _hostingEnvironment);
                 memoryStream.Close();
                 Response.Clear();
                 Response.ContentType = "application/pdf";
@@ -892,8 +893,9 @@ namespace Host.Controllers
             {
                 var list = new List<FileContentResult>();
                 var stationLocation = _locationService.GetLocationById(downloadPdf.Select(i => i.LocationId).FirstOrDefault());
+                
                 System.IO.MemoryStream memoryStream = new System.IO.MemoryStream();
-                var bytes = DownloadPdf.DownloadAllPdf(downloadPdf,_hostingEnvironment);
+                var bytes = DownloadPdf.DownloadAllPdf(downloadPdf, stationLocation.Name,_hostingEnvironment);
                 memoryStream.Close();
                 Response.Clear();
                 Response.ContentType = "application/pdf";
@@ -1156,10 +1158,10 @@ namespace Host.Controllers
         }
 
 
-        [HttpGet("Company/StationLocation/CheckSno/sno/{sno}")]
-        public bool CheckSnoExist([FromRoute] int sno)
+        [HttpGet("Company/StationLocation/CheckSno/sno/{sno}/branchId/{branchId}")]
+        public bool CheckSnoExist([FromRoute] int sno, [FromRoute]int branchId)
         {
-            var snoExist = _stationLocationService.CheckSnoExist(sno);
+            var snoExist = _stationLocationService.CheckSnoExist(sno, branchId);
             return snoExist;
         }
 

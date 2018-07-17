@@ -148,7 +148,8 @@ namespace Host.Business.DbServices
                     {
                         StationLocationId = a.PkStationLocationId,
                         StationId = a.FkStation.PkStationId,
-                        Sno = a.Sno
+                        Sno = a.Sno,
+                        BranchId = a.FkLocation.BranchLocation.Select(i => i.FkBranchId).FirstOrDefault()
                     }).SingleOrDefault();
 
 
@@ -164,10 +165,10 @@ namespace Host.Business.DbServices
 
         public string GetStationNameById(int id)
         {
-            return _context.Station
+            return _context.StationLocation
                     .AsNoTracking()
-                    .Where(i => i.PkStationId == id)
-                    .Select(o => o.Name)
+                    .Where(i => i.PkStationLocationId == id)
+                    .Select(o => o.FkStation.Name)
                     .SingleOrDefault();
         }
 
@@ -243,7 +244,7 @@ namespace Host.Business.DbServices
             
         }
 
-        public bool CheckSnoExist(int sno)
+        public bool CheckSnoExist(int sno, int branchId)
         {
             return _context.StationLocation
                     .AsNoTracking()
