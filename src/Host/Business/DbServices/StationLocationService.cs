@@ -26,7 +26,11 @@ namespace Host.Business.DbServices
             try
             {
                 var code = LastCodeStationLocation();
-                var decriptCode = EncoderAgent.EncryptString(code + "00001");
+                Random rnd = new Random();
+                int month = rnd.Next(1, 13); // creates a number between 1 and 12
+                int dice = rnd.Next(1, 7);   // creates a number between 1 and 6
+                int card = rnd.Next(52);
+                var decriptCode = EncoderAgent.EncryptString(code +card);
                 var stationLocation = new StationLocation
                 {
                     FkStationId = requestDto.StationId,
@@ -59,7 +63,7 @@ namespace Host.Business.DbServices
                                           StationId = p.FkStation.PkStationId,
                                           StationName = p.FkStation.Name,
                                           StationLocationId = p.PkStationLocationId,
-                                          Code = EncoderAgent.DecryptString(p.Code),
+                                          Code = p.Code,
                                           Sno = p.Sno
                                       }).ToList();
                 return stationLocation;
@@ -111,6 +115,7 @@ namespace Host.Business.DbServices
                 var stationLocation = _context.StationLocation.Find(requestDto.StationLocationId);
                 stationLocation.FkStationId = requestDto.StationId;
                 stationLocation.FkLocationId = requestDto.LocationId;
+                stationLocation.Sno = requestDto.Sno;
                 //var stationlocation = new StationLocation
                 //{
                 //    PkStationLocationId = requestDto.StationLocationId,
@@ -143,6 +148,8 @@ namespace Host.Business.DbServices
                     {
                         StationLocationId = a.PkStationLocationId,
                         StationId = a.FkStation.PkStationId,
+                        Sno = a.Sno,
+                        BranchId = a.FkLocation.BranchLocation.Select(i => i.FkBranchId).FirstOrDefault()
                     }).SingleOrDefault();
 
 
@@ -158,10 +165,10 @@ namespace Host.Business.DbServices
 
         public string GetStationNameById(int id)
         {
-            return _context.Station
+            return _context.StationLocation
                     .AsNoTracking()
-                    .Where(i => i.PkStationId == id)
-                    .Select(o => o.Name)
+                    .Where(i => i.PkStationLocationId == id)
+                    .Select(o => o.FkStation.Name)
                     .SingleOrDefault();
         }
 
@@ -187,7 +194,7 @@ namespace Host.Business.DbServices
             var encrptCode = EncoderAgent.EncryptString(code);
             var stationId = _context.StationLocation
                             .AsNoTracking()
-                            .Where(i => i.Code == encrptCode)
+                            .Where(i => i.Code == code)
                             .Select(p => new { p.FkStationId, p.FkStation.Name, p.PkStationLocationId, p.Sno })
                             .SingleOrDefault();
             if(stationId !=null && stationId.FkStationId != 0)
@@ -237,7 +244,7 @@ namespace Host.Business.DbServices
             
         }
 
-        public bool CheckSnoExist(int sno)
+        public bool CheckSnoExist(int sno, int branchId)
         {
             return _context.StationLocation
                     .AsNoTracking()

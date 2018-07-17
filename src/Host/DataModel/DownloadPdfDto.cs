@@ -12,5 +12,6 @@ namespace Host.DataModel
         public string StationName { get; set; }
         public string LocationName { get; set; }
         public string Code { get; set; }
+        public int SNo { get; set; }
     }
 }

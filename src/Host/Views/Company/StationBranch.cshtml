@@ -50,6 +50,7 @@
                         <th> Location Name</th>
                         <th> Station Number</th>
                         <th> Bar Code</th>
+                        <th>Options</th>
                     </tr>
                 </thead>
                 <tbody id="tbody">
@@ -62,6 +63,11 @@
                         <td>@a.LocationName</td>
                         <td>@a.StationLocationId</td>
                         <td id="@(a.StationLocationId)"> </td>
+                        <td style="text-align:center">
+                            <a class="fa fa-edit " href='#'>Edit</a>
+                            <a class="fa fa-remove " href='#'>Delete</a>
+                            <a class="fa fa-download" onClick='@($"window.location.href='/Company/Download?id={a.StationLocationId}&locationId={a.LocationId}&code={a.Code}&sno={a.Sno}'")'>Download</a>
+                        </td>
                     </tr>
 
             }
@@ -98,6 +104,7 @@
             stationLocationId: m.StationLocationId,
             stationName: m.StationName,
             code: m.Code,
+            sno : m.Sno,
             locationId: m.LocationId,
             locationName:m.LocationName
         });

@@ -31,5 +31,6 @@ namespace Host.Models.AccountViewModels
         public string RoleName { get; set; }
         public string RoleId { get; set; }
         public SelectList Roles { get; set; }
+        public bool Status { get; set; }
     }
 }
