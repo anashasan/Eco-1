@@ -1127,12 +1127,13 @@ namespace Host.Controllers
         }
 
         [HttpGet]
-        public IActionResult DeleteLocation(int locationId, int branchId)
+        public IActionResult DeleteLocation(int locationId, int branchId,int companyId)
         {
             try
             {
                 _locationService.DeleteLocation(locationId);
-                return RedirectToAction("GetLocationById", new { id = branchId });
+                
+                return RedirectToAction("GetLocationById", new { id = branchId , CompanyId = companyId });
             }
             catch (Exception e)
             {
