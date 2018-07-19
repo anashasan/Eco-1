@@ -81,36 +81,40 @@ namespace Host.Helper
                     web.Add(Web);
                     document.Add(web);
 
-               
 
-              /*  PdfContentByte cb = writer.DirectContent;
-                                 var Rectangular = new Rectangle(7, 420, 280, 25); //left width,top height,right width,bottom height
-                                  Rectangular.BorderWidthLeft = 1.1f;
-                                  Rectangular.BorderWidthRight = 1.1f;
-                                  Rectangular.BorderWidthTop = 1.1f;
-                                  Rectangular.BorderWidthBottom = 1.1f;*/
 
-                string Station = stationName;
-                iTextSharp.text.Paragraph station = new iTextSharp.text.Paragraph();
+                  PdfContentByte cb = writer.DirectContent;
+                              /*     var Rectangular = new Rectangle(7, 420, 280, 25); //left width,top height,right width,bottom height
+                                    Rectangular.BorderWidthLeft = 1.1f;
+                                    Rectangular.BorderWidthRight = 1.1f;
+                                    Rectangular.BorderWidthTop = 1.1f;
+                                    Rectangular.BorderWidthBottom = 1.1f;*/
 
-                station.SpacingBefore = 10;
-                station.SpacingAfter = 25;
-                station.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
-                station.Font = FontFactory.GetFont(FontFactory.TIMES, 30f, BaseColor.BLACK);
-                station.Add(Station);
-                document.Add(station);
+                 string Station = stationName;
+                 iTextSharp.text.Paragraph station = new iTextSharp.text.Paragraph();
 
+                 station.SpacingBefore = 10;
+                 station.SpacingAfter = 25;
+                 station.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
+                 station.Font= FontFactory.GetFont(FontFactory.TIMES, 23f, BaseColor.BLACK);
+                 station.Add(Station);
+                 document.Add(station);
+
+                
                 int StationNo = Sno;
                 iTextSharp.text.Paragraph stationno = new iTextSharp.text.Paragraph();
 
-                stationno.SpacingBefore = 10;
+                stationno.SpacingBefore = 25;
                 stationno.SpacingAfter = 10;
                 stationno.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
                 stationno.Font = FontFactory.GetFont(FontFactory.TIMES_BOLD, 60f, BaseColor.BLACK);
                 stationno.Add(""+Sno);
                 document.Add(stationno);
 
-                
+                cb.SetLineWidth(2.25f);   // Make a bit thicker than 1.0 default
+                cb.MoveTo(3, document.Top  -237f);
+                cb.LineTo(300, document.Top -237f);
+                cb.Stroke();
 
                 string LocationName = locationName;
                 iTextSharp.text.Paragraph locationname = new iTextSharp.text.Paragraph();
@@ -118,13 +122,13 @@ namespace Host.Helper
                 locationname.SpacingBefore = 10;
                 locationname.SpacingAfter = 1;
                 locationname.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
-                locationname.Font = FontFactory.GetFont(FontFactory.TIMES, 30f, BaseColor.BLACK);
+                locationname.Font = FontFactory.GetFont(FontFactory.TIMES, 23f, BaseColor.BLACK);
                 locationname.Add(LocationName);
                 document.Add(locationname);
 
                  BarcodeQRCode barcodeQRCode = new BarcodeQRCode(code, 1000, 1000, null);
                 Image codeQrImage = barcodeQRCode.GetImage();
-                codeQrImage.ScaleAbsolute(95, 5);
+                codeQrImage.ScaleAbsolute(95, 95);
                 codeQrImage.Alignment = iTextSharp.text.Element.ALIGN_LEFT;
                 codeQrImage.Alignment = iTextSharp.text.Element.ALIGN_BOTTOM;
                 document.Add(codeQrImage);
@@ -224,7 +228,7 @@ namespace Host.Helper
                 station1.SpacingBefore = 10;
                 station1.SpacingAfter = 25;
                 station1.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
-                station1.Font = FontFactory.GetFont(FontFactory.TIMES, 30f, BaseColor.BLACK);
+                station1.Font = FontFactory.GetFont(FontFactory.TIMES, 23f, BaseColor.BLACK);
                 station1.Add(Station1);
                 document.Add(station1);
 
@@ -246,7 +250,7 @@ namespace Host.Helper
                 locationname1.SpacingBefore = 10;
                 locationname1.SpacingAfter = 1;
                 locationname1.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
-                locationname1.Font = FontFactory.GetFont(FontFactory.TIMES, 30f, BaseColor.BLACK);
+                locationname1.Font = FontFactory.GetFont(FontFactory.TIMES, 23f, BaseColor.BLACK);
                 locationname1.Add(LocationName1);
                 document.Add(locationname1);
 
