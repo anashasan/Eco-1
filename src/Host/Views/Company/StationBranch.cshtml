@@ -64,7 +64,7 @@
                         <td>@a.StationLocationId</td>
                         <td id="@(a.StationLocationId)"> </td>
                         <td style="text-align:center">
-                            <a class="fa fa-edit " href='#'>Edit</a>
+                            <a class="fa fa-edit " onClick='@($"window.location.href='/Company/UpdateBranchStation'")'>Edit</a>
                             <a class="fa fa-remove " href='#'>Delete</a>
                             <a class="fa fa-download" onClick='@($"window.location.href='/Company/Download?id={a.StationLocationId}&locationId={a.LocationId}&code={a.Code}&sno={a.Sno}'")'>Download</a>
                         </td>

@@ -839,6 +839,11 @@ namespace Host.Controllers
             return View("AddStationLocation", stationlocation);
         }
 
+        public IActionResult UpdateBranchStation()
+        {
+            return View("UpdateBranchStation");
+        }
+
 
 
 

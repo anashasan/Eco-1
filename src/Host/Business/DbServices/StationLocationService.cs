@@ -26,11 +26,8 @@ namespace Host.Business.DbServices
             try
             {
                 var code = LastCodeStationLocation();
-                Random rnd = new Random();
-                int month = rnd.Next(1, 13); // creates a number between 1 and 12
-                int dice = rnd.Next(1, 7);   // creates a number between 1 and 6
-                int card = rnd.Next(52);
-                var decriptCode = EncoderAgent.EncryptString(code +card);
+                
+                var decriptCode = EncoderAgent.EncryptString((int.Parse(code)).ToString());
                 var stationLocation = new StationLocation
                 {
                     FkStationId = requestDto.StationId,
@@ -178,8 +175,9 @@ namespace Host.Business.DbServices
             {
                 var lastCode = _context.StationLocation
                                .AsNoTracking()
+                               .OrderByDescending(i => i.PkStationLocationId)
                                .Select(i => i.PkStationLocationId)
-                               .LastOrDefault();
+                               .FirstOrDefault();
                 return lastCode.ToString();
             }
             catch (Exception e)
