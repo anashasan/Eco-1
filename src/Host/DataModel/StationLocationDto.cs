@@ -10,6 +10,7 @@ namespace Host.DataModel
     {
         public int StationLocationId { get; set; }
         public SelectList Stations { get; set; }
+        public SelectList Locations { get; set; }
         public int StationId { get; set; }
         public int LocationId { get; set; }
         public int BranchId { get; set; }

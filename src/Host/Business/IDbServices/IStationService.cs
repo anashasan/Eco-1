@@ -14,6 +14,6 @@ namespace Host.Business.IDbServices
         StationDto GetStationById(int id);
         PaginatedList<StationDto> GetAllStationPagination(PagingParams pagingParams);
         List<StationDto> GetAllStation();
-        Task<int> DeleteStation(int id);
+        void DeleteStation(int id);
     }
 }

@@ -16,89 +16,89 @@
 
     <ol class="breadcrumb">
         <li class="active"><i class="fa fa-dashboard"></i> Company</li>
-
     </ol>
-
-    <div class="box col-md-10">
-
-        <div class="box-header">
-            <h3 class="box-title">Company Data Table</h3></br>
-            </br>
-
-
-            <!-- Trigger the modal with a button -->
-            <a class=" btn  btn-primary" id="th" href="@Url.Action("AddCompany", "Company")">Add Company</a>
-        </div>
-
-        <!-- /.box-header -->
-        <div class="box-body " style="width: 100%; height: 400px; ">
-            <table id="example2" class="table table-bordered table-hover table-striped">
-                <thead id="th">
-                    <tr>
-                        <th>Company Name</th>
-                        <th>Type</th>
-                        <th>URL</th>
-                        <th>Options</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var s in Model)
-                    {
-
-                        <tr>
-                            <td style="text-align: center">
-                                @s.Name
-                                <a class="text-primary"></a>
-                            </td>
-                            <td style="text-align: center">
-                                @s.Type
-                                <span>
-                                    <i class='zmdi large-size'></i>
-                                </span>
-                            </td>
-
-                            <td style="text-align: center">
-                                @s.Url
-                                <span>
-                                    <i class='zmdi large-size'></i>
-                                </span>
-                            </td>
-                            <td>
-                                <div class="dropdown">
-                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                        Options
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item fa fa-edit" href="#" onClick='@($"window.location.href='/Company/DeleteCompany?companyId={s.CompanyId}'")'>Delete</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item fa fa-edit" href="#" onClick='@($"window.location.href='/Company/GetCompanyById?id={s.CompanyId}'")'>Edit</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item fa fa-delicious" href='#' onclick='@($"window.location.href='/Company/GetBranchByCompanyId?companyId={s.CompanyId}'")'>Branches</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item fa fa-comment-o" href='#' onclick='@($"window.location.href='/Company/GetBranchEmployeeByCompanyId?companyId={s.CompanyId}'")'>Correspondants</a>
-
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-
-
-                    }
-            </table>
-        </div>
-        <!-- /.box-body -->
     </div>
-</div>
+    <div class="col-xs-12">
+        <div class="box col-md-10">
 
-@section Scripts{
-    <link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
-    <script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('#example2').DataTable();
-        });
+            <div class="box-header">
+                <h3 class="box-title">Company Data Table</h3></br>
+                </br>
 
-    </script>
-}
+
+                <!-- Trigger the modal with a button -->
+                <a class=" btn  btn-primary" id="th" href="@Url.Action("AddCompany", "Company")">Add Company</a>
+            </div>
+
+            <!-- /.box-header -->
+            <div class="box-body " style="width: 100%; height: 400px; ">
+                <table id="example2" class="table table-bordered table-hover table-striped">
+                    <thead id="th">
+                        <tr>
+                            <th>Company Name</th>
+                            <th>Type</th>
+                            <th>URL</th>
+                            <th>Options</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var s in Model)
+                        {
+
+                            <tr>
+                                <td style="text-align: center">
+                                    @s.Name
+                                    <a class="text-primary"></a>
+                                </td>
+                                <td style="text-align: center">
+                                    @s.Type
+                                    <span>
+                                        <i class='zmdi large-size'></i>
+                                    </span>
+                                </td>
+
+                                <td style="text-align: center">
+                                    @s.Url
+                                    <span>
+                                        <i class='zmdi large-size'></i>
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            Options
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a class="dropdown-item fa fa-edit" href="#" onClick='@($"window.location.href='/Company/DeleteCompany?companyId={s.CompanyId}'")'>Delete</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item fa fa-edit" href="#" onClick='@($"window.location.href='/Company/GetCompanyById?id={s.CompanyId}'")'>Edit</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item fa fa-delicious" href='#' onclick='@($"window.location.href='/Company/GetBranchByCompanyId?companyId={s.CompanyId}'")'>Branches</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item fa fa-comment-o" href='#' onclick='@($"window.location.href='/Company/GetBranchEmployeeByCompanyId?companyId={s.CompanyId}'")'>Correspondants</a>
+
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+
+                        }
+                </table>
+            </div>
+            <!-- /.box-body -->
+        </div>
+    </div>
+
+    @section Scripts{
+        <link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+        <script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('#example2').DataTable();
+            });
+
+        </script>
+    }
 
 

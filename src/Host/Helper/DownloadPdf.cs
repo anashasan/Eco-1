@@ -19,76 +19,76 @@ namespace Host.Helper
         Document _document;
         PdfWriter _pdfWriter;
         Phrase _phrase;
-      
-        public static  byte[] Download( int stationLocationId,string stationName,string locationName, string code,int Sno, IHostingEnvironment _hostingEnvironment)
+
+        public static byte[] Download(int stationLocationId, string stationName, string locationName, string code, int Sno, IHostingEnvironment _hostingEnvironment)
         {
             try
             {
-               
+
                 System.IO.MemoryStream memoryStream = new System.IO.MemoryStream();
 
-                
+
                 var document = new iTextSharp.text.Document(new Rectangle(288f, 432f));
 
-      
+
 
                 PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
                 document.Open();
-                    Phrase phrase = new Phrase();
-                    document.Add(phrase);
+                Phrase phrase = new Phrase();
+                document.Add(phrase);
 
                 var path = Path.Combine(_hostingEnvironment.WebRootPath, @"images\Eco.jpg");
 
                 iTextSharp.text.Image image = iTextSharp.text.Image.GetInstance(path);
-                    image.ScaleAbsolute(145f, 70f);
-                    image.SetAbsolutePosition(70f, 345f);
-                    image.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
+                image.ScaleAbsolute(145f, 70f);
+                image.SetAbsolutePosition(70f, 345f);
+                image.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
                 //image.SpacingAfter = 40;
-                    document.Add(image);
-                    
+                document.Add(image);
+
 
                 string Phone = @"Phone:021-34829161/63";
 
-                    List<iTextSharp.text.Paragraph> paragraph = new List<iTextSharp.text.Paragraph>();
+                List<iTextSharp.text.Paragraph> paragraph = new List<iTextSharp.text.Paragraph>();
 
 
-                    iTextSharp.text.Paragraph phone = new iTextSharp.text.Paragraph();
+                iTextSharp.text.Paragraph phone = new iTextSharp.text.Paragraph();
 
-                    phone.SpacingBefore = 50;
-                    phone.SpacingAfter = 1;
-                    phone.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
-                    phone.Font = FontFactory.GetFont(FontFactory.TIMES, 16f, BaseColor.DARK_GRAY);
-                    phone.Add(Phone);
-                    document.Add(phone);
+                phone.SpacingBefore = 50;
+                phone.SpacingAfter = 1;
+                phone.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
+                phone.Font = FontFactory.GetFont(FontFactory.TIMES, 16f, BaseColor.DARK_GRAY);
+                phone.Add(Phone);
+                document.Add(phone);
 
-                    string Email = @"Email:info@ecoservices.com.pk";
-                    iTextSharp.text.Paragraph email = new iTextSharp.text.Paragraph();
+                string Email = @"Email:info@ecoservices.com.pk";
+                iTextSharp.text.Paragraph email = new iTextSharp.text.Paragraph();
 
-                    email.SpacingBefore = 1;
-                    email.SpacingAfter = 1;
-                    email.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
-                    email.Font = FontFactory.GetFont(FontFactory.TIMES, 16f, BaseColor.DARK_GRAY);
-                    email.Add(Email);
-                    document.Add(email);
+                email.SpacingBefore = 1;
+                email.SpacingAfter = 1;
+                email.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
+                email.Font = FontFactory.GetFont(FontFactory.TIMES, 16f, BaseColor.DARK_GRAY);
+                email.Add(Email);
+                document.Add(email);
 
-                    string Web = @"Web: www.ecoservices.com.pk";
-                    iTextSharp.text.Paragraph web = new iTextSharp.text.Paragraph();
+                string Web = @"Web: www.ecoservices.com.pk";
+                iTextSharp.text.Paragraph web = new iTextSharp.text.Paragraph();
 
-                    web.SpacingBefore = 1;
-                    web.SpacingAfter = 30;
-                    web.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
-                    web.Font = FontFactory.GetFont(FontFactory.TIMES, 16F, BaseColor.DARK_GRAY);
-                    web.Add(Web);
-                    document.Add(web);
+                web.SpacingBefore = 1;
+                web.SpacingAfter = 30;
+                web.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
+                web.Font = FontFactory.GetFont(FontFactory.TIMES, 16F, BaseColor.DARK_GRAY);
+                web.Add(Web);
+                document.Add(web);
 
-               
 
-              /*  PdfContentByte cb = writer.DirectContent;
-                                 var Rectangular = new Rectangle(7, 420, 280, 25); //left width,top height,right width,bottom height
-                                  Rectangular.BorderWidthLeft = 1.1f;
-                                  Rectangular.BorderWidthRight = 1.1f;
-                                  Rectangular.BorderWidthTop = 1.1f;
-                                  Rectangular.BorderWidthBottom = 1.1f;*/
+
+                /*  PdfContentByte cb = writer.DirectContent;
+                                   var Rectangular = new Rectangle(7, 420, 280, 25); //left width,top height,right width,bottom height
+                                    Rectangular.BorderWidthLeft = 1.1f;
+                                    Rectangular.BorderWidthRight = 1.1f;
+                                    Rectangular.BorderWidthTop = 1.1f;
+                                    Rectangular.BorderWidthBottom = 1.1f;*/
 
                 string Station = stationName;
                 iTextSharp.text.Paragraph station = new iTextSharp.text.Paragraph();
@@ -107,10 +107,10 @@ namespace Host.Helper
                 stationno.SpacingAfter = 10;
                 stationno.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
                 stationno.Font = FontFactory.GetFont(FontFactory.TIMES_BOLD, 60f, BaseColor.BLACK);
-                stationno.Add(""+Sno);
+                stationno.Add("" + Sno);
                 document.Add(stationno);
 
-                
+
 
                 string LocationName = locationName;
                 iTextSharp.text.Paragraph locationname = new iTextSharp.text.Paragraph();
@@ -122,7 +122,7 @@ namespace Host.Helper
                 locationname.Add(LocationName);
                 document.Add(locationname);
 
-                 BarcodeQRCode barcodeQRCode = new BarcodeQRCode(code, 1000, 1000, null);
+                BarcodeQRCode barcodeQRCode = new BarcodeQRCode(code, 1000, 1000, null);
                 Image codeQrImage = barcodeQRCode.GetImage();
                 codeQrImage.ScaleAbsolute(95, 95);
                 codeQrImage.Alignment = iTextSharp.text.Element.ALIGN_LEFT;
@@ -302,22 +302,22 @@ namespace Host.Helper
 
        */
                 document.Close();
-                    byte[] bytes = memoryStream.ToArray();
-                    memoryStream.Close();
-                    return bytes;
+                byte[] bytes = memoryStream.ToArray();
+                memoryStream.Close();
+                return bytes;
 
-                
-               
+
+
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
                 throw;
             }
-           
+
         }
 
-        public  static byte[] DownloadAllPdf (List<DownloadPdfDto> downloadAllPdf,string locationName , IHostingEnvironment _hostingEnvironment)
+        public static byte[] DownloadAllPdf(List<DownloadPdfDto> downloadAllPdf, string locationName, IHostingEnvironment _hostingEnvironment)
         {
             try
             {
@@ -328,7 +328,7 @@ namespace Host.Helper
                 var path = Path.Combine(_hostingEnvironment.WebRootPath, @"images\Eco.jpg");
                 foreach (var s in downloadAllPdf)
                 {
-                   
+
                     document.Open();
                     Phrase phrase = new Phrase();
                     document.Add(phrase);

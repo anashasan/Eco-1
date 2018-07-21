@@ -157,6 +157,21 @@ namespace Host.Business.DbServices
             }
         }
 
+        public bool IsEmailExist(string email)
+        {
+            try
+            {
+                return _context.AspNetUsers
+                       .AsNoTracking()
+                       .Any(i => i.Email == email);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>

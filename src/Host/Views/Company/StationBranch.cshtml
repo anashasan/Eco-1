@@ -20,6 +20,7 @@
     </ol>
     <div class="box">
         @Html.Hidden("companyId", (int)ViewBag.CompanyId)
+        @Html.Hidden("branchId", (int)ViewBag.BranchId)
         <div class="box-header">
             <h3 class="box-title" style="font-family:'Times New Roman'">Branch Station Data Table</h3></br>
             </br>
@@ -64,8 +65,8 @@
                         <td>@a.StationLocationId</td>
                         <td id="@(a.StationLocationId)"> </td>
                         <td style="text-align:center">
-                            <a class="fa fa-edit " onClick='@($"window.location.href='/Company/UpdateBranchStation'")'>Edit</a>
-                            <a class="fa fa-remove " href='#'>Delete</a>
+                            <a class="fa fa-edit " onClick='@($"window.location.href='/Company/UpdateBranchStation?stationlocationId={a.StationLocationId}&branchId={@ViewBag.BranchId}&locationId={a.LocationId}&companyId={ViewBag.CompanyId}'")'>Edit</a>
+                            <a class="fa fa-remove " onClick='@($"window.location.href='/Company/DeleteStationLocation?stationlocationId={a.StationLocationId}&branchId={@ViewBag.BranchId}&companyId={ViewBag.CompanyId}'")'>Delete</a>
                             <a class="fa fa-download" onClick='@($"window.location.href='/Company/Download?id={a.StationLocationId}&locationId={a.LocationId}&code={a.Code}&sno={a.Sno}'")'>Download</a>
                         </td>
                     </tr>
@@ -150,7 +151,6 @@
 
     </script>
     <script>
-        cript >
             $(document).ready(function () {
                 var t = $('#example').DataTable({
                     "columnDefs": [{

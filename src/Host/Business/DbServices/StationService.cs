@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Dapper;
+using System.Data;
 
 namespace Host.Business.DbServices
 {
@@ -51,11 +53,21 @@ namespace Host.Business.DbServices
             }
         }
 
-        public async Task<int> DeleteStation(int id)
+        public void DeleteStation(int id)
         {
-            var deleteStation = _context.Station.Find(id);
-            _context.Station.Remove(deleteStation);
-            return await Task.FromResult(_context.SaveChanges());
+            try
+            {
+                var connection = _context.Database.GetDbConnection();
+                connection.Execute(
+                    "[dbo].[usp_DeleteStation]"
+                    , new { @paramStationId = id },
+                    commandType: CommandType.StoredProcedure);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         public List<StationDto> GetAllStation()

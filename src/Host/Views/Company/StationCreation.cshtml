@@ -64,6 +64,8 @@
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <a class="dropdown-item fa fa-edit" href="#" onclick='@($"window.location.href='/Company/GetStationById?id={s.StationId}'")'>Edit</a>
                                         <div class="dropdown-divider"></div>
+                                        <a class="fa fa-remove " onClick='@($"window.location.href='/Company/DeleteStation?stationId={s.StationId}'")'>Delete</a>
+                                        <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" href='#' onclick='@($"window.location.href='/Company/GetActivityById?stationId={s.StationId}'")'>Activities</a>
 
                                     </div>
