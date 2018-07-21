@@ -112,7 +112,7 @@ namespace Host.Helper
                 document.Add(stationno);
 
                 cb.SetLineWidth(2.25f);   // Make a bit thicker than 1.0 default
-                cb.MoveTo(3, document.Top  -237f);
+                cb.MoveTo(1, document.Top  -237f);
                 cb.LineTo(300, document.Top -237f);
                 cb.Stroke();
 
@@ -241,8 +241,11 @@ namespace Host.Helper
                 stationno1.Font = FontFactory.GetFont(FontFactory.TIMES_BOLD, 60f, BaseColor.BLACK);
                 stationno1.Add("" + Sno);
                 document.Add(stationno1);
-
-
+                //line
+                cb.SetLineWidth(2.25f);   // Make a bit thicker than 1.0 default
+                cb.MoveTo(1, document.Top - 237f);
+                cb.LineTo(300, document.Top - 237f);
+                cb.Stroke();
 
                 string LocationName1 = locationName;
                 iTextSharp.text.Paragraph locationname1 = new iTextSharp.text.Paragraph();
@@ -395,7 +398,7 @@ namespace Host.Helper
                     station.SpacingBefore = 10;
                     station.SpacingAfter = 25;
                     station.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
-                    station.Font = FontFactory.GetFont(FontFactory.TIMES, 30f, BaseColor.BLACK);
+                    station.Font = FontFactory.GetFont(FontFactory.TIMES, 23f, BaseColor.BLACK);
                     station.Add(Station);
                     document.Add(station);
 
@@ -417,7 +420,7 @@ namespace Host.Helper
                     locationname.SpacingBefore = 10;
                     locationname.SpacingAfter = 1;
                     locationname.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
-                    locationname.Font = FontFactory.GetFont(FontFactory.TIMES, 30f, BaseColor.BLACK);
+                    locationname.Font = FontFactory.GetFont(FontFactory.TIMES, 23f, BaseColor.BLACK);
                     locationname.Add(LocationName);
                     document.Add(locationname);
 
@@ -523,7 +526,7 @@ namespace Host.Helper
                     station1.SpacingBefore = 10;
                     station1.SpacingAfter = 25;
                     station1.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
-                    station1.Font = FontFactory.GetFont(FontFactory.TIMES, 30f, BaseColor.BLACK);
+                    station1.Font = FontFactory.GetFont(FontFactory.TIMES, 23f, BaseColor.BLACK);
                     station1.Add(Station1);
                     document.Add(station1);
 
@@ -545,7 +548,7 @@ namespace Host.Helper
                     locationname1.SpacingBefore = 10;
                     locationname1.SpacingAfter = 1;
                     locationname1.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
-                    locationname1.Font = FontFactory.GetFont(FontFactory.TIMES, 30f, BaseColor.BLACK);
+                    locationname1.Font = FontFactory.GetFont(FontFactory.TIMES, 23f, BaseColor.BLACK);
                     locationname1.Add(LocationName1);
                     document.Add(locationname1);
 
