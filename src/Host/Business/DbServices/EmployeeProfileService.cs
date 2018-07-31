@@ -1,6 +1,8 @@
 ﻿using Host.Business.IDbServices;
 using Host.DataContext;
 using Host.DataModel;
+using Host.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,7 +14,6 @@ namespace Host.Business.DbServices
     public class EmployeeProfileService : IEmployeeProfileService
     {
         private readonly EcoDbContext _context;
-
         /// <summary>
         /// 
         /// </summary>
@@ -164,6 +165,21 @@ namespace Host.Business.DbServices
                 return _context.AspNetUsers
                        .AsNoTracking()
                        .Any(i => i.Email == email);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public bool IsUserNameExist(string userName)
+        {
+            try
+            {
+                return _context.AspNetUsers
+                      .AsNoTracking()
+                      .Any(i => i.UserName == userName);
             }
             catch (Exception e)
             {

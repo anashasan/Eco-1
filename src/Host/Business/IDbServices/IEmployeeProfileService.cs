@@ -14,5 +14,6 @@ namespace Host.Business.IDbServices
         List<EmployeeProfileDto> GetAllEmployeeProfile();
         EmployeeProfileDto GetEmployeeProfileByUserId(string UserId);
         bool IsEmailExist(string email);
+        bool IsUserNameExist(string email);
     }
 }
