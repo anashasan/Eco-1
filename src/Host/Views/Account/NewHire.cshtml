@@ -3,17 +3,13 @@
     Layout = "_AdminLayout";
 }
 
-<style>
-    .error {
-        color: red;
-    }
-</style>
-<div class="page-header">
+
+@*<div class="page-header">
     <div class="row">
-       
-       
+
+
     </div>
-</div>
+</div>*@
 
 <div class="main-contents">
     <div class="row">
@@ -33,25 +29,27 @@
                                 <input type="hidden" data-val="true" data-val-required="The UserId field is required." id="UserId" name="UserId" value="00000000-0000-0000-0000-000000000000">
                                 <input type="hidden" data-val="true" data-val-required="The SiteId field is required." id="SiteId" name="SiteId" value="a9d9c0b8-1930-4059-a58c-e52648bee1ba">
                                 <div class="form-group">
-                                    <label class="col-md-2 control-label" for="Email">Email<i class="fa fa-asterisk" style="color:red" aria-hidden="true"></i></label>
+                                    <label class="col-md-2 control-label" for="Email">Email<i class="fa fa-asterisk" aria-hidden="true"></i></label>
                                     <div class="col-md-10">
-                                        <input id="email" class="form-control" type="email" asp-for="Email" onchange="CheckAvailability()">
+                                        <input id="email" class="form-control" type="email" asp-for="Email">
                                         <br />
                                         <span asp-validation-for="Email" class="text-danger" id="message"></span>
+                                        <span class="text-danger" id="emailMessage"></span>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-md-2 control-label" asp-for="UserName">Username<i class="fa fa-asterisk" style="color:red" aria-hidden="true"></i></label>
+                                    <label class="col-md-2 control-label" asp-for="UserName">Username<i class="fa fa-asterisk" aria-hidden="true"></i></label>
                                     <div class="col-md-10">
-                                        <input class="form-control" type="text" asp-for="UserName">
-                                        <span asp-validation-for="UserName"class="text-danger" ></span>
+                                        <input id="userName" class="form-control" type="text" asp-for="UserName">
+                                        <span asp-validation-for="UserName" class="text-danger"></span>
+                                        <span class="text-danger" id="userNameMessage"></span>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-md-2 control-label">Display Name<i class="fa fa-asterisk" style="color:red" aria-hidden="true"></i></label>
+                                    <label class="col-md-2 control-label">Display Name<i class="fa fa-asterisk" aria-hidden="true"></i></label>
                                     <div class="col-md-10">
                                         <input class="form-control" type="text" asp-for="NormalizeUserName">
-                                        <span asp-validation-for="NormalizeUserName" class="text-danger" ></span>
+                                        <span asp-validation-for="NormalizeUserName" class="text-danger"></span>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -61,17 +59,17 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-md-2 control-label" for="Password">Password<i class="fa fa-asterisk" style="color:red;" aria-hidden="true"></i></label>
+                                    <label class="col-md-2 control-label" for="Password">Password<i class="fa fa-asterisk" aria-hidden="true"></i></label>
                                     <div class="col-md-10">
-                                        <input type="password" asp-for="Password" onchange="checkEquality"  class="form-control">
-                                        <span asp-validation-for="Password" class="text-danger"  data-valmsg-for="Password"  data-valmsg-replace="true"> </span>
+                                        <input type="password" asp-for="Password" class="form-control">
+                                        <span asp-validation-for="Password" class="text-danger "> </span>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-md-2 control-label" >Confirm Password<i class="fa fa-asterisk" style="color:red" aria-hidden="true"></i></label>
+                                    <label class="col-md-2 control-label">Confirm Password<i class="fa fa-asterisk" aria-hidden="true"></i></label>
                                     <div class="col-md-10">
-                                        <input type="password" name="ConfirmPassword" id="ConfirmPassword" class="form-control" onblur="checkEquality(this.value)" />
-                                        <span asp-validation-for="ConfrimedPassword" class="text-danger" id="msgConfirmPassword" style="display: none;color: red;">Password does match </span>
+                                        <input type="password" asp-for="ConfrimedPassword" id="ConfirmPassword" class="form-control" onblur="checkEquality(this.value)" />
+                                        <span asp-validation-for="ConfrimedPassword" class="text-danger"></span>
                                     </div>
                                 </div>
 
@@ -89,143 +87,8 @@
     </div>
 </div>
 
-@section scripts {
-    <script type="text/javascript">
-
-        const CheckAvailability = () => {
-            var email = document.getElementById("email").value;
-            var message = $("#message");
-            const headers = new Headers();
-            headers.append("Accept", "application/json");
-            headers.append("Content-Type", "application/json");
-            fetch(`/Account//IsEmailExist/email/${email}`, {
-                credentials: "same-origin",
-                headers: headers,
-                method: "GET"
-            })
-                .then(function (response) {
-                    if (response.ok) {
-                        response.json()
-                            .then(bool => {
-
-                                if (bool) {
-                                    message.css("color", "red");
-                                    message.css("fontSize", "small")
-                                    message.html("Number is NOT available");
-                                    document.getElementById('btn').setAttribute("disabled", "disabled");
-                                }
-                                else {
-                                    message.css("color", "green");
-                                    message.css("fontSize", "small")
-                                    message.html("Number is  available");
-                                    document.getElementById('btn').removeAttribute("disabled");
-
-                                }
-                            });
-
-                    }
-
-                })
-                .catch(ex => { });
-        };
-
-
-        function ClearMessage() {
-            $("#message").html("");
-        };
-
-        const checkEquality = (confirmPasswordText) => {
-            const password = document.getElementById('Password').value;
-            if (password === confirmPasswordText) {
-                const btRegister = document.getElementById('btRegister');
-                btRegister.disabled = "";
-                const validationMessage = document.getElementById('msgConfirmPassword');
-                validationMessage.style = 'display:none';
-                return;
-            } else {
-                const btRegister = document.getElementById('btRegister');
-                btRegister.disabled = "disabled";
-                const validationMessage = document.getElementById('msgConfirmPassword');
-                validationMessage.style = 'display:inline';
-                return;
-            }
-        };
-
-        const checkPasswordStrength = () => {
-            let isPasswordStrenghtValid = true;
-            const password = document.getElementById('Password').value;
-
-            if (!password) {
-                return false;
-            }
-
-            //const lowerCaseLetters = /[a-z]/g;
-            //if (!lowerCaseLetters.test(password)) {
-            //    const lowerCaseTextBox = document.getElementById('lowerCase');
-            //    lowerCaseTextBox.style = 'color: red;';
-            //    isPasswordStrenghtValid = false;
-            //} else {
-            //    const lowerCaseTextBox = document.getElementById('lowerCase');
-            //    lowerCaseTextBox.style = 'color: black;';
-            //}
-
-            //// Validate capital letters
-            //const upperCaseLetters = /[A-Z]/g;
-            //if (!upperCaseLetters.test(password)) {
-            //    const upperCaseTextBox = document.getElementById('upperCase');
-            //    upperCaseTextBox.style = 'color: red;';
-            //    isPasswordStrenghtValid = false;
-            //} else {
-            //    const upperCaseTextBox = document.getElementById('upperCase');
-            //    upperCaseTextBox.style = 'color: black;';
-            //}
-
-            // Validate Non Alpha numeric
-            const nonAlphaNumeric = /[^A-z\s\d][\\\^]?/g;
-            if (!nonAlphaNumeric.test(password)) {
-                const nonAlphaNumericCaseTextBox = document.getElementById('nonAlphaNumeric');
-                nonAlphaNumericCaseTextBox.style = 'color: red;';
-                isPasswordStrenghtValid = false;
-            } else {
-                const nonAlphaNumericCaseTextBox = document.getElementById('nonAlphaNumeric');
-                nonAlphaNumericCaseTextBox.style = 'color: black;';
-            }
-
-            // Validate numer
-            const number = /\d/;
-            if (!number.test(password)) {
-                const numericTestCase = document.getElementById('numbers');
-                numericTestCase.style = 'color: red;';
-                isPasswordStrenghtValid = false;
-            } else {
-                const numericTestCase = document.getElementById('numbers');
-                numericTestCase.style = 'color: black;';
-            }
-
-            // Validate length
-            if (password.length < 7) {
-                const lenghtCaseTextBox = document.getElementById('sevenCharacter');
-                lenghtCaseTextBox.style = 'color: red;';
-                isPasswordStrenghtValid = false;
-            } else {
-                const lenghtCaseTextBox = document.getElementById('sevenCharacter');
-                lenghtCaseTextBox.style = 'color: black;';
-            }
-            return isPasswordStrenghtValid;
-        };
-
-        $('form').on('submit',
-            () => {
-                const isPasswordStrenghtValid = checkPasswordStrength();
-                if (isPasswordStrenghtValid) {
-                    return true;
-                } else {
-                    return false;
-                }
-            });
-
-    </script>
+@section script {
+    <script src="~/dist/js/NewHire.js"></script>
 }
-
 
 

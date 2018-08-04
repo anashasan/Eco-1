@@ -20,7 +20,10 @@
         <li class="active"><i class="fa fa-suitcase "></i>Station Location</li>
 
     </ol>
-    <div class="box">
+    </div>
+<div class="col-xs-12">
+    <div class="box col-md-10">
+
         <div class="box-header">
             <h3 class="box-title" style="font-family:'Times New Roman'">Station Data Table</h3></br>
             </br>
@@ -50,29 +53,30 @@
                 </thead>
                 <tbody id="tbody">
                     @foreach (var s in Model)
-            {
-                <tr>
-                    <td class="glyphicon-align-center">@s.Sno</td>
-                    <td>@s.StationName</td>
-                    <td id="@(s.StationLocationId)"> </td>
-                    <td>
-                        <a class="fa fa-download  " onClick='@($"window.location.href='/Company/Download?id={s.StationLocationId}&locationId={ViewBag.LocationId}&code={s.Code}&sno={s.Sno}'")'>Download</a>
-                        <a class="fa fa-edit" href='#' onClick='@($"window.location.href='/Company/AddStationLocation?locationId={ViewBag.LocationId}&stationlocationId={s.StationLocationId}&branchId={ViewBag.BranchId}&companyid={ViewBag.CompanyId}'")'>Edit</a>
-                    </td>
-                </tr>
-    }
+                    {
+                        <tr>
+                            <td class="glyphicon-align-center">@s.Sno</td>
+                            <td>@s.StationName</td>
+                            <td id="@(s.StationLocationId)"> </td>
+                            <td>
+                                <a class="fa fa-download  " onClick='@($"window.location.href='/Company/Download?id={s.StationLocationId}&locationId={ViewBag.LocationId}&code={s.Code}&sno={s.Sno}'")'>Download</a>
+                                <a class="fa fa-edit" href='#' onClick='@($"window.location.href='/Company/AddStationLocation?locationId={ViewBag.LocationId}&stationlocationId={s.StationLocationId}&branchId={ViewBag.BranchId}&companyid={ViewBag.CompanyId}'")'>Edit</a>
+                            </td>
+                        </tr>
+                    }
             </table>
         </div>
-        <!-- /.box-body -->
-    </div>
-</div>
-<link href="~/dist/css/font-awesome.css" rel="stylesheet" />
-<!--<link href="~/dist/css/material-bootstrap-wizard.css" rel="stylesheet" />-->
-<!--<script src="~/dist/js/material-bootstrap-wizard.js"></script>-->
 
-@section script {
-    <script src="~/dist/js/download.js"></script>
-    <script type="text/javascript">
+    </div>
+    <!-- /.box-body -->
+</div>
+    <link href="~/dist/css/font-awesome.css" rel="stylesheet" />
+    <!--<link href="~/dist/css/material-bootstrap-wizard.css" rel="stylesheet" />-->
+    <!--<script src="~/dist/js/material-bootstrap-wizard.js"></script>-->
+
+    @section script {
+        <script src="~/dist/js/download.js"></script>
+        <script type="text/javascript">
     var myArray = [];
     var url
     var tbody = document.getElementById("tbody");
@@ -127,43 +131,43 @@
         }
     console.log(myArray);
 
-        
-   
-    </script>
-}
-
-@section Scripts{
-    <link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/select/1.2.7/css/select.dataTables.min.css" />
-    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
-
-    <script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
-
-    <script>
-      
-        //$(document).ready(function () {
-        //    $('#example2').datatable({
-        //        columndefs: [{
-        //            orderable: true,
-        //            classname: 'select-checkbox',
-        //            targets: 0
-        //        }],
-
-        //        select: {
-        //            style: 'multi',
-        //            selector: 'td:first-child'
-        //        },
-        //        order: [[1, 'asc']]
-
-        //    });
-        //});
-
-        $(document).ready(function () {
-            $('#example2').DataTable();
-        });
 
 
-    </script>
+        </script>
+    }
 
-}
+    @section Scripts{
+        <link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+        <link rel="stylesheet" href="https://cdn.datatables.net/select/1.2.7/css/select.dataTables.min.css" />
+        <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+
+        <script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/select/1.2.7/js/dataTables.select.min.js"></script>
+
+        <script>
+
+            //$(document).ready(function () {
+            //    $('#example2').datatable({
+            //        columndefs: [{
+            //            orderable: true,
+            //            classname: 'select-checkbox',
+            //            targets: 0
+            //        }],
+
+            //        select: {
+            //            style: 'multi',
+            //            selector: 'td:first-child'
+            //        },
+            //        order: [[1, 'asc']]
+
+            //    });
+            //});
+
+            $(document).ready(function () {
+                $('#example2').DataTable();
+            });
+
+
+        </script>
+
+    }

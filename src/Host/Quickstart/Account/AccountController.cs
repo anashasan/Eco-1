@@ -109,6 +109,7 @@ namespace IdentityServer4.Quickstart.UI
                     var result = userMgr.CreateAsync(userName, user.Password).Result;
                     if (!result.Succeeded)
                     {
+                        ModelState.AddModelError(result.Errors.ToString(),result.Errors.ToString());
                         throw new Exception(result.Errors.First().Description);
                     }
 
@@ -157,11 +158,18 @@ namespace IdentityServer4.Quickstart.UI
         }
 
 
-        [HttpGet]
+        [HttpGet("Account/IsEmailExist/email/{email}")]
         public bool IsEmailExist([FromRoute]string email)
         {
             var isEmail = _employeeProfileService.IsEmailExist(email);
             return isEmail;
+        }
+
+        [HttpGet("Account/IsUerNameExist/usesrName/{userName}")]
+        public bool IsUserNameExist([FromRoute]string userName)
+        {
+            var isUserName = _employeeProfileService.IsUserNameExist(userName);
+            return isUserName;
         }
 
         [AllowAnonymous]
@@ -249,7 +257,6 @@ namespace IdentityServer4.Quickstart.UI
         {
             // build a model so we know what to show on the login page
             var vm = await BuildLoginViewModelAsync(returnUrl);
-
             if (vm.IsExternalLoginOnly)
             {
                 // we only have one option for logging in and it's an external provider
