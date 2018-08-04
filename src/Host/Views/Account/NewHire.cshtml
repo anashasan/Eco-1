@@ -35,7 +35,7 @@
                                 <div class="form-group">
                                     <label class="col-md-2 control-label" for="Email">Email<i class="fa fa-asterisk" style="color:red" aria-hidden="true"></i></label>
                                     <div class="col-md-10">
-                                        <input id="email" class="form-control" type="email" asp-for="Email" onchange="CheckEmailAvailability()">
+                                        <input id="email" class="form-control" type="email" asp-for="Email" onchange="CheckAvailability()">
                                         <br />
                                         <span asp-validation-for="Email" class="text-danger" id="message"></span>
                                     </div>
@@ -61,17 +61,17 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-md-2 control-label" for="Password">Password<i class="fa fa-asterisk" style="color:red" aria-hidden="true"></i></label>
+                                    <label class="col-md-2 control-label" for="Password">Password<i class="fa fa-asterisk" style="color:red;" aria-hidden="true"></i></label>
                                     <div class="col-md-10">
-                                        <input type="password" asp-for="Password" class="form-control">
-                                        <span asp-validation-for="Password" class="text-danger "> </span>
+                                        <input type="password" asp-for="Password" onchange="checkEquality"  class="form-control">
+                                        <span asp-validation-for="Password" class="text-danger"  data-valmsg-for="Password"  data-valmsg-replace="true"> </span>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-md-2 control-label">Confirm Password<i class="fa fa-asterisk" style="color:red" aria-hidden="true"></i></label>
+                                    <label class="col-md-2 control-label" >Confirm Password<i class="fa fa-asterisk" style="color:red" aria-hidden="true"></i></label>
                                     <div class="col-md-10">
                                         <input type="password" name="ConfirmPassword" id="ConfirmPassword" class="form-control" onblur="checkEquality(this.value)" />
-                                        <span asp-validation-for="ConfrimedPassword" class="text-danger" ></span>
+                                        <span asp-validation-for="ConfrimedPassword" class="text-danger" id="msgConfirmPassword" style="display: none;color: red;">Password does match </span>
                                     </div>
                                 </div>
 
@@ -92,13 +92,13 @@
 @section scripts {
     <script type="text/javascript">
 
-        const CheckEmailAvailability = () => {
-            var sno = document.getElementById("email").value;
+        const CheckAvailability = () => {
+            var email = document.getElementById("email").value;
             var message = $("#message");
             const headers = new Headers();
             headers.append("Accept", "application/json");
             headers.append("Content-Type", "application/json");
-            fetch(`/Company/Employee/CheckEmail/email/${email}`, {
+            fetch(`/Account//IsEmailExist/email/${email}`, {
                 credentials: "same-origin",
                 headers: headers,
                 method: "GET"
@@ -110,14 +110,14 @@
 
                                 if (bool) {
                                     message.css("color", "red");
-                                    message.css("fontSize", "large")
-                                    message.html("Email is NOT available");
+                                    message.css("fontSize", "small")
+                                    message.html("Number is NOT available");
                                     document.getElementById('btn').setAttribute("disabled", "disabled");
                                 }
                                 else {
                                     message.css("color", "green");
-                                    message.css("fontSize", "large")
-                                    message.html("Email is  available");
+                                    message.css("fontSize", "small")
+                                    message.html("Number is  available");
                                     document.getElementById('btn').removeAttribute("disabled");
 
                                 }

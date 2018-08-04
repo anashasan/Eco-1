@@ -28,8 +28,8 @@ namespace Host
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+       // This method gets called by the runtime.Use this method to add services to the container.
+            public void ConfigureServices(IServiceCollection services)
         {
             var connectionString = Environment.GetEnvironmentVariable("DefaultConnection");
 
@@ -42,7 +42,7 @@ namespace Host
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
-           
+
 
             // services Add 
             services.AddScoped<IActivityService, ActivityService>();
@@ -64,7 +64,7 @@ namespace Host
 
             services.AddMvc();
 
-            
+
 
 
             services.AddIdentityServer()
@@ -75,7 +75,8 @@ namespace Host
                 .AddAspNetIdentity<ApplicationUser>();
 
             services.AddAuthentication()
-                .AddJwtBearer(cfg => {
+                .AddJwtBearer(cfg =>
+                {
 
                     cfg.RequireHttpsMetadata = false;
                     cfg.SaveToken = true;
@@ -116,7 +117,7 @@ namespace Host
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-        {            
+        {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

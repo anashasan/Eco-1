@@ -8,6 +8,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Host.Helper;
+using Dapper;
+using System.Data;
 
 namespace Host.Business.DbServices
 {
@@ -26,11 +28,8 @@ namespace Host.Business.DbServices
             try
             {
                 var code = LastCodeStationLocation();
-                Random rnd = new Random();
-                int month = rnd.Next(1, 13); // creates a number between 1 and 12
-                int dice = rnd.Next(1, 7);   // creates a number between 1 and 6
-                int card = rnd.Next(52);
-                var decriptCode = EncoderAgent.EncryptString(code +card);
+                
+                var decriptCode = EncoderAgent.EncryptString((int.Parse(code)).ToString());
                 var stationLocation = new StationLocation
                 {
                     FkStationId = requestDto.StationId,
@@ -137,6 +136,28 @@ namespace Host.Business.DbServices
             }
         }
 
+        public async Task<int> BranchStationLocation(StationLocationDto requestDto)
+        {
+            try
+            {
+                var stationLocation = _context.StationLocation.Find(requestDto.StationLocationId);
+                stationLocation.FkStationId = requestDto.StationId;
+                stationLocation.FkLocationId = requestDto.LocationId;
+                
+                _context.StationLocation.Update(stationLocation);
+                _context.SaveChanges();
+
+                return await Task.FromResult(stationLocation.PkStationLocationId);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+
+                throw;
+            }
+        }
+
         public StationLocationDto GetStationLocationById(int id)
         {
             try
@@ -149,6 +170,7 @@ namespace Host.Business.DbServices
                         StationLocationId = a.PkStationLocationId,
                         StationId = a.FkStation.PkStationId,
                         Sno = a.Sno,
+                        LocationId = a.FkLocationId,
                         BranchId = a.FkLocation.BranchLocation.Select(i => i.FkBranchId).FirstOrDefault()
                     }).SingleOrDefault();
 
@@ -178,8 +200,9 @@ namespace Host.Business.DbServices
             {
                 var lastCode = _context.StationLocation
                                .AsNoTracking()
+                               .OrderByDescending(i => i.PkStationLocationId)
                                .Select(i => i.PkStationLocationId)
-                               .LastOrDefault();
+                               .FirstOrDefault();
                 return lastCode.ToString();
             }
             catch (Exception e)
@@ -230,18 +253,19 @@ namespace Host.Business.DbServices
         {
             try
             {
-                var deleteModel = _context.StationLocation
-                                              .Where(i => i.PkStationLocationId == id)
-                                              .Single();
-                _context.StationLocation.Remove(deleteModel);
-                _context.SaveChanges();
+                var connection = _context.Database.GetDbConnection();
+                connection.Execute(
+                    "[dbo].[usp_DeleteStationLocation]"
+                    , new { @paramStationLocationId = id },
+                    commandType: CommandType.StoredProcedure);
+
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
                 throw;
             }
-            
+
         }
 
         public bool CheckSnoExist(int sno, int branchId)

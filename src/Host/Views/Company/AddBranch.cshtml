@@ -24,7 +24,7 @@
                                 <div class="form-group">
           <label class="col-md-2 control-label" for="Company">Company Name</label>
           <div class="col-md-10">
-              <label class="form-control" asp-for="CompanyName">@Html.DisplayFor(item =>item.CompanyName)</label>
+              @Html.LabelFor(companyname =>companyname.CompanyName)
               <!--<select class="form-control" asp-items="" asp-for="CompanyId" placeholder="Select Business Name..."></select>-->
           </div>
       </div>

@@ -1,0 +1,49 @@
+﻿@model Host.DataModel.StationLocationDto
+@{
+    ViewData["Title"] = "UpdateBranchStation";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="page-header">
+    <div class="row">
+
+    </div>
+</div>
+
+<div class="main-contents">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header">
+                    <h4 style="font-family:'Times New Roman'">Add Station Location</h4>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <form class="form-horizontal" asp-controller="Company" asp-action="UpdateBranchStation" method="post">
+
+                                <input type="hidden" asp-for="CompanyId" id="branchId" />
+                                <input type="hidden" asp-for="BranchId" />
+                                <input type="hidden"  asp-for="StationLocationId"/>
+
+                                <span id="message"></span>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label" for="Company">Location</label>
+                                    <div class="col-md-3">
+                                        <select class="form-control" asp-items="@Model.Locations" asp-for="LocationId" placeholder="Select Business Name..."></select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label" for="Company">Station Name</label>
+                                    <div class="col-md-3">
+                                        <select class="form-control" asp-items="@Model.Stations" asp-for="StationId" placeholder="Select Business Name..."></select>
+                                    </div>
+                                </div>
+                                <button id="btn" type="submit" class="btn-primary top-right">Add</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
