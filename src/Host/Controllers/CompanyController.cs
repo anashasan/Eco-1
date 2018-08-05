@@ -371,7 +371,7 @@ namespace Host.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        public async Task<IActionResult> AddBranch(int companyId, int branchId)
+        public async Task<IActionResult> AddBranch(int companyId, int branchId , string companyname)
 
         {
             if (branchId != 0)
@@ -379,14 +379,16 @@ namespace Host.Controllers
                 var companiesList = await _companyService.GetAllCompany();
                 ViewBag.CompanyId = companyId;
                 var model = _branchService.GetBranchById(branchId);
-                model.Companies = new SelectList(companiesList, "CompanyId", "Name", model.CompanyId);
+               // model.Companies = new SelectList(companiesList, "CompanyId", "Name", model.CompanyId);
                 return View("AddBranch", model);
             }
 
             var company = await _companyService.GetAllCompany();
+
             var branches = new BranchDto
             {
-                Companies = new SelectList(company, "CompanyId", "Name"),
+                CompanyName = companyname,
+               // Companies = new SelectList(company, "CompanyId", "Name"),
                 CompanyId = companyId
             };
 
