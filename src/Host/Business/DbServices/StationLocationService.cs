@@ -22,7 +22,8 @@ namespace Host.Business.DbServices
         {
             _context = context;
         }
-        public async Task<int> AddStationLocation(StationLocationDto requestDto)
+
+        public int AddStationLocation(StationLocationDto requestDto)
         {
 
             try
@@ -41,11 +42,11 @@ namespace Host.Business.DbServices
 
                 _context.StationLocation.Add(stationLocation);
                 _context.SaveChanges();
-                return await Task.FromResult(stationLocation.PkStationLocationId);
+                return stationLocation.PkStationLocationId;
             }
             catch (Exception e)
             {
-                Console.WriteLine();
+                Console.WriteLine(e);
                 throw;
             }
         }

@@ -15,13 +15,10 @@ namespace Host.Business.DbServices
     public class GraphService : IGraphService
     {
         private readonly EcoDbContext _context;
-        private readonly IEfHepler _efHepler;
 
-        public GraphService(EcoDbContext context,
-                            IEfHepler efHepler)
+        public GraphService(EcoDbContext context)
         {
             _context = context;
-            _efHepler = efHepler;
         }
 
         public async Task<List<ListOfTotalActivityDto>> GetTotalCountActivity()
@@ -58,12 +55,12 @@ namespace Host.Business.DbServices
 
                // var act = _context.Set.FromSql("[dbo].[usp_GetAllActivity] @paramStationId ={2023}");
 
-                var abc = _efHepler.ExecuteProcedure(
-                "[dbo].[usp_GetAllActivity]",
-                new[]
-                {
-                        new SqlParameter("@paramStationId",2023)
-                });
+                //var abc = _efHepler.ExecuteProcedure(
+                //"[dbo].[usp_GetAllActivity]",
+                //new[]
+                //{
+                //        new SqlParameter("@paramStationId",2023)
+                //});
                 //Model = (from IDictionary<string, object> model in await abc
                 //         select new GraphDto
                 //         {

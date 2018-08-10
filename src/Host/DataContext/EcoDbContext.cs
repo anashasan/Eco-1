@@ -10,7 +10,6 @@ namespace Host.DataContext
         {
 
         }
-
         public virtual DbSet<Activity> Activity { get; set; }
         public virtual DbSet<ActivityObservation> ActivityObservation { get; set; }
         public virtual DbSet<ActivityPerform> ActivityPerform { get; set; }
@@ -30,6 +29,7 @@ namespace Host.DataContext
         public virtual DbSet<CompanyBranch> CompanyBranch { get; set; }
         public virtual DbSet<EmployeeProfile> EmployeeProfile { get; set; }
         public virtual DbSet<Gender> Gender { get; set; }
+        public virtual DbSet<JsonData> JsonData { get; set; }
         public virtual DbSet<Location> Location { get; set; }
         public virtual DbSet<Station> Station { get; set; }
         public virtual DbSet<StationActivity> StationActivity { get; set; }
@@ -37,11 +37,7 @@ namespace Host.DataContext
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-CCKC9UA;Initial Catalog=Eco;Integrated Security=True;");
-            }
+           
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -185,6 +181,11 @@ namespace Host.DataContext
             modelBuilder.Entity<Gender>(entity =>
             {
                 entity.Property(e => e.PkGenderId).ValueGeneratedOnAdd();
+            });
+
+            modelBuilder.Entity<JsonData>(entity =>
+            {
+                entity.Property(e => e.GeneratedCode).HasDefaultValueSql("(newid())");
             });
 
             modelBuilder.Entity<StationActivity>(entity =>

@@ -51,7 +51,6 @@ namespace IdentityServer4.Quickstart.UI
         private readonly IRoleService _roleService;
         private readonly IEmployeeProfileService _employeeProfileService;
         private readonly ICompanyService _companyService;
-        private readonly RequestDelegate _next;
         private readonly IAntiforgery _antiforgery;
         private readonly IConfiguration _config;
 
@@ -190,7 +189,7 @@ namespace IdentityServer4.Quickstart.UI
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateRoles(RolesModel rolesModel)
+        public IActionResult CreateRoles(RolesModel rolesModel)
         {
             if (!ModelState.IsValid)
                 return RedirectToAction("Role");

@@ -63,12 +63,12 @@ namespace Host.Business.DbServices
             }
         }
 
-        public async Task<int> DeleteActivityById(int id)
+        public int DeleteActivityById(int id)
         {
             var listOfActivityIds = _context.StationActivity.Find(id);
             _context.StationActivity.Remove(listOfActivityIds);
             _context.SaveChanges();
-            return (listOfActivityIds.PkStationActivityId);
+            return listOfActivityIds.PkStationActivityId;
 
         }
 
