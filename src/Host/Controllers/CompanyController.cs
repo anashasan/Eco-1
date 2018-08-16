@@ -1097,7 +1097,8 @@ namespace Host.Controllers
         {
             return _employeeService.CheckEmailIsExist(email);
         }
-
+        
+        [AllowAnonymous]
         [HttpGet("Company/GetJson")]
         public IActionResult GetJson([FromQuery] Guid code)
         {

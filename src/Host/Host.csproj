@@ -113,7 +113,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="Views\Shared\_Layout.cshtml">
+    <Content Update="Views\**\*;wwwroot\**\*;tempkey.rsa">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
