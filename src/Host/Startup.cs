@@ -16,6 +16,9 @@ using Host.Helper;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication;
+using jsreport.Local;
+using jsreport.Binary;
+using jsreport.AspNetCore;
 
 namespace Host
 {
@@ -42,6 +45,8 @@ namespace Host
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+           
 
 
             // services Add 
