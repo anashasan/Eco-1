@@ -18,7 +18,7 @@ using Microsoft.AspNetCore.Hosting;
 
 namespace Host.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Operation")]
     public class CompanyController : BaseController
     {
 
