@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GemBox.Document;
 using Host.Business.IDbServices;
 using Host.DataModel;
 using Host.Helper;
@@ -13,7 +12,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using iTextSharp.text.factories;
-using QRCoder;
 using System.Drawing;
 using Host.Business.DbServices;
 using Microsoft.AspNetCore.Hosting;
@@ -40,8 +38,7 @@ namespace Host.Controllers
         private readonly IGraphService _graphService;
         private readonly IEmployeesService _employeeService;
         private readonly IHostingEnvironment _hostingEnvironment;
-
-
+        private readonly IJsonDataService _jsonDataService;
 
         /// <summary>
         /// 
@@ -63,7 +60,8 @@ namespace Host.Controllers
                                  IActivityPerformService activityPerformService,
                                  IGraphService graphService,
                                  IEmployeesService employeesService,
-                                 IHostingEnvironment hostingEnvironment
+                                 IHostingEnvironment hostingEnvironment,
+                                 IJsonDataService jsonDataService
                                  )
         {
             _companyService = companyService;
@@ -79,6 +77,7 @@ namespace Host.Controllers
             _graphService = graphService;
             _employeeService = employeesService;
             _hostingEnvironment = hostingEnvironment;
+            _jsonDataService = jsonDataService;
         }
 
         /// <summary>
@@ -371,7 +370,7 @@ namespace Host.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        public async Task<IActionResult> AddBranch(int companyId, int branchId , string companyname)
+        public async Task<IActionResult> AddBranch(int companyId, int branchId, string companyname)
 
         {
             if (branchId != 0)
@@ -379,7 +378,7 @@ namespace Host.Controllers
                 var companiesList = await _companyService.GetAllCompany();
                 ViewBag.CompanyId = companyId;
                 var model = _branchService.GetBranchById(branchId);
-               // model.Companies = new SelectList(companiesList, "CompanyId", "Name", model.CompanyId);
+                // model.Companies = new SelectList(companiesList, "CompanyId", "Name", model.CompanyId);
                 return View("AddBranch", model);
             }
 
@@ -388,7 +387,7 @@ namespace Host.Controllers
             var branches = new BranchDto
             {
                 CompanyName = companyname,
-               // Companies = new SelectList(company, "CompanyId", "Name"),
+                // Companies = new SelectList(company, "CompanyId", "Name"),
                 CompanyId = companyId
             };
 
@@ -666,7 +665,7 @@ namespace Host.Controllers
                     return RedirectToAction("StationLocation", new { locationId = requestDto.LocationId, companyId = requestDto.CompanyId, id = requestDto.BranchId });
                 }
 
-                await _stationLocationService.AddStationLocation(requestDto);
+                _stationLocationService.AddStationLocation(requestDto);
                 return RedirectToAction("StationLocation", new { locationId = requestDto.LocationId, companyId = requestDto.CompanyId, id = requestDto.BranchId });
 
 
@@ -779,7 +778,7 @@ namespace Host.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Download(int id, int locationId, string code, int sno)
+        public IActionResult Download(int id, int locationId, string code, int sno)
         {
             try
             {
@@ -807,7 +806,7 @@ namespace Host.Controllers
 
         [HttpPost]
         [HttpPost]
-        public async Task<IActionResult> DownloadAllPdf([FromBody]List<DownloadPdfDto> downloadPdf)
+        public IActionResult DownloadAllPdf([FromBody]List<DownloadPdfDto> downloadPdf)
         {
             try
             {
@@ -1097,6 +1096,27 @@ namespace Host.Controllers
         public bool CheckEmailAddress([FromRoute]string email)
         {
             return _employeeService.CheckEmailIsExist(email);
+        }
+        
+        [AllowAnonymous]
+        [HttpGet("Company/GetJson")]
+        public IActionResult GetJson([FromQuery] Guid code)
+        {
+
+            var json = _jsonDataService.GetJsonData(code, out string message);
+            if (string.IsNullOrEmpty(message))
+            {
+                return Json(json);
+            }
+            else
+            {
+                return Json(message);
+            }
+
+        }
+        public IActionResult Test()
+        {
+            return View("Test");
         }
     }
 }

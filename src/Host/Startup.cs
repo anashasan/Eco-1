@@ -16,9 +16,7 @@ using Host.Helper;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication;
-using jsreport.Local;
-using jsreport.Binary;
-using jsreport.AspNetCore;
+
 
 namespace Host
 {
@@ -48,7 +46,6 @@ namespace Host
 
            
 
-
             // services Add 
             services.AddScoped<IActivityService, ActivityService>();
             services.AddScoped<ICompanyService, CompanyService>();
@@ -57,15 +54,16 @@ namespace Host
             services.AddScoped<IStationService, StationService>();
             services.AddScoped<IEmployeeProfileService, EmployeeProfileService>();
             services.AddScoped<IBranchService, BranchService>();
-            services.AddScoped<QRCodeGenerator>();
+            //services.AddScoped<QRCodeGenerator>();
             services.AddScoped<IBranchEmployeeService, BranchEmployeeService>();
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<IStationLocationService, StationLocationService>();
             services.AddScoped<IActivityTypeService, ActivityTypeService>();
             services.AddScoped<IActivityPerformService, ActivityPerformService>();
-            services.AddScoped<IAuditDbContext, AuditDbContext>();
-            services.AddScoped<IEfHepler, EfHepler>();
+           // services.AddScoped<IAuditDbContext, AuditDbContext>();
+           // services.AddScoped<IEfHepler, EfHepler>();
             services.AddScoped<IGraphService, GraphService>();
+            services.AddScoped<IJsonDataService, JsonDataService>();
 
             services.AddMvc();
 

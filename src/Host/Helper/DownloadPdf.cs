@@ -7,31 +7,25 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using iTextSharp.text.pdf.qrcode;
 using Host.DataModel;
+using Host.Helper.QrCode;
 
 namespace Host.Helper
 {
     public class DownloadPdf
     {
-        private static string strtemp;
-        private static string path;
-        Document _document;
-        PdfWriter _pdfWriter;
-        Phrase _phrase;
-
-        public static byte[] Download(int stationLocationId, string stationName, string locationName, string code, int Sno, IHostingEnvironment _hostingEnvironment)
+        public static byte[] Download(
+            int stationLocationId,
+            string stationName,
+            string locationName,
+            string code,
+            int Sno,
+            IHostingEnvironment _hostingEnvironment)
         {
             try
             {
-
-                System.IO.MemoryStream memoryStream = new System.IO.MemoryStream();
-
-
+                var memoryStream = new System.IO.MemoryStream();
                 var document = new iTextSharp.text.Document(new Rectangle(288f, 432f));
-
-
-
                 PdfWriter writer = PdfWriter.GetInstance(document, memoryStream);
                 document.Open();
                 Phrase phrase = new Phrase();
@@ -57,7 +51,7 @@ namespace Host.Helper
                 phone.SpacingBefore = 50;
                 phone.SpacingAfter = 1;
                 phone.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
-                phone.Font = FontFactory.GetFont(FontFactory.TIMES, 16f, BaseColor.DARK_GRAY);
+                phone.Font = FontFactory.GetFont(FontFactory.TIMES, 16f, BaseColor.DarkGray);
                 phone.Add(Phone);
                 document.Add(phone);
 
@@ -67,7 +61,7 @@ namespace Host.Helper
                 email.SpacingBefore = 1;
                 email.SpacingAfter = 1;
                 email.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
-                email.Font = FontFactory.GetFont(FontFactory.TIMES, 16f, BaseColor.DARK_GRAY);
+                email.Font = FontFactory.GetFont(FontFactory.TIMES, 16f, BaseColor.DarkGray);
                 email.Add(Email);
                 document.Add(email);
 
@@ -77,7 +71,7 @@ namespace Host.Helper
                 web.SpacingBefore = 1;
                 web.SpacingAfter = 30;
                 web.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
-                web.Font = FontFactory.GetFont(FontFactory.TIMES, 16F, BaseColor.DARK_GRAY);
+                web.Font = FontFactory.GetFont(FontFactory.TIMES, 16F, BaseColor.DarkGray);
                 web.Add(Web);
                 document.Add(web);
 
@@ -96,7 +90,7 @@ namespace Host.Helper
                 station.SpacingBefore = 10;
                 station.SpacingAfter = 25;
                 station.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
-                station.Font = FontFactory.GetFont(FontFactory.TIMES, 20f, BaseColor.BLACK);
+                station.Font = FontFactory.GetFont(FontFactory.TIMES, 20f, BaseColor.Black);
                 station.Add(Station);
                 document.Add(station);
 
@@ -106,7 +100,7 @@ namespace Host.Helper
                 stationno.SpacingBefore = 10;
                 stationno.SpacingAfter = 10;
                 stationno.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
-                stationno.Font = FontFactory.GetFont(FontFactory.TIMES_BOLD, 60f, BaseColor.BLACK);
+                stationno.Font = FontFactory.GetFont(FontFactory.TIMES_BOLD, 60f, BaseColor.Black);
                 stationno.Add("" + Sno);
                 document.Add(stationno);
 
@@ -118,7 +112,7 @@ namespace Host.Helper
                 locationname.SpacingBefore = 10;
                 locationname.SpacingAfter = 1;
                 locationname.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
-                locationname.Font = FontFactory.GetFont(FontFactory.TIMES, 20f, BaseColor.BLACK);
+                locationname.Font = FontFactory.GetFont(FontFactory.TIMES, 20f, BaseColor.Black);
                 locationname.Add(LocationName);
                 document.Add(locationname);
 
@@ -185,7 +179,7 @@ namespace Host.Helper
                 phone1.SpacingBefore = 50;
                 phone1.SpacingAfter = 1;
                 phone1.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
-                phone1.Font = FontFactory.GetFont(FontFactory.TIMES, 16f, BaseColor.DARK_GRAY);
+                phone1.Font = FontFactory.GetFont(FontFactory.TIMES, 16f, BaseColor.DarkGray);
                 phone1.Add(Phone1);
                 document.Add(phone1);
 
@@ -195,7 +189,7 @@ namespace Host.Helper
                 email1.SpacingBefore = 1;
                 email1.SpacingAfter = 1;
                 email1.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
-                email1.Font = FontFactory.GetFont(FontFactory.TIMES, 16f, BaseColor.DARK_GRAY);
+                email1.Font = FontFactory.GetFont(FontFactory.TIMES, 16f, BaseColor.DarkGray);
                 email1.Add(Email1);
                 document.Add(email1);
 
@@ -205,7 +199,7 @@ namespace Host.Helper
                 web1.SpacingBefore = 1;
                 web1.SpacingAfter = 30;
                 web1.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
-                web1.Font = FontFactory.GetFont(FontFactory.TIMES, 16F, BaseColor.DARK_GRAY);
+                web1.Font = FontFactory.GetFont(FontFactory.TIMES, 16F, BaseColor.DarkGray);
                 web1.Add(Web1);
                 document.Add(web1);
 
@@ -224,7 +218,7 @@ namespace Host.Helper
                 station1.SpacingBefore = 10;
                 station1.SpacingAfter = 25;
                 station1.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
-                station1.Font = FontFactory.GetFont(FontFactory.TIMES, 20f, BaseColor.BLACK);
+                station1.Font = FontFactory.GetFont(FontFactory.TIMES, 20f, BaseColor.Black);
                 station1.Add(Station1);
                 document.Add(station1);
 
@@ -234,7 +228,7 @@ namespace Host.Helper
                 stationno1.SpacingBefore = 10;
                 stationno1.SpacingAfter = 10;
                 stationno1.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
-                stationno1.Font = FontFactory.GetFont(FontFactory.TIMES_BOLD, 60f, BaseColor.BLACK);
+                stationno1.Font = FontFactory.GetFont(FontFactory.TIMES_BOLD, 60f, BaseColor.Black);
                 stationno1.Add("" + Sno);
                 document.Add(stationno1);
 
@@ -246,7 +240,7 @@ namespace Host.Helper
                 locationname1.SpacingBefore = 10;
                 locationname1.SpacingAfter = 1;
                 locationname1.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
-                locationname1.Font = FontFactory.GetFont(FontFactory.TIMES, 20f, BaseColor.BLACK);
+                locationname1.Font = FontFactory.GetFont(FontFactory.TIMES, 20f, BaseColor.Black);
                 locationname1.Add(LocationName1);
                 document.Add(locationname1);
 
@@ -351,7 +345,7 @@ namespace Host.Helper
                     phone.SpacingBefore = 50;
                     phone.SpacingAfter = 1;
                     phone.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
-                    phone.Font = FontFactory.GetFont(FontFactory.TIMES, 16f, BaseColor.DARK_GRAY);
+                    phone.Font = FontFactory.GetFont(FontFactory.TIMES, 16f, BaseColor.DarkGray);
                     phone.Add(Phone);
                     document.Add(phone);
 
@@ -361,7 +355,7 @@ namespace Host.Helper
                     email.SpacingBefore = 1;
                     email.SpacingAfter = 1;
                     email.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
-                    email.Font = FontFactory.GetFont(FontFactory.TIMES, 16f, BaseColor.DARK_GRAY);
+                    email.Font = FontFactory.GetFont(FontFactory.TIMES, 16f, BaseColor.DarkGray);
                     email.Add(Email);
                     document.Add(email);
 
@@ -371,7 +365,7 @@ namespace Host.Helper
                     web.SpacingBefore = 1;
                     web.SpacingAfter = 30;
                     web.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
-                    web.Font = FontFactory.GetFont(FontFactory.TIMES, 16F, BaseColor.DARK_GRAY);
+                    web.Font = FontFactory.GetFont(FontFactory.TIMES, 16F, BaseColor.DarkGray);
                     web.Add(Web);
                     document.Add(web);
 
@@ -381,7 +375,7 @@ namespace Host.Helper
                     station.SpacingBefore = 10;
                     station.SpacingAfter = 25;
                     station.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
-                    station.Font = FontFactory.GetFont(FontFactory.TIMES, 20f, BaseColor.BLACK);
+                    station.Font = FontFactory.GetFont(FontFactory.TIMES, 20f, BaseColor.Black);
                     station.Add(Station);
                     document.Add(station);
 
@@ -391,7 +385,7 @@ namespace Host.Helper
                     stationno.SpacingBefore = 10;
                     stationno.SpacingAfter = 10;
                     stationno.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
-                    stationno.Font = FontFactory.GetFont(FontFactory.TIMES_BOLD, 60f, BaseColor.BLACK);
+                    stationno.Font = FontFactory.GetFont(FontFactory.TIMES_BOLD, 60f, BaseColor.Black);
                     stationno.Add("" + s.SNo);
                     document.Add(stationno);
 
@@ -403,7 +397,7 @@ namespace Host.Helper
                     locationname.SpacingBefore = 10;
                     locationname.SpacingAfter = 1;
                     locationname.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
-                    locationname.Font = FontFactory.GetFont(FontFactory.TIMES, 20f, BaseColor.BLACK);
+                    locationname.Font = FontFactory.GetFont(FontFactory.TIMES, 20f, BaseColor.Black);
                     locationname.Add(LocationName);
                     document.Add(locationname);
 
@@ -435,7 +429,7 @@ namespace Host.Helper
                     phone1.SpacingBefore = 50;
                     phone1.SpacingAfter = 1;
                     phone1.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
-                    phone1.Font = FontFactory.GetFont(FontFactory.TIMES, 16f, BaseColor.DARK_GRAY);
+                    phone1.Font = FontFactory.GetFont(FontFactory.TIMES, 16f, BaseColor.DarkGray);
                     phone1.Add(Phone1);
                     document.Add(phone1);
 
@@ -445,7 +439,7 @@ namespace Host.Helper
                     email1.SpacingBefore = 1;
                     email1.SpacingAfter = 1;
                     email1.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
-                    email1.Font = FontFactory.GetFont(FontFactory.TIMES, 16f, BaseColor.DARK_GRAY);
+                    email1.Font = FontFactory.GetFont(FontFactory.TIMES, 16f, BaseColor.DarkGray);
                     email1.Add(Email1);
                     document.Add(email1);
 
@@ -455,7 +449,7 @@ namespace Host.Helper
                     web1.SpacingBefore = 1;
                     web1.SpacingAfter = 30;
                     web1.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
-                    web1.Font = FontFactory.GetFont(FontFactory.TIMES, 16F, BaseColor.DARK_GRAY);
+                    web1.Font = FontFactory.GetFont(FontFactory.TIMES, 16F, BaseColor.DarkGray);
                     web1.Add(Web1);
                     document.Add(web1);
 
@@ -474,7 +468,7 @@ namespace Host.Helper
                     station1.SpacingBefore = 10;
                     station1.SpacingAfter = 25;
                     station1.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
-                    station1.Font = FontFactory.GetFont(FontFactory.TIMES, 20f, BaseColor.BLACK);
+                    station1.Font = FontFactory.GetFont(FontFactory.TIMES, 20f, BaseColor.Black);
                     station1.Add(Station1);
                     document.Add(station1);
 
@@ -484,7 +478,7 @@ namespace Host.Helper
                     stationno1.SpacingBefore = 10;
                     stationno1.SpacingAfter = 10;
                     stationno1.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
-                    stationno1.Font = FontFactory.GetFont(FontFactory.TIMES_BOLD, 60f, BaseColor.BLACK);
+                    stationno1.Font = FontFactory.GetFont(FontFactory.TIMES_BOLD, 60f, BaseColor.Black);
                     stationno1.Add("" + s.SNo);
                     document.Add(stationno1);
 
@@ -496,7 +490,7 @@ namespace Host.Helper
                     locationname1.SpacingBefore = 10;
                     locationname1.SpacingAfter = 1;
                     locationname1.Alignment = iTextSharp.text.Element.ALIGN_CENTER;
-                    locationname1.Font = FontFactory.GetFont(FontFactory.TIMES, 20f, BaseColor.BLACK);
+                    locationname1.Font = FontFactory.GetFont(FontFactory.TIMES, 20f, BaseColor.Black);
                     locationname1.Add(LocationName1);
                     document.Add(locationname1);
 
