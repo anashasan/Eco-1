@@ -38,6 +38,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.1" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.2" PrivateAssets="All" />
+    <PackageReference Include="MiniProfiler.AspNetCore.Mvc" Version="4.0.133" />
     <PackageReference Include="NETCoreBarcode" Version="1.0.0" />
     <PackageReference Include="NETStandardBarcode" Version="1.0.1" />
     <PackageReference Include="NETStandardQRCode" Version="0.9.7" />

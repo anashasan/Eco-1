@@ -107,6 +107,19 @@ namespace Host.Controllers
             return Json(models);
         }
 
+        public IActionResult ActivityPerfromReport()
+        {
+            return View("ActivityPerformReport");
+        }
+
+       [AllowAnonymous]
+       [HttpGet("Company/data")]
+       public IActionResult ActivityPerformDailyReport([FromQuery]int? locationId, [FromQuery]DateTime? createdOn)
+        {
+            var model = _activityPerformService.ActivityReport(locationId, createdOn);
+            return Json(model);
+        }
+
         //[HttpPost]
         //public async Task<IActionResult> AddCompany(CompanyDto requestDto)
         //{
