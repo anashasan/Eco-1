@@ -4,27 +4,44 @@
 @{
     Layout = "_AdminLayout";
 }
-<div class="box">
-    <table border="1">
-        <tr>
-            <td>1</td>
-            <td>
-                2
-            </td>
-        </tr>
-        <tr>
-            <td>1</td>
-            <td>
-                2
-            </td>
-        </tr>
-
-    </table>
-</div>
 <script>
-    var container = document.getElementById("container");
-    for (var i = 0; i < array.length; i++) {
-        container.innerHTML += '<div class="box"></div>';
-    }
+window.onload = function () {
+
+var chart = new CanvasJS.Chart("chartContainer", {
+	animationEnabled: true,
+	theme: "light2", // "light1", "light2", "dark1", "dark2"
+	title: {
+		text: "BAIT STATION MONTH JAN 2018"
+	},
+	subtitles: [{
+	//ext: "In USD",
+		fontSize: 16
+	}],
+	axisY: {
+		prefix: "$",
+		scaleBreaks: {
+			customBreaks: [{
+				startValue: 10000,
+				endValue: 35000
+			}]
+		}
+	},
+	data: [{
+		type: "column",
+		yValueFormatString: "$#,##0.00",
+		dataPoints: [
+            { label: "Station Damaged", y: 2000 },
+            { label: "Station Replaced", y: 3090 },
+            { label: "Wax Blocked Change", y: 2892 }
+			
+		]
+    }]
+    });
+    console.log(chart[0]);
+chart.render();
+
+}
 </script>
 
+<div id="chartContainer" style="height: 300px; width: 100%;"></div>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
