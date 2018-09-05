@@ -10,9 +10,8 @@ using Host.Configuration;
 using Host.DataContext;
 using Host.Business.IDbServices;
 using Host.Business.DbServices;
-using Swashbuckle.AspNetCore.Swagger;
 using System;
-using Host.Helper;
+using System.Diagnostics;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication;
@@ -33,6 +32,7 @@ namespace Host
         public void ConfigureServices(IServiceCollection services)
         {
             var connectionString = Environment.GetEnvironmentVariable("DefaultConnection");
+            Debug.Assert(connectionString != null, nameof(connectionString) + " != null");
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
@@ -61,10 +61,13 @@ namespace Host
             services.AddScoped<IGraphService, GraphService>();
             services.AddScoped<IJsonDataService, JsonDataService>();
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("eco-report-grid",
+                    builder => builder.WithOrigins("http://localhost:3000"));
+            });
+
             services.AddMvc();
-
-
-
 
             services.AddIdentityServer()
                 .AddDeveloperSigningCredential()
@@ -76,7 +79,6 @@ namespace Host
             services.AddAuthentication()
                 .AddJwtBearer(cfg =>
                 {
-
                     cfg.RequireHttpsMetadata = false;
                     cfg.SaveToken = true;
 
@@ -183,6 +185,7 @@ namespace Host
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
 
+            app.UseCors("eco-report-grid");
 
             app.UseMvc(routes =>
             {
