@@ -4,44 +4,78 @@
 @{
     Layout = "_AdminLayout";
 }
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<div id="myDiv"><!-- Plotly chart will be drawn inside this DIV --></div>
 <script>
-window.onload = function () {
+    var arr = {
+        data: [{
+            trace1: {
+                x: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                y: [20, 14, 25, 16, 18, 22, 19, 15, 12, 16, 14, 17],
+            },
+            trace2: {
+                x: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                y: [19, 14, 22, 14, 16, 19, 15, 14, 10, 12, 12, 16],
+            }
+        }, {
+            trace1: {
+                x: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                y: [20, 14, 25, 16, 18, 22, 18, 10, 12, 16, 14, 20],
+            },
+            trace2: {
+                x: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                y: [19, 14, 22, 14, 16, 19, 15, 14, 10, 12, 12, 16],
+                }
+            
+        }]
+    };
 
-var chart = new CanvasJS.Chart("chartContainer", {
-	animationEnabled: true,
-	theme: "light2", // "light1", "light2", "dark1", "dark2"
-	title: {
-		text: "BAIT STATION MONTH JAN 2018"
-	},
-	subtitles: [{
-	//ext: "In USD",
-		fontSize: 16
-	}],
-	axisY: {
-		prefix: "$",
-		scaleBreaks: {
-			customBreaks: [{
-				startValue: 10000,
-				endValue: 35000
-			}]
-		}
-	},
-	data: [{
-		type: "column",
-		yValueFormatString: "$#,##0.00",
-		dataPoints: [
-            { label: "Station Damaged", y: 2000 },
-            { label: "Station Replaced", y: 3090 },
-            { label: "Wax Blocked Change", y: 2892 }
-			
-		]
-    }]
-    });
-    console.log(chart[0]);
-chart.render();
+    for (var i = 0; i < arr.data.length; i++) {
+        var trace1Data = arr.data[i].trace1;
+        var trace1 = {
+            x: trace1Data.x,
+            y: trace1Data.y,
+            type: 'bar',
+            name: 'Primary Product',
+            marker: {
+                color: 'rgb(49,130,189)',
+                opacity: 0.7
+            }
+        };
 
-}
+        var trace2Data = arr.data[i].trace2;
+
+        var trace2 = {
+            x: trace2Data.x,
+            y: trace2Data.y,
+            type: 'bar',
+            name: 'Secondary Product',
+            marker: {
+                color: 'rgb(204,204,204)',
+                opacity: 0.5
+            }
+        };
+        
+
+        var data = [trace1, trace2];
+
+        var layout = {
+            title: '2013 Sales Report',
+            xaxis: {
+                tickangle: -45
+            },
+            barmode: 'group',
+           
+        };
+        const div = document.createElement("div");
+        div.id = "newDiv" + i;
+        const parentDiv = document.getElementById('myDiv');
+        parentDiv.appendChild(div); 
+        Plotly.newPlot('newDiv' + i, data, layout);
+    }
+
+    
+
+   
+
 </script>
-
-<div id="chartContainer" style="height: 300px; width: 100%;"></div>
-<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
