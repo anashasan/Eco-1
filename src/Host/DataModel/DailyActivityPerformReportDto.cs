@@ -1,16 +1,11 @@
-﻿
-using Newtonsoft.Json;
-using System;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Host.DataModel
 {
     public class DailyActivityPerformReportDto
     {
-        private List<DailyActivityPerformDetailDto> _activityPerform;
-
+        [JsonIgnore]
         public string StationName { get; set; }
         public int StationNo { get; set; }
         public string LocationName { get; set; }

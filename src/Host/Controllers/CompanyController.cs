@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using iTextSharp.text.factories;
 using System.Drawing;
 using Host.Business.DbServices;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Hosting;
 
 namespace Host.Controllers
@@ -112,11 +113,12 @@ namespace Host.Controllers
             return View("ActivityPerformReport");
         }
 
-       [AllowAnonymous]
-       [HttpGet("Company/data")]
-       public IActionResult ActivityPerformDailyReport([FromQuery]int? locationId, [FromQuery]DateTime? createdOn)
+        [AllowAnonymous]
+        [EnableCors("eco-report-grid")]
+        [HttpGet("Company/data")]
+        public async Task<IActionResult> ActivityPerformDailyReport([FromQuery]int? locationId, [FromQuery]DateTime? createdOn)
         {
-            var model = _activityPerformService.ActivityReport(locationId, createdOn);
+            var model = await _activityPerformService.ActivityReport(locationId, createdOn);
             return Json(model);
         }
 
@@ -1110,7 +1112,7 @@ namespace Host.Controllers
         {
             return _employeeService.CheckEmailIsExist(email);
         }
-        
+
         [AllowAnonymous]
         [HttpGet("Company/GetJson")]
         public IActionResult GetJson([FromQuery] Guid code)

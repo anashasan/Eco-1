@@ -129,7 +129,7 @@ namespace Host.Business.DbServices
             }
         }
 
-        public async Task<List<DailyActivityPerformReportDto>> ActivityReport(int? locationId, DateTime? createdOn)
+        public async Task<List<ReportDto>> ActivityReport(int? locationId, DateTime? createdOn)
         {
             try
             {
@@ -140,14 +140,56 @@ namespace Host.Business.DbServices
                     commandType: CommandType.StoredProcedure)
                    ).ToList();
 
-                for (int i = 0; i < models.Count; i++)
+                var reportDto = new List<ReportDto>();
+                var stationName = string.Empty;
+                var dailyActivities = new Stack<DailyActivityPerformReportDto>();
+                var activities = new Stack<string>();
+                foreach (var model in models)
                 {
-                    var model = models[i];
+                    if (stationName != model.StationName && !string.IsNullOrEmpty(stationName))
+                    {
+                        var reportActivities = new List<string>(activities.Count);
+                        while (activities.Count != 0)
+                        {
+                            reportActivities.Add(activities.Pop());
+                        }                        
+
+                        var dailyReportActivities = new List<DailyActivityPerformReportDto>(dailyActivities.Count);
+                        while (dailyActivities.Count != 0)
+                        {
+                            dailyReportActivities.Add(dailyActivities.Pop());
+                        }
+
+                        reportDto.Add(new ReportDto
+                        {
+                            StationName = stationName,
+                            DailyActivityPerformReport = dailyReportActivities,
+                            Activities = reportActivities.Any() ? reportActivities : null,
+                        });
+                    }
+
                     if (model.ActivityPerformJson != null && model.ActivityPerformJson.Any())
+                    {
                         model.ActivityPerform = JsonConvert.DeserializeObject<List<DailyActivityPerformDetailDto>>(model.ActivityPerformJson);
+                        if (model.ActivityPerform != null && model.ActivityPerform.Any())
+                        {
+                            foreach (var activityPerform in model.ActivityPerform)
+                            {
+                                if (!string.IsNullOrEmpty(activityPerform.ActivityName))
+                                {
+                                    if (!activities.Contains(activityPerform.ActivityName))
+                                        activities.Push(activityPerform.ActivityName);
+                                }
+                            }
+                        }
+                    }
+                    stationName = model.StationName;
+                    dailyActivities.Push(model);
+
+
                 }
 
-                return models;
+                return reportDto;
             }
             catch (Exception e)
             {
