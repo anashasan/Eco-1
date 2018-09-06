@@ -78,7 +78,7 @@ namespace Host.Business.DbServices
             {
                 var activityPerform = new ActivityPerform
                 {
-                    FkStationLocationId = requestDto.StationId,
+                    FkStationLocationId = requestDto.StationLocationId,
                     FkEmployeeId = requestDto.EmployeeId,
                     CreatedOn = DateTime.Now,
 
