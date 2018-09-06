@@ -273,7 +273,7 @@ namespace Host.Business.DbServices
         {
             return _context.StationLocation
                     .AsNoTracking()
-                    .Any(i => i.Sno == sno);
+                    .Any(i => i.FkLocation.BranchLocation.Any(j => j.FkBranchId == branchId) && i.Sno == sno);
         }
 
 

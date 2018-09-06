@@ -103,7 +103,7 @@ namespace IdentityServer4.Quickstart.UI
                     var userName = new ApplicationUser
                     {
                         UserName = user.UserName,
-                        Email = user.Email
+                        Email = user.Email,
                     };
                     var result = userMgr.CreateAsync(userName, user.Password).Result;
                     if (!result.Succeeded)
@@ -132,9 +132,7 @@ namespace IdentityServer4.Quickstart.UI
                         FkInitiatedById = GetUserid().ToString(),
                         FkUserId = userName.Id,
                         CreatedOn = DateTime.Now,
-                        WorkEmail = user.Email
-
-
+                        WorkEmail = user.Email,
                     };
 
                     await _employeeProfileService.AddEmployeeProfile(employeProfile);
