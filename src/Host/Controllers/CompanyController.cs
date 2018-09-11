@@ -14,11 +14,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using iTextSharp.text.factories;
 using System.Drawing;
 using Host.Business.DbServices;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Hosting;
 
 namespace Host.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Operation")]
     public class CompanyController : BaseController
     {
 
@@ -105,6 +106,20 @@ namespace Host.Controllers
         {
             var models = _graphService.GetTotalCountActivity();
             return Json(models);
+        }
+
+        public IActionResult ActivityPerfromReport()
+        {
+            return View("ActivityPerformReport");
+        }
+
+        [AllowAnonymous]
+        [EnableCors("eco-report-grid")]
+        [HttpGet("Company/data")]
+        public async Task<IActionResult> ActivityPerformDailyReport([FromQuery]int? locationId, [FromQuery]DateTime? createdOn)
+        {
+            var model = await _activityPerformService.ActivityReport(locationId, createdOn);
+            return Json(model);
         }
 
         //[HttpPost]
@@ -1097,7 +1112,7 @@ namespace Host.Controllers
         {
             return _employeeService.CheckEmailIsExist(email);
         }
-        
+
         [AllowAnonymous]
         [HttpGet("Company/GetJson")]
         public IActionResult GetJson([FromQuery] Guid code)

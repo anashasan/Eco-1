@@ -3,10 +3,13 @@ using Host.Business.IDbServices;
 using Host.DataContext;
 using Host.DataModel;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Profiling;
+using StackExchange.Profiling.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using Newtonsoft.Json;
 using System.Threading.Tasks;
 
 namespace Host.Business.DbServices
@@ -37,10 +40,10 @@ namespace Host.Business.DbServices
             ;
             var modelGroup = model.OrderBy(x => x.StationName)
                        .GroupBy(x => x.StationName).ToList();
-            
+
             return abc;
 
-                                       
+
         }
 
         public async Task<List<GroupActivityReports>> ActivityFilterReporByBranchIdt(int branchId, int locationId)
@@ -75,18 +78,18 @@ namespace Host.Business.DbServices
             {
                 var activityPerform = new ActivityPerform
                 {
-                    FkStationLocationId = requestDto.StationId,
+                    FkStationLocationId = requestDto.StationLocationId,
                     FkEmployeeId = requestDto.EmployeeId,
                     CreatedOn = DateTime.Now,
-                   
-            };
+
+                };
                 _context.ActivityPerform.Add(activityPerform);
                 _context.SaveChanges();
 
                 var lstActivityPerformDetail = new List<ActivityPerformDetail>();
                 foreach (var activity in requestDto.Activities)
                 {
-                    if(activity.Observations != null && activity.Observations.Any())
+                    if (activity.Observations != null && activity.Observations.Any())
                     {
                         lstActivityPerformDetail.Add(new ActivityPerformDetail
                         {
@@ -95,7 +98,7 @@ namespace Host.Business.DbServices
                             CreatedOn = DateTime.Now,
                             ActivityObservation = activity.Observations.Select(i => new ActivityObservation
                             {
-                                Description = i,                                
+                                Description = i,
                             })
                             .ToList()
                         });
@@ -116,8 +119,77 @@ namespace Host.Business.DbServices
                 _context.ActivityPerformDetail.AddRange(lstActivityPerformDetail);
 
                 return await Task.FromResult(_context.SaveChanges());
-                
-                                      
+
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public async Task<List<ReportDto>> ActivityReport(int? locationId, DateTime? createdOn)
+        {
+            try
+            {
+                var connection = _context.Database.GetDbConnection();
+                var models = (await connection.QueryAsync<DailyActivityPerformReportDto>(
+                    "[dbo].[usp_DailyActivityPerformReport]",
+                    new { paramLocationId = locationId, paramDate = createdOn },
+                    commandType: CommandType.StoredProcedure)
+                   ).ToList();
+
+                var reportDto = new List<ReportDto>();
+                var stationName = string.Empty;
+                var dailyActivities = new Stack<DailyActivityPerformReportDto>();
+                var activities = new Stack<string>();
+                foreach (var model in models)
+                {
+                    if (stationName != model.StationName && !string.IsNullOrEmpty(stationName))
+                    {
+                        var reportActivities = new List<string>(activities.Count);
+                        while (activities.Count != 0)
+                        {
+                            reportActivities.Add(activities.Pop());
+                        }                        
+
+                        var dailyReportActivities = new List<DailyActivityPerformReportDto>(dailyActivities.Count);
+                        while (dailyActivities.Count != 0)
+                        {
+                            dailyReportActivities.Add(dailyActivities.Pop());
+                        }
+
+                        reportDto.Add(new ReportDto
+                        {
+                            StationName = stationName,
+                            DailyActivityPerformReport = dailyReportActivities,
+                            Activities = reportActivities.Any() ? reportActivities : null,
+                        });
+                    }
+
+                    if (model.ActivityPerformJson != null && model.ActivityPerformJson.Any())
+                    {
+                        model.ActivityPerform = JsonConvert.DeserializeObject<List<DailyActivityPerformDetailDto>>(model.ActivityPerformJson);
+                        if (model.ActivityPerform != null && model.ActivityPerform.Any())
+                        {
+                            foreach (var activityPerform in model.ActivityPerform)
+                            {
+                                if (!string.IsNullOrEmpty(activityPerform.ActivityName))
+                                {
+                                    if (!activities.Contains(activityPerform.ActivityName))
+                                        activities.Push(activityPerform.ActivityName);
+                                }
+                            }
+                        }
+                    }
+                    stationName = model.StationName;
+                    dailyActivities.Push(model);
+
+
+                }
+
+                return reportDto;
             }
             catch (Exception e)
             {

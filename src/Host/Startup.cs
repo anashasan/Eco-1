@@ -10,12 +10,12 @@ using Host.Configuration;
 using Host.DataContext;
 using Host.Business.IDbServices;
 using Host.Business.DbServices;
-using Swashbuckle.AspNetCore.Swagger;
 using System;
-using Host.Helper;
+using System.Diagnostics;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication;
+using StackExchange.Profiling.Storage;
 
 
 namespace Host
@@ -29,10 +29,11 @@ namespace Host
 
         public IConfiguration Configuration { get; }
 
-       // This method gets called by the runtime.Use this method to add services to the container.
-            public void ConfigureServices(IServiceCollection services)
+        // This method gets called by the runtime.Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
         {
             var connectionString = Environment.GetEnvironmentVariable("DefaultConnection");
+            Debug.Assert(connectionString != null, nameof(connectionString) + " != null");
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
@@ -65,10 +66,13 @@ namespace Host
             services.AddScoped<IGraphService, GraphService>();
             services.AddScoped<IJsonDataService, JsonDataService>();
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("eco-report-grid",
+                    builder => builder.WithOrigins("http://localhost:3000"));
+            });
+
             services.AddMvc();
-
-
-
 
             services.AddIdentityServer()
                 .AddDeveloperSigningCredential()
@@ -80,7 +84,6 @@ namespace Host
             services.AddAuthentication()
                 .AddJwtBearer(cfg =>
                 {
-
                     cfg.RequireHttpsMetadata = false;
                     cfg.SaveToken = true;
 
@@ -115,6 +118,43 @@ namespace Host
                 });
             });
 
+
+            services.AddMiniProfiler(options =>
+            {
+                // All of this is optional. You can simply call .AddMiniProfiler() for all defaults
+
+                // (Optional) Path to use for profiler URLs, default is /mini-profiler-resources
+                options.RouteBasePath = "/profiler";
+
+                // (Optional) Control storage
+                // (default is 30 minutes in MemoryCacheStorage)
+                (options.Storage as MemoryCacheStorage).CacheDuration = TimeSpan.FromMinutes(60);
+
+                // (Optional) Control which SQL formatter to use, InlineFormatter is the default
+                options.SqlFormatter = new StackExchange.Profiling.SqlFormatters.InlineFormatter();
+
+                //// (Optional) To control authorization, you can use the Func<HttpRequest, bool> options:
+                //// (default is everyone can access profilers)
+                //options.ResultsAuthorize = request => MyGetUserFunction(request).CanSeeMiniProfiler;
+                //options.ResultsListAuthorize = request => MyGetUserFunction(request).CanSeeMiniProfiler;
+
+                //// (Optional)  To control which requests are profiled, use the Func<HttpRequest, bool> option:
+                //// (default is everything should be profiled)
+                //options.ShouldProfile = request => MyShouldThisBeProfiledFunction(request);
+
+                //// (Optional) Profiles are stored under a user ID, function to get it:
+                //// (default is null, since above methods don't use it by default)
+                //options.UserIdProvider = request => MyGetUserIdFunction(request);
+
+                //// (Optional) Swap out the entire profiler provider, if you want
+                //// (default handles async and works fine for almost all appliations)
+                //options.ProfilerProvider = new MyProfilerProvider();
+
+                // (Optional) You can disable "Connection Open()", "Connection Close()" (and async variant) tracking.
+                // (defaults to true, and connection opening/closing is tracked)
+                options.TrackConnectionOpenClose = true;
+            });
+
             // Other ConfigureServices() code...
         }
 
@@ -135,6 +175,8 @@ namespace Host
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            app.UseMiniProfiler();
+
             app.UseStaticFiles();
 
             //app.UseAuthentication(); // UseAuthentication not needed -- UseIdentityServer add this
@@ -148,6 +190,7 @@ namespace Host
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
 
+            app.UseCors("eco-report-grid");
 
             app.UseMvc(routes =>
             {
