@@ -104,6 +104,7 @@ namespace IdentityServer4.Quickstart.UI
                     {
                         UserName = user.UserName,
                         Email = user.Email,
+                        Status = true
                     };
                     var result = userMgr.CreateAsync(userName, user.Password).Result;
                     if (!result.Succeeded)

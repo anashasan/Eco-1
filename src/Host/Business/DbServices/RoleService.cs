@@ -185,7 +185,7 @@ namespace Host.Business.DbServices
             {
                 return _context.AspNetUsers
                        .AsNoTracking()
-                       .Where(i => i.Email == email)
+                       .Where(i =>i.Status.HasValue && i.Status.Value && i.Email == email)
                        .Select(o => o.UserName)
                        .SingleOrDefault();
             }

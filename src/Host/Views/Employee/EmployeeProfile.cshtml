@@ -39,18 +39,38 @@
                         <th>
                             <a>Last Name</a>
                         </th>
+
+                        <th>
+                            <a>Options</a>
+                        </th>
                     </tr>
                     @foreach (var s in Model)
-            {
-                <tr>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th>@s.Email</th>
-                    <th>@s.NormalizeUserName</th>
-                    <th>@s.RoleName</th>
-                </tr>
-    }
+                    {
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th>@s.Email</th>
+                            <th>@s.NormalizeUserName</th>
+                            <th>@s.RoleName</th>
+                            <th>
+                                @if (s.RoleName != "Admin")
+                                {
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            Options
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+                                            <a class="dropdown-item fa fa-edit" href="#" onClick='@($"window.location.href='/Employee/UserInActive?userId={s.Id}'")'>Delete</a>
+
+                                        </div>
+
+                                    </div>
+                                }
+                            </th>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>

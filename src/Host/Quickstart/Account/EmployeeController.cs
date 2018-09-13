@@ -85,6 +85,14 @@ namespace Host.Quickstart.Account
             return RedirectToAction("Sign", "Home");
 
         }
+
+        [HttpGet]
+        public IActionResult UserInActive(string userId)
+        {
+            _employeesService.UserInActive(userId);
+
+            return RedirectToAction("EmployeeProfile");
+        }
        
 
         //[HttpPost]
