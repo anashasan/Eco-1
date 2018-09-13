@@ -29,7 +29,6 @@ namespace Host.Quickstart.Account
         }
 
         [Authorize]
-
         public IActionResult EmployeeProfile()
         {
             var employees = _employeesService.GetAllEmployee();
@@ -39,6 +38,9 @@ namespace Host.Quickstart.Account
             return View("EmployeeProfile", model);
 
         }
+
+        [AllowAnonymous]
+        [HttpGet]
         public IActionResult RegisterEmployee(string code)
         {
             try
@@ -82,6 +84,14 @@ namespace Host.Quickstart.Account
             sendEmail.SendPasswordResetEmail(forgetPasswordDto.Email, "Reset Your Password", id, url);
             return RedirectToAction("Sign", "Home");
 
+        }
+
+        [HttpGet]
+        public IActionResult UserInActive(string userId)
+        {
+            _employeesService.UserInActive(userId);
+
+            return RedirectToAction("EmployeeProfile");
         }
        
 

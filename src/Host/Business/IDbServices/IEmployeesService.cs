@@ -12,5 +12,6 @@ namespace Host.Business.IDbServices
         string GetUserName(string userId);
         bool CheckEmailIsExist(string email);
         //Task<int> DeleteUser(string userId);
+        void UserInActive(string userId);
     }
 }

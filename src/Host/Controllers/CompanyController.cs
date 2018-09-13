@@ -95,6 +95,11 @@ namespace Host.Controllers
             var report = await _activityPerformService.ActivityFilterReport();
             return View("ExampleGraph", report);
         }
+
+        public async Task<IActionResult> MonthlyGraph()
+        {
+            return View("Graph");
+        }
         public IActionResult TotalActivityGraph()
         {
 

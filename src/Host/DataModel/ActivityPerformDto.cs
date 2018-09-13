@@ -8,7 +8,7 @@ namespace Host.DataModel
 {
     public class ActivityPerformDto
     {
-        public int StationId { get; set; }
+        public int StationLocationId { get; set; }
         public string EmployeeId { get; set; }
         public string StationName { get; set; }
         public List<ActivityPerformDetailDto> Activities { get; set; }

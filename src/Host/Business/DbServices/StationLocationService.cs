@@ -228,7 +228,7 @@ namespace Host.Business.DbServices
                              .Where(i => i.FkStationId == stationId.FkStationId)
                              .Select(p => new ActivityPerformDetailDto
                              {
-                                 Name = p.FkActivity.Name,
+                                 ActivityName = p.FkActivity.Name,
                                  ActivityId = p.FkActivityId,
                                  ActivityTypeId = p.FkActivity.FkActivityTypeId,
                                  StationActivityId = p.PkStationActivityId,
@@ -238,7 +238,7 @@ namespace Host.Business.DbServices
                 return await Task.FromResult(new ActivityPerformDto
                 {
                     Activities = activities,
-                    StationId = stationId.PkStationLocationId,
+                    StationLocationId = stationId.PkStationLocationId,
                     StationName = stationId.Name
                 });
             }
@@ -273,7 +273,7 @@ namespace Host.Business.DbServices
         {
             return _context.StationLocation
                     .AsNoTracking()
-                    .Any(i => i.Sno == sno);
+                    .Any(i => i.FkLocation.BranchLocation.Any(j => j.FkBranchId == branchId) && i.Sno == sno);
         }
 
 

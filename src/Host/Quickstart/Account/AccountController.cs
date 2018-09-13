@@ -103,7 +103,8 @@ namespace IdentityServer4.Quickstart.UI
                     var userName = new ApplicationUser
                     {
                         UserName = user.UserName,
-                        Email = user.Email
+                        Email = user.Email,
+                        Status = true
                     };
                     var result = userMgr.CreateAsync(userName, user.Password).Result;
                     if (!result.Succeeded)
@@ -132,9 +133,7 @@ namespace IdentityServer4.Quickstart.UI
                         FkInitiatedById = GetUserid().ToString(),
                         FkUserId = userName.Id,
                         CreatedOn = DateTime.Now,
-                        WorkEmail = user.Email
-
-
+                        WorkEmail = user.Email,
                     };
 
                     await _employeeProfileService.AddEmployeeProfile(employeProfile);
@@ -286,7 +285,7 @@ namespace IdentityServer4.Quickstart.UI
                     await _events.RaiseAsync(new UserLoginSuccessEvent(users, user.Id, users));
 
                     // make sure the returnUrl is still valid, and if so redirect back to authorize endpoint or a local page
-                    // the IsLocalUrl check is only necessary if you want to support additional local pages, otherwise IsValidReturnUrl is more strict
+                    // the IsLocalUrl check is only necessary if you want to s`port additional local pages, otherwise IsValidReturnUrl is more strict
                     if (_interaction.IsValidReturnUrl(model.ReturnUrl) || Url.IsLocalUrl(model.ReturnUrl))
                     {
                         //return Redirect(model.ReturnUrl);

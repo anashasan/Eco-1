@@ -11,11 +11,11 @@ namespace Host.DataModel
         public int ActivityId { get; set; }
         [Required]
         [StringLength(250)]
-        public string Name { get; set; }
+        public string ActivityName { get; set; }
         public int ActivityTypeId { get; set; }
         public string Type { get; set; }
         public int StationActivityId { get; set; }
-        public List<string> Observations { get; set; }
+        public List<string> Observation { get; set; }
         public bool IsPerform { get; set; }
         public string Perform { get; set; }
     }
