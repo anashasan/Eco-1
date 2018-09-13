@@ -89,14 +89,14 @@ namespace Host.Business.DbServices
                 var lstActivityPerformDetail = new List<ActivityPerformDetail>();
                 foreach (var activity in requestDto.Activities)
                 {
-                    if (activity.Observations != null && activity.Observations.Any())
+                    if (activity.Observation != null && activity.Observation.Any())
                     {
                         lstActivityPerformDetail.Add(new ActivityPerformDetail
                         {
                             FkActivityId = activity.ActivityId,
                             FkActivityPerformId = activityPerform.PkActivityPerformId,
                             CreatedOn = DateTime.Now,
-                            ActivityObservation = activity.Observations.Select(i => new ActivityObservation
+                            ActivityObservation = activity.Observation.Select(i => new ActivityObservation
                             {
                                 Description = i,
                             })

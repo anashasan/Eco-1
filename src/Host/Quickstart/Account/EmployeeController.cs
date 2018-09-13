@@ -29,7 +29,6 @@ namespace Host.Quickstart.Account
         }
 
         [Authorize]
-
         public IActionResult EmployeeProfile()
         {
             var employees = _employeesService.GetAllEmployee();
@@ -39,6 +38,9 @@ namespace Host.Quickstart.Account
             return View("EmployeeProfile", model);
 
         }
+
+        [AllowAnonymous]
+        [HttpGet]
         public IActionResult RegisterEmployee(string code)
         {
             try
