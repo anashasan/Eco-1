@@ -127,6 +127,20 @@ namespace Host.Controllers
             return Json(model);
         }
 
+        [HttpGet("Company/LocationByBranchId/BranchId/{branchId}")]
+        public IActionResult LocationByBranchId([FromRoute] int branchId)
+        {
+            try
+            {
+                var locations = _stationLocationService.GetLocationByBranchId(branchId);
+                return Json(locations);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
         //[HttpPost]
         //public async Task<IActionResult> AddCompany(CompanyDto requestDto)
         //{
