@@ -1,6 +1,19 @@
 import React, { Component, Fragment } from "react";
-import { Table } from "reactstrap";
+import {
+  Table,
+  Container,
+  Row,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  Card,
+  CardHeader,
+  CardBody,
+  Button
+} from "reactstrap";
 import axios from "axios";
+import queryString from "query-string";
 
 /**
   @typedef {Object} ActivityDetail
@@ -26,7 +39,9 @@ import axios from "axios";
 /**
   @typedef {Object} State
   @property {Report[]} reports
-  @property {number} index
+  @property { Date } createdOn
+  @property { Number } locationId
+  @property { Number } branchId
  */
 
 /**
@@ -139,10 +154,17 @@ function createTable(report, index) {
 class App extends Component {
   constructor() {
     super();
+    const parsed = queryString.parse(window.location.search);
     /** @type {State} */
     this.state = {
-      reports: []
+      reports: [],
+      createdOn: "",
+      locationId: 0,
+      branchId: parsed.branchLocationId
     };
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -153,11 +175,75 @@ class App extends Component {
     });
   }
 
+  handleChange(event) {
+    var name = event.target.name;
+    this.setState({ [name]: event.target.value });
+  }
+
+  handleSubmit(event) {
+    axios
+      .get(
+        `http://localhost:5000/Company/data?locationId=${
+          this.state.locationId === 0 ? null : this.state.locationId
+        }&createdOn=${this.state.createdOn}`
+      )
+      .then(json => {
+        this.setState({
+          reports: [...json.data]
+        });
+      });
+    event.preventDefault();
+  }
+
   render() {
     const tables = this.state.reports.map((report, index) =>
       createTable(report, index)
     );
-    return <div>{tables}</div>;
+    return (
+      <Container>
+        <br />
+        <Row>
+          <Card>
+            <CardHeader>Search Box</CardHeader>
+            <CardBody>
+              <Form inline onSubmit={this.handleSubmit}>
+                <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                  <Label for="txtCreatedOn" className="mr-sm-2">
+                    Created On
+                  </Label>
+                  <Input
+                    type="date"
+                    id="txtCreatedOn"
+                    name="createdOn"
+                    value={this.state.createdOn}
+                    onChange={this.handleChange}
+                  />
+                </FormGroup>
+                <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                  <Label for="locationDropDown" className="mr-sm-2">
+                    Location
+                  </Label>
+                  <Input
+                    type="select"
+                    id="locationDropDown"
+                    name="locationId"
+                    value={this.state.locationId}
+                    onChange={this.handleChange}
+                  >
+                    <option>1</option>
+                  </Input>
+                </FormGroup>
+                <Button>Search</Button>
+              </Form>
+            </CardBody>
+          </Card>
+        </Row>
+        <br />
+        <Row>
+          <div>{tables}</div>
+        </Row>
+      </Container>
+    );
   }
 }
 
