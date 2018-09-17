@@ -129,14 +129,14 @@ namespace Host.Business.DbServices
             }
         }
 
-        public async Task<List<ReportDto>> ActivityReport(int? locationId, DateTime? createdOn)
+        public async Task<List<ReportDto>> ActivityReport(int? locationId, DateTime? createdOn, int? branchId)
         {
             try
             {
                 var connection = _context.Database.GetDbConnection();
                 var models = (await connection.QueryAsync<DailyActivityPerformReportDto>(
                     "[dbo].[usp_DailyActivityPerformReport]",
-                    new { paramLocationId = locationId, paramDate = createdOn },
+                    new { paramLocationId = locationId, paramDate = createdOn, paramBranchId = branchId},
                     commandType: CommandType.StoredProcedure)
                    ).ToList();
 

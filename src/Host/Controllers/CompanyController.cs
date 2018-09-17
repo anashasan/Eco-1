@@ -121,9 +121,9 @@ namespace Host.Controllers
         [AllowAnonymous]
         [EnableCors("eco-report-grid")]
         [HttpGet("Company/data")]
-        public async Task<IActionResult> ActivityPerformDailyReport([FromQuery]int? locationId, [FromQuery]DateTime? createdOn)
+        public async Task<IActionResult> ActivityPerformDailyReport([FromQuery]int? locationId, [FromQuery]DateTime? createdOn, [FromQuery]int branchId)
         {
-            var model = await _activityPerformService.ActivityReport(locationId, createdOn);
+            var model = await _activityPerformService.ActivityReport(locationId, createdOn,branchId);
             return Json(model);
         }
 
