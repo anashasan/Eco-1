@@ -100,8 +100,10 @@ function createActivities(activityDetail, activities) {
 
 /**
  * @param {Report} report
+ * @param {Date} createdOn
+ * @param {Number} index
  */
-function createTable(report, index) {
+function createTable(report, createdOn, index) {
   const trData = report.dailyActivityPerformReport.map(
     (dailyActivityPerform, index) => (
       <tr key={index}>
@@ -133,7 +135,7 @@ function createTable(report, index) {
             </td>
             {report.activities && (
               <td rowSpan="1" colSpan={report.activities.length}>
-                Activity Perform (Period)
+                Activity Perform ({createdOn})
               </td>
             )}
           </tr>
@@ -167,7 +169,7 @@ class App extends Component {
       reports: [],
       createdOn: "",
       locationId: 0,
-      branchId: parsed.branchLocationId,
+      branchId: parsed.branchId,
       locations: []
     };
 
@@ -176,11 +178,13 @@ class App extends Component {
   }
 
   componentDidMount() {
-    axios.get("http://localhost:5000/Company/data").then(json => {
-      this.setState({
-        reports: [...json.data]
+    axios
+      .get(`http://localhost:5000/Company/data?branchId=${this.state.branchId}`)
+      .then(json => {
+        this.setState({
+          reports: [...json.data]
+        });
       });
-    });
 
     axios
       .get(
@@ -203,7 +207,9 @@ class App extends Component {
   handleSubmit(event) {
     axios
       .get(
-        `http://localhost:5000/Company/data?locationId=${
+        `http://localhost:5000/Company/data?branchId=${
+          this.state.branchId
+        }&locationId=${
           this.state.locationId === 0 ? null : this.state.locationId
         }&createdOn=${this.state.createdOn}`
       )
@@ -217,7 +223,7 @@ class App extends Component {
 
   render() {
     const tables = this.state.reports.map((report, index) =>
-      createTable(report, index)
+      createTable(report, this.state.createdOn, index)
     );
     return (
       <Container>
