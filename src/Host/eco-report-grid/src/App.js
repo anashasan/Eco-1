@@ -256,6 +256,7 @@ class App extends Component {
                     value={this.state.locationId}
                     onChange={this.handleChange}
                   >
+                    <option value={null}>Select All</option>
                     {this.state.locations.map((locationData, index) => (
                       <option key={index} value={locationData.locationId}>
                         {locationData.locationName}
