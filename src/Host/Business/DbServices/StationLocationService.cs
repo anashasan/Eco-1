@@ -276,6 +276,35 @@ namespace Host.Business.DbServices
                     .Any(i => i.FkLocation.BranchLocation.Any(j => j.FkBranchId == branchId) && i.Sno == sno);
         }
 
+        public  Task<List<StationLocationDropDownDto>> GetLocationByBranchId(int branchId)
+        {
+            try
+            {
+                var locations = new List<StationLocationDropDownDto>();
+                var locationIds = _context.BranchLocation
+                               .AsNoTracking()
+                               .Where(i => i.FkBranchId == branchId)
+                               .Select(j => j.FkLocationId)
+                               .ToList();
+               
+                locations = _context.Location
+                                .AsNoTracking()
+                                .Where(i => locationIds.Contains(i.PkLocationId))
+                                .Select(j => new StationLocationDropDownDto
+                                {
+                                    LocationId = j.PkLocationId,
+                                    LocationName = j.Name
+                                }).ToList();
+
+                return Task.FromResult(locations);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
 
 
         /*  public List<StationLocationDto> GetStationByLocationId(int id)

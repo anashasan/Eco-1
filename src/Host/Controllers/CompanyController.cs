@@ -95,6 +95,11 @@ namespace Host.Controllers
             var report = await _activityPerformService.ActivityFilterReport();
             return View("ExampleGraph", report);
         }
+
+        public async Task<IActionResult> MonthlyGraph()
+        {
+            return View("Graph");
+        }
         public IActionResult TotalActivityGraph()
         {
 
@@ -122,6 +127,20 @@ namespace Host.Controllers
             return Json(model);
         }
 
+        [HttpGet("Company/LocationByBranchId/BranchId/{branchId}")]
+        public IActionResult LocationByBranchId([FromRoute] int branchId)
+        {
+            try
+            {
+                var locations = _stationLocationService.GetLocationByBranchId(branchId);
+                return Json(locations);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
         //[HttpPost]
         //public async Task<IActionResult> AddCompany(CompanyDto requestDto)
         //{
@@ -1075,6 +1094,7 @@ namespace Host.Controllers
             {
                 _stationService.DeleteStation(stationId);
                 return RedirectToAction("Station");
+
             }
             catch (Exception e)
             {
@@ -1129,9 +1149,17 @@ namespace Host.Controllers
             }
 
         }
+
         public IActionResult Test()
         {
             return View("Test");
+        }
+
+        [AllowAnonymous]
+        [HttpGet("Company/GraphReport")]
+        public IActionResult GetGraphReport()
+        {
+            return Json(_activityPerformService.StationReport());
         }
     }
 }

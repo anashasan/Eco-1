@@ -1,5 +1,6 @@
 ﻿using Host.Business.IDbServices;
 using Host.DataContext;
+using Host.Models;
 using Host.Models.AccountViewModels;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -37,14 +38,17 @@ namespace Host.Business.DbServices
         {
             try
             {
-              var employee =  _context.AspNetUsers
-                       .AsNoTracking()
-                       .Select(i => new UserInfoModel
-                       {
-                           UserName = i.UserName,
-                           Email = i.Email,
-                           RoleName = i.AspNetUserRoles.Select(p => p.Role.Name).SingleOrDefault(),
-                           NormalizeUserName = i.NormalizedUserName,
+                var employee = _context.AspNetUsers
+                         .AsNoTracking()
+                         .Where(i => i.Status.HasValue && i.Status.Value)
+                         .Select(i => new UserInfoModel
+                         {
+                             Id = i.Id,
+                             UserName = i.UserName,
+                             Email = i.Email,
+                             RoleName = i.AspNetUserRoles.Select(p => p.Role.Name).SingleOrDefault(),
+                             NormalizeUserName = i.NormalizedUserName,
+                             RoleId = i.AspNetUserRoles.Select(p => p.RoleId).SingleOrDefault()
                        }).ToList();
                 return employee;
             }
@@ -64,6 +68,24 @@ namespace Host.Business.DbServices
                        .Where(i => i.Id == userId)
                        .Select(p => p.NormalizedUserName)
                        .Single();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public void UserInActive(string userId)
+        {
+            try
+            {
+                var userModel = new AspNetUsers() { Id = userId };
+                _context.AspNetUsers.Attach(userModel);
+                userModel.Status = false;
+
+                _context.SaveChanges();
+
             }
             catch (Exception e)
             {

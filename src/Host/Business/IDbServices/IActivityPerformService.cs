@@ -12,5 +12,7 @@ namespace Host.Business.IDbServices
         Task<List<GroupActivityReports>> ActivityFilterReport();
         Task<List<GroupActivityReports>> ActivityFilterReporByBranchIdt(int branchId, int locationId);
         Task<List<ReportDto>> ActivityReport(int? locationId, DateTime? createdOn);
+        List<StationReportDto> StationReport();
+        //List<StationReportDto> StationReport();
     }
 }

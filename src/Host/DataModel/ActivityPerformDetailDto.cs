@@ -15,7 +15,7 @@ namespace Host.DataModel
         public int ActivityTypeId { get; set; }
         public string Type { get; set; }
         public int StationActivityId { get; set; }
-        public List<string> Observations { get; set; }
+        public List<string> Observation { get; set; }
         public bool IsPerform { get; set; }
         public string Perform { get; set; }
     }

@@ -89,14 +89,14 @@ namespace Host.Business.DbServices
                 var lstActivityPerformDetail = new List<ActivityPerformDetail>();
                 foreach (var activity in requestDto.Activities)
                 {
-                    if (activity.Observations != null && activity.Observations.Any())
+                    if (activity.Observation != null && activity.Observation.Any())
                     {
                         lstActivityPerformDetail.Add(new ActivityPerformDetail
                         {
                             FkActivityId = activity.ActivityId,
                             FkActivityPerformId = activityPerform.PkActivityPerformId,
                             CreatedOn = DateTime.Now,
-                            ActivityObservation = activity.Observations.Select(i => new ActivityObservation
+                            ActivityObservation = activity.Observation.Select(i => new ActivityObservation
                             {
                                 Description = i,
                             })
@@ -152,7 +152,7 @@ namespace Host.Business.DbServices
                         while (activities.Count != 0)
                         {
                             reportActivities.Add(activities.Pop());
-                        }                        
+                        }
 
                         var dailyReportActivities = new List<DailyActivityPerformReportDto>(dailyActivities.Count);
                         while (dailyActivities.Count != 0)
@@ -197,5 +197,18 @@ namespace Host.Business.DbServices
                 throw;
             }
         }
+        public List<StationReportDto> StationReport()
+        {
+            var connection = _context.Database.GetDbConnection();
+
+            return connection.Query<StationReportDto>("[dbo].[usp_Graphreport]", commandType: CommandType.StoredProcedure)
+                  .ToList();
+
+
+        }
+
     }
+
 }
+
+
