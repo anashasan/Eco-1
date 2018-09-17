@@ -37,11 +37,18 @@ import queryString from "query-string";
  */
 
 /**
+  @typedef {Object} Location
+  @property {number} locationId
+  @property {string} locationName
+ */
+
+/**
   @typedef {Object} State
   @property {Report[]} reports
   @property { Date } createdOn
   @property { Number } locationId
   @property { Number } branchId
+  @property {Location[]} locations
  */
 
 /**
@@ -160,7 +167,8 @@ class App extends Component {
       reports: [],
       createdOn: "",
       locationId: 0,
-      branchId: parsed.branchLocationId
+      branchId: parsed.branchLocationId,
+      locations: []
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -173,6 +181,18 @@ class App extends Component {
         reports: [...json.data]
       });
     });
+
+    axios
+      .get(
+        `http://localhost:5000/Company/locations/branchId/${
+          this.state.branchId
+        }`
+      )
+      .then(json => {
+        this.setState({
+          locations: [...json.data]
+        });
+      });
   }
 
   handleChange(event) {
@@ -230,7 +250,11 @@ class App extends Component {
                     value={this.state.locationId}
                     onChange={this.handleChange}
                   >
-                    <option>1</option>
+                    {this.state.locations.map((locationData, index) => (
+                      <option key={index} value={locationData.locationId}>
+                        {locationData.locationName}
+                      </option>
+                    ))}
                   </Input>
                 </FormGroup>
                 <Button>Search</Button>

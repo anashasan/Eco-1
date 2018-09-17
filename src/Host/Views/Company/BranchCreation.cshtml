@@ -139,7 +139,8 @@
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item fa fa-user-o" href='#' onclick='@($"window.location.href='/Company/GetStationByBranchId?branchId={s.BranchId}&companyId={ViewBag.CompanyId}'")'>BranchStation</a>
 
-
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item fa fa-user-o" href='#' asp-action="ActivityPerfromReport" asp-route-branchLocationId="@s.BranchId">Daily Report</a>
                                     </div>
                                 </div>
 
