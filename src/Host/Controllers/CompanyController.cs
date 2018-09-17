@@ -115,6 +115,7 @@ namespace Host.Controllers
 
         public IActionResult ActivityPerfromReport(int branchId)
         {
+            ViewBag.Route = HttpContext.Response.HttpContext.Request.Host;
             return View("ActivityPerformReport");
         }
 
