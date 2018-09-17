@@ -12,8 +12,8 @@ import {
   CardBody,
   Button
 } from "reactstrap";
-import axios from "axios";
 import queryString from "query-string";
+import { ApiClient } from "./ApiClient";
 
 /**
   @typedef {Object} ActivityDetail
@@ -178,25 +178,21 @@ class App extends Component {
   }
 
   componentDidMount() {
-    axios
-      .get(`http://localhost:5000/Company/data?branchId=${this.state.branchId}`)
-      .then(json => {
+    ApiClient.get(`/Company/data?branchId=${this.state.branchId}`).then(
+      json => {
         this.setState({
           reports: [...json.data]
         });
-      });
+      }
+    );
 
-    axios
-      .get(
-        `http://localhost:5000/Company/locations/branchId/${
-          this.state.branchId
-        }`
-      )
-      .then(json => {
+    ApiClient.get(`/Company/locations/branchId/${this.state.branchId}`).then(
+      json => {
         this.setState({
           locations: [...json.data]
         });
-      });
+      }
+    );
   }
 
   handleChange(event) {
@@ -205,19 +201,15 @@ class App extends Component {
   }
 
   handleSubmit(event) {
-    axios
-      .get(
-        `http://localhost:5000/Company/data?branchId=${
-          this.state.branchId
-        }&locationId=${
-          this.state.locationId === 0 ? null : this.state.locationId
-        }&createdOn=${this.state.createdOn}`
-      )
-      .then(json => {
-        this.setState({
-          reports: [...json.data]
-        });
+    ApiClient.get(
+      `/Company/data?branchId=${this.state.branchId}&locationId=${
+        this.state.locationId === 0 ? null : this.state.locationId
+      }&createdOn=${this.state.createdOn}`
+    ).then(json => {
+      this.setState({
+        reports: [...json.data]
       });
+    });
     event.preventDefault();
   }
 
