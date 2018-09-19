@@ -195,11 +195,17 @@ class App extends Component {
     );
   }
 
+  /**
+   * @param {Event} event
+   */
   handleChange(event) {
     var name = event.target.name;
     this.setState({ [name]: event.target.value });
   }
 
+  /**
+   * @param {Event} event
+   */
   handleSubmit(event) {
     ApiClient.get(
       `/Company/data?branchId=${this.state.branchId}&locationId=${
