@@ -1096,6 +1096,7 @@ namespace Host.Controllers
             {
                 _stationService.DeleteStation(stationId);
                 return RedirectToAction("Station");
+
             }
             catch (Exception e)
             {
@@ -1149,6 +1150,18 @@ namespace Host.Controllers
                 return Json(message);
             }
 
+        }
+
+        public IActionResult Test()
+        {
+            return View("Test");
+        }
+
+        [AllowAnonymous]
+        [HttpGet("Company/GraphReport")]
+        public IActionResult GetGraphReport()
+        {
+            return Json(_activityPerformService.StationReport());
         }
     }
 }

@@ -76,7 +76,7 @@ namespace Host.Business.DbServices
         {
             try
             {
-                var activityPerform = new ActivityPerform
+                var activityPerform = new DataContext.ActivityPerform
                 {
                     FkStationLocationId = requestDto.StationLocationId,
                     FkEmployeeId = requestDto.EmployeeId,
@@ -152,7 +152,7 @@ namespace Host.Business.DbServices
                         while (activities.Count != 0)
                         {
                             reportActivities.Add(activities.Pop());
-                        }                        
+                        }
 
                         var dailyReportActivities = new List<DailyActivityPerformReportDto>(dailyActivities.Count);
                         while (dailyActivities.Count != 0)
@@ -197,5 +197,47 @@ namespace Host.Business.DbServices
                 throw;
             }
         }
+        public List<GraphActivityPerform> StationReport()
+        {
+            var connection = _context.Database.GetDbConnection();
+
+            var models = connection.Query<StationReportDto>
+                ("[dbo].[usp_Graphreport]", commandType: CommandType.StoredProcedure)
+                  .ToList();
+            var stationreport = new List<GraphActivityPerform>();
+            var dailyactivitiesperform = new Stack<MonthlyPerform>();
+            var activityName = string.Empty;
+
+            foreach (var model in models)
+            {
+                if (activityName != model.Activity && !string.IsNullOrEmpty(activityName))
+                {
+                    var monthlyPerform = new List<MonthlyPerform>(dailyactivitiesperform.Count);
+                    while (dailyactivitiesperform.Count != 0)
+                    {
+                        monthlyPerform.Add(dailyactivitiesperform.Pop());
+                    }
+
+                    stationreport.Add(new GraphActivityPerform
+                    {
+                        Activity = activityName,
+                        MonthlyPerform = monthlyPerform
+                    });
+                }
+
+                activityName = model.Activity;
+                dailyactivitiesperform.Push(new MonthlyPerform
+                {
+                    Month = model.Month,
+                    Value = model.ActivityType == "Input" ? model.Perform : model.isperform,
+                });
+            }
+
+            return stationreport;
+        }
+
     }
+
 }
+
+

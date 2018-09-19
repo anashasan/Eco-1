@@ -17,6 +17,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication;
 using StackExchange.Profiling.Storage;
 
+
 namespace Host
 {
     public class Startup
@@ -44,6 +45,7 @@ namespace Host
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+           
 
             // services Add 
             services.AddScoped<IActivityService, ActivityService>();
@@ -53,11 +55,14 @@ namespace Host
             services.AddScoped<IStationService, StationService>();
             services.AddScoped<IEmployeeProfileService, EmployeeProfileService>();
             services.AddScoped<IBranchService, BranchService>();
+            //services.AddScoped<QRCodeGenerator>();
             services.AddScoped<IBranchEmployeeService, BranchEmployeeService>();
             services.AddScoped<ILocationService, LocationService>();
             services.AddScoped<IStationLocationService, StationLocationService>();
             services.AddScoped<IActivityTypeService, ActivityTypeService>();
             services.AddScoped<IActivityPerformService, ActivityPerformService>();
+           // services.AddScoped<IAuditDbContext, AuditDbContext>();
+           // services.AddScoped<IEfHepler, EfHepler>();
             services.AddScoped<IGraphService, GraphService>();
             services.AddScoped<IJsonDataService, JsonDataService>();
 

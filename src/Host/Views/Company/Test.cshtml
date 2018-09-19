@@ -1,0 +1,81 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = "_AdminLayout";
+}
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<div id="myDiv"><!-- Plotly chart will be drawn inside this DIV --></div>
+<script>
+    var arr = {
+        data: [{
+            trace1: {
+                x: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                y: [20, 14, 25, 16, 18, 22, 19, 15, 12, 16, 14, 17],
+            },
+            trace2: {
+                x: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                y: [19, 14, 22, 14, 16, 19, 15, 14, 10, 12, 12, 16],
+            }
+        }, {
+            trace1: {
+                x: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                y: [20, 14, 25, 16, 18, 22, 18, 10, 12, 16, 14, 20],
+            },
+            trace2: {
+                x: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                y: [19, 14, 22, 14, 16, 19, 15, 14, 10, 12, 12, 16],
+                }
+            
+        }]
+    };
+
+    for (var i = 0; i < arr.data.length; i++) {
+        var trace1Data = arr.data[i].trace1;
+        var trace1 = {
+            x: trace1Data.x,
+            y: trace1Data.y,
+            type: 'bar',
+            name: 'Primary Product',
+            marker: {
+                color: 'rgb(49,130,189)',
+                opacity: 0.7
+            }
+        };
+
+        var trace2Data = arr.data[i].trace2;
+
+        var trace2 = {
+            x: trace2Data.x,
+            y: trace2Data.y,
+            type: 'bar',
+            name: 'Secondary Product',
+            marker: {
+                color: 'rgb(204,204,204)',
+                opacity: 0.5
+            }
+        };
+        
+
+        var data = [trace1, trace2];
+
+        var layout = {
+            title: '2013 Sales Report',
+            xaxis: {
+                tickangle: -45
+            },
+            barmode: 'group',
+           
+        };
+        const div = document.createElement("div");
+        div.id = "newDiv" + i;
+        const parentDiv = document.getElementById('myDiv');
+        parentDiv.appendChild(div); 
+        Plotly.newPlot('newDiv' + i, data, layout);
+    }
+
+    
+
+   
+
+</script>
