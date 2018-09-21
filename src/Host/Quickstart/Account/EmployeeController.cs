@@ -39,6 +39,17 @@ namespace Host.Quickstart.Account
 
         }
 
+        [Authorize]
+        public IActionResult InActiveEmployee()
+        {
+            var employees = _employeesService.GetAllInActiveUser();
+            var model = new List<UserInfoModel>();
+            model = employees;
+
+            return View("InActiveUser", model);
+
+        }
+
         [AllowAnonymous]
         [HttpGet]
         public IActionResult RegisterEmployee(string code)
@@ -93,7 +104,15 @@ namespace Host.Quickstart.Account
 
             return RedirectToAction("EmployeeProfile");
         }
-       
+
+        [HttpGet]
+        public IActionResult UserActive(string userId)
+        {
+            _employeesService.UserActive(userId);
+
+            return RedirectToAction("InActiveEmployee");
+        }
+
 
         //[HttpPost]
         //public async Task<IActionResult> RegisterEmployee(RegisterViewModel registerViewModel)

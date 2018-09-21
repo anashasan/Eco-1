@@ -96,10 +96,11 @@ namespace Host.Controllers
             return View("ExampleGraph", report);
         }
 
-        public async Task<IActionResult> MonthlyGraph()
+        public IActionResult MonthlyGraph()
         {
             return View("Graph");
         }
+
         public IActionResult TotalActivityGraph()
         {
 
