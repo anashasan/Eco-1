@@ -59,6 +59,31 @@ namespace Host.Business.DbServices
             }
         }
 
+        public List<UserInfoModel> GetAllInActiveUser()
+        {
+            try
+            {
+                var inActiveEmployee = _context.AspNetUsers
+                         .AsNoTracking()
+                         .Where(i => i.Status.Value== false)
+                         .Select(i => new UserInfoModel
+                         {
+                             Id = i.Id,
+                             UserName = i.UserName,
+                             Email = i.Email,
+                             RoleName = i.AspNetUserRoles.Select(p => p.Role.Name).SingleOrDefault(),
+                             NormalizeUserName = i.NormalizedUserName,
+                             RoleId = i.AspNetUserRoles.Select(p => p.RoleId).SingleOrDefault()
+                         }).ToList();
+                return inActiveEmployee;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
         public string GetUserName(string userId)
         {
             try
@@ -68,6 +93,24 @@ namespace Host.Business.DbServices
                        .Where(i => i.Id == userId)
                        .Select(p => p.NormalizedUserName)
                        .Single();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public void UserActive(string userId)
+        {
+            try
+            {
+                var userModel = new AspNetUsers() { Id = userId };
+                _context.AspNetUsers.Attach(userModel);
+                userModel.Status = true;
+
+                _context.SaveChanges();
+
             }
             catch (Exception e)
             {

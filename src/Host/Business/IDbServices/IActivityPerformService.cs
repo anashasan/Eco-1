@@ -11,8 +11,9 @@ namespace Host.Business.IDbServices
         Task<int> ActivityPerform(ActivityPerformDto requestDto);
         Task<List<GroupActivityReports>> ActivityFilterReport();
         Task<List<GroupActivityReports>> ActivityFilterReporByBranchIdt(int branchId, int locationId);
-        Task<List<ReportDto>> ActivityReport(int? locationId, DateTime? createdOn);
-        List<GraphActivityPerform> StationReport();
+        // Task<List<ReportDto>> ActivityReport(int? locationId, DateTime? createdOn);
+        Task<List<ReportDto>> ActivityReport(int? locationId, DateTime? createdOn, int? branchId);
+       // List<GraphActivityPerform> StationReport();
         //List<StationReportDto> StationReport();
     }
 }

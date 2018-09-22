@@ -96,10 +96,11 @@ namespace Host.Controllers
             return View("ExampleGraph", report);
         }
 
-        public async Task<IActionResult> MonthlyGraph()
+        public IActionResult MonthlyGraph()
         {
             return View("Graph");
         }
+
         public IActionResult TotalActivityGraph()
         {
 
@@ -113,7 +114,7 @@ namespace Host.Controllers
             return Json(models);
         }
 
-        public IActionResult ActivityPerfromReport()
+        public IActionResult ActivityPerfromReport(int branchId)
         {
             return View("ActivityPerformReport");
         }
@@ -121,18 +122,20 @@ namespace Host.Controllers
         [AllowAnonymous]
         [EnableCors("eco-report-grid")]
         [HttpGet("Company/data")]
-        public async Task<IActionResult> ActivityPerformDailyReport([FromQuery]int? locationId, [FromQuery]DateTime? createdOn)
+        public async Task<IActionResult> ActivityPerformDailyReport([FromQuery]int? locationId, [FromQuery]DateTime? createdOn, [FromQuery]int branchId)
         {
-            var model = await _activityPerformService.ActivityReport(locationId, createdOn);
+            var model = await _activityPerformService.ActivityReport(locationId, createdOn,branchId);
             return Json(model);
         }
 
-        [HttpGet("Company/LocationByBranchId/BranchId/{branchId}")]
-        public IActionResult LocationByBranchId([FromRoute] int branchId)
+        [AllowAnonymous]
+        [EnableCors("eco-report-grid")]
+        [HttpGet("Company/locations/branchId/{branchId}")]
+        public async Task<IActionResult> LocationByBranchId([FromRoute] int branchId)
         {
             try
             {
-                var locations = _stationLocationService.GetLocationByBranchId(branchId);
+                var locations = await _stationLocationService.GetLocationByBranchIdAsync(branchId);
                 return Json(locations);
             }
             catch (Exception e)
@@ -1155,11 +1158,11 @@ namespace Host.Controllers
             return View("Test");
         }
 
-        [AllowAnonymous]
-        [HttpGet("Company/GraphReport")]
-        public IActionResult GetGraphReport()
-        {
-            return Json(_activityPerformService.StationReport());
-        }
+        //[AllowAnonymous]
+        //[HttpGet("Company/GraphReport")]
+        //public IActionResult GetGraphReport()
+        //{
+        //    return Json(_activityPerformService.StationReport());
+        //}
     }
 }

@@ -12,8 +12,8 @@ import {
   CardBody,
   Button
 } from "reactstrap";
-import axios from "axios";
 import queryString from "query-string";
+import { ApiClient } from "./ApiClient";
 
 /**
   @typedef {Object} ActivityDetail
@@ -37,11 +37,18 @@ import queryString from "query-string";
  */
 
 /**
+  @typedef {Object} Location
+  @property {number} locationId
+  @property {string} locationName
+ */
+
+/**
   @typedef {Object} State
   @property {Report[]} reports
   @property { Date } createdOn
   @property { Number } locationId
   @property { Number } branchId
+  @property {Location[]} locations
  */
 
 /**
@@ -93,8 +100,10 @@ function createActivities(activityDetail, activities) {
 
 /**
  * @param {Report} report
+ * @param {Date} createdOn
+ * @param {Number} index
  */
-function createTable(report, index) {
+function createTable(report, createdOn, index) {
   const trData = report.dailyActivityPerformReport.map(
     (dailyActivityPerform, index) => (
       <tr key={index}>
@@ -126,7 +135,7 @@ function createTable(report, index) {
             </td>
             {report.activities && (
               <td rowSpan="1" colSpan={report.activities.length}>
-                Activity Perform (Period)
+                Activity Perform ({createdOn})
               </td>
             )}
           </tr>
@@ -160,7 +169,8 @@ class App extends Component {
       reports: [],
       createdOn: "",
       locationId: 0,
-      branchId: parsed.branchLocationId
+      branchId: parsed.branchId,
+      locations: []
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -168,36 +178,50 @@ class App extends Component {
   }
 
   componentDidMount() {
-    axios.get("http://localhost:5000/Company/data").then(json => {
-      this.setState({
-        reports: [...json.data]
-      });
-    });
+    ApiClient.get(`/Company/data?branchId=${this.state.branchId}`).then(
+      json => {
+        this.setState({
+          reports: [...json.data]
+        });
+      }
+    );
+
+    ApiClient.get(`/Company/locations/branchId/${this.state.branchId}`).then(
+      json => {
+        this.setState({
+          locations: [...json.data]
+        });
+      }
+    );
   }
 
+  /**
+   * @param {Event} event
+   */
   handleChange(event) {
     var name = event.target.name;
     this.setState({ [name]: event.target.value });
   }
 
+  /**
+   * @param {Event} event
+   */
   handleSubmit(event) {
-    axios
-      .get(
-        `http://localhost:5000/Company/data?locationId=${
-          this.state.locationId === 0 ? null : this.state.locationId
-        }&createdOn=${this.state.createdOn}`
-      )
-      .then(json => {
-        this.setState({
-          reports: [...json.data]
-        });
+    ApiClient.get(
+      `/Company/data?branchId=${this.state.branchId}&locationId=${
+        this.state.locationId === 0 ? null : this.state.locationId
+      }&createdOn=${this.state.createdOn}`
+    ).then(json => {
+      this.setState({
+        reports: [...json.data]
       });
+    });
     event.preventDefault();
   }
 
   render() {
     const tables = this.state.reports.map((report, index) =>
-      createTable(report, index)
+      createTable(report, this.state.createdOn, index)
     );
     return (
       <Container>
@@ -230,7 +254,12 @@ class App extends Component {
                     value={this.state.locationId}
                     onChange={this.handleChange}
                   >
-                    <option>1</option>
+                    <option value={null}>Select All</option>
+                    {this.state.locations.map((locationData, index) => (
+                      <option key={index} value={locationData.locationId}>
+                        {locationData.locationName}
+                      </option>
+                    ))}
                   </Input>
                 </FormGroup>
                 <Button>Search</Button>

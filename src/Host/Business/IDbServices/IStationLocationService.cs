@@ -20,7 +20,7 @@ namespace Host.Business.IDbServices
         void DeleteStationLocation(int id);
         bool CheckSnoExist(int sno, int branchId);
         Task<int> BranchStationLocation(StationLocationDto requestDto);
-        Task<List<StationLocationDropDownDto>> GetLocationByBranchId(int branchId);
+        Task<List<StationLocationDropDownDto>> GetLocationByBranchIdAsync(int branchId);
 
     }
 }
