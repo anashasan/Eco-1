@@ -1158,11 +1158,11 @@ namespace Host.Controllers
             return View("Test");
         }
 
-        [AllowAnonymous]
-        [HttpGet("Company/GraphReport")]
-        public IActionResult GetGraphReport()
-        {
-            return Json(_activityPerformService.StationReport());
-        }
+        //[AllowAnonymous]
+        //[HttpGet("Company/GraphReport")]
+        //public IActionResult GetGraphReport()
+        //{
+        //    return Json(_activityPerformService.StationReport());
+        //}
     }
 }

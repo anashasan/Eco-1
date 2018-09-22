@@ -168,25 +168,10 @@ namespace Host.Business.DbServices
                         });
                     }
 
-                    if (model.ActivityPerformJson != null && model.ActivityPerformJson.Any())
-                    {
-                        model.ActivityPerform = JsonConvert.DeserializeObject<List<DailyActivityPerformDetailDto>>(model.ActivityPerformJson);
-                        if (model.ActivityPerform != null && model.ActivityPerform.Any())
-                        {
-                            foreach (var activityPerform in model.ActivityPerform)
-                            {
-                                if (!string.IsNullOrEmpty(activityPerform.ActivityName))
-                                {
-                                    if (!activities.Contains(activityPerform.ActivityName))
-                                        activities.Push(activityPerform.ActivityName);
-                                }
-                            }
-                        }
-                    }
+                    activities.Push(model.ActivityName);
+
                     stationName = model.StationName;
                     dailyActivities.Push(model);
-
-
                 }
 
                 return reportDto;
@@ -197,44 +182,86 @@ namespace Host.Business.DbServices
                 throw;
             }
         }
-        public List<GraphActivityPerform> StationReport()
-        {
-            var connection = _context.Database.GetDbConnection();
+        //public List<GraphActivityPerform> StationReport()
+        //{
+        //    var connection = _context.Database.GetDbConnection();
 
-            var models = connection.Query<StationReportDto>
-                ("[dbo].[usp_Graphreport]", commandType: CommandType.StoredProcedure)
-                  .ToList();
-            var stationreport = new List<GraphActivityPerform>();
-            var dailyactivitiesperform = new Stack<MonthlyPerform>();
-            var activityName = string.Empty;
+        //    var models = connection.Query<StationReportDto>
+        //        ("[dbo].[usp_Graphreport]", commandType: CommandType.StoredProcedure)
+        //          .ToList();
+        //    var stationreport = new List<GraphActivityPerform>();
+        //    var dailyactivitiesperform = new Stack<MonthlyPerform>();
+        //    var activityName = string.Empty;
 
-            foreach (var model in models)
-            {
-                if (activityName != model.Activity && !string.IsNullOrEmpty(activityName))
-                {
-                    var monthlyPerform = new List<MonthlyPerform>(dailyactivitiesperform.Count);
-                    while (dailyactivitiesperform.Count != 0)
-                    {
-                        monthlyPerform.Add(dailyactivitiesperform.Pop());
-                    }
+        //    foreach (var model in models)
+        //    {
+        //        if (activityName != model.Activity && !string.IsNullOrEmpty(activityName))
+        //        {
+        //            var monthlyPerform = new List<MonthlyPerform>(dailyactivitiesperform.Count);
+        //            while (dailyactivitiesperform.Count != 0)
+        //            {
+        //                monthlyPerform.Add(dailyactivitiesperform.Pop());
+        //            }
 
-                    stationreport.Add(new GraphActivityPerform
-                    {
-                        Activity = activityName,
-                        MonthlyPerform = monthlyPerform
-                    });
-                }
+        //            stationreport.Add(new GraphActivityPerform
+        //            {
+        //                Activity = activityName,
+        //                MonthlyPerform = monthlyPerform
+        //            });
+        //        }
 
-                activityName = model.Activity;
-                dailyactivitiesperform.Push(new MonthlyPerform
-                {
-                    Month = model.Month,
-                    Value = model.ActivityType == "Input" ? model.Perform : model.isperform,
-                });
-            }
+        //        activityName = model.Activity;
+        //        dailyactivitiesperform.Push(new MonthlyPerform
+        //        {
+        //            Month = model.Month,
+        //            Value = model.ActivityType == "Input" ? model.Perform : model.isperform,
+        //        });
+        //    }
 
-            return stationreport;
-        }
+        //    return stationreport;
+        //}
+
+        //public List<GraphActivityPerform> StationReport()
+        //{
+        //    var connection = _context.Database.GetDbConnection();
+
+        //    var models = connection.Query<StationReportDto>
+        //        ("[dbo].[usp_Graphreport]", commandType: CommandType.StoredProcedure)
+        //          .ToList();
+        //    var station = new List<StationActivityDto>();
+        //    var stationreport = new List<GraphActivityPerform>();
+        //    var dailystationactivity = new Stack<GraphActivityPerform>();
+        //    var dailyactivitiesperform = new Stack<MonthlyPerform>();
+        //    var activityName = string.Empty;
+
+        //    foreach (var model in models)
+        //    {
+        //        if (activityName != model.Activity && !string.IsNullOrEmpty(activityName))
+        //        {
+        //            var monthlyPerform = new List<MonthlyPerform>(dailyactivitiesperform.Count);
+        //            while (dailyactivitiesperform.Count != 0)
+        //            {
+        //                monthlyPerform.Add(dailyactivitiesperform.Pop());
+        //            }
+
+        //            stationreport.Add(new GraphActivityPerform
+        //            {
+        //                Activity = activityName,
+        //                MonthlyPerform = monthlyPerform
+        //            });
+        //        }
+
+        //        activityName = model.Activity;
+        //        dailyactivitiesperform.Push(new MonthlyPerform
+        //        {
+        //            Month = model.Month,
+        //            Value = model.ActivityType == "Input" ? model.Perform : model.isperform,
+        //        });
+        //    }
+
+        //    return stationreport;
+        //}
+
 
     }
 

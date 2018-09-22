@@ -12,6 +12,7 @@ namespace Host.DataModel
         public string Activity { get; set; }
         public string location { get; set; }
         public string ActivityType { get; set; }
+        public string Station { get; set; }
     }
 
     public class MonthlyPerform
@@ -25,4 +26,10 @@ namespace Host.DataModel
         public string Activity { get; set; }
         public List<MonthlyPerform> MonthlyPerform { get; set; }
     }
+    
+    //public class StationActivityDto
+    //{
+    //    public string Station { get; set; }
+    //    public List<GraphActivityPerform> graphActivityPerforms { get; set; }
+    //}
 }
