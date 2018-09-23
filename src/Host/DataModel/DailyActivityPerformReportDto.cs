@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Host.DataModel
 {
@@ -8,6 +9,16 @@ namespace Host.DataModel
         public string StationName { get; set; }
         public int StationNo { get; set; }
         public string LocationName { get; set; }
+        [JsonIgnore]
+        public string ActivityName { get; set; }
+        [JsonIgnore]
+        public int Perform { get; set; }
+
+        public List<ActivityPerformance> ActivityPerform { get; set; }
+    }
+
+    public class ActivityPerformance
+    {
         public string ActivityName { get; set; }
         public int Perform { get; set; }
     }

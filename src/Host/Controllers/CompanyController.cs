@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using iTextSharp.text.factories;
 using System.Drawing;
+using System.Globalization;
 using Host.Business.DbServices;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Hosting;
@@ -122,9 +123,25 @@ namespace Host.Controllers
         [AllowAnonymous]
         [EnableCors("eco-report-grid")]
         [HttpGet("Company/data")]
-        public async Task<IActionResult> ActivityPerformDailyReport([FromQuery]int? locationId, [FromQuery]DateTime? createdOn, [FromQuery]int branchId)
+        public async Task<IActionResult> ActivityPerformDailyReport(
+            [FromQuery]int? locationId,
+            [FromQuery]string fromDate,
+            [FromQuery]string toDate,
+            [FromQuery]int branchId)
         {
-            var model = await _activityPerformService.ActivityReport(locationId, createdOn,branchId);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var cultureInfo = new CultureInfo("ur-PK");
+            var isValidStartDate = DateTime.TryParse(fromDate, cultureInfo,
+                DateTimeStyles.NoCurrentDateDefault, out var startDate);
+
+            var isValidEndDate = DateTime.TryParse(toDate, cultureInfo,
+                DateTimeStyles.NoCurrentDateDefault, out var endDate);
+
+            var model = await _activityPerformService.ActivityReport(
+                locationId,
+                isValidStartDate ? startDate : (DateTime?)null,
+                isValidEndDate ? endDate : (DateTime?)null,
+                branchId);
             return Json(model);
         }
 

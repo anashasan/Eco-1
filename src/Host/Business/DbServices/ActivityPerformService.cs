@@ -129,48 +129,90 @@ namespace Host.Business.DbServices
             }
         }
 
-        public async Task<List<ReportDto>> ActivityReport(int? locationId, DateTime? createdOn, int? branchId)
+        public async Task<List<ReportDto>> ActivityReport(int? locationId, DateTime? fromDate, DateTime? toDate, int? branchId)
         {
             try
             {
                 var connection = _context.Database.GetDbConnection();
                 var models = (await connection.QueryAsync<DailyActivityPerformReportDto>(
                     "[dbo].[usp_DailyActivityPerformReport]",
-                    new { paramLocationId = locationId, paramDate = createdOn, paramBranchId = branchId},
+                    new
+                    {
+                        paramLocationId = locationId,
+                        paramFromDate = fromDate,
+                        paramToDate = toDate,
+                        paramBranchId = branchId
+                    },
                     commandType: CommandType.StoredProcedure)
                    ).ToList();
 
                 var reportDto = new List<ReportDto>();
                 var stationName = string.Empty;
+                var perform = 0;
                 var dailyActivities = new Stack<DailyActivityPerformReportDto>();
-                var activities = new Stack<string>();
+                var activities = new HashSet<string>();
                 foreach (var model in models)
                 {
                     if (stationName != model.StationName && !string.IsNullOrEmpty(stationName))
                     {
-                        var reportActivities = new List<string>(activities.Count);
-                        while (activities.Count != 0)
-                        {
-                            reportActivities.Add(activities.Pop());
-                        }
-
                         var dailyReportActivities = new List<DailyActivityPerformReportDto>(dailyActivities.Count);
+                        var stationNo = 0;
+                        var locationName = string.Empty;
+                        var activityName = string.Empty;
+                        var activityPerformance = new Stack<ActivityPerformance>();
+
                         while (dailyActivities.Count != 0)
                         {
-                            dailyReportActivities.Add(dailyActivities.Pop());
+                            var dailyActivityPerform = dailyActivities.Pop();
+                            if (stationNo != dailyActivityPerform.StationNo && stationNo != 0 &&
+                                locationName != dailyActivityPerform.LocationName && !string.IsNullOrEmpty(locationName))
+                            {
+                                var stationNoActivities = new List<ActivityPerformance>(activityPerformance.Count);
+                                while (activityPerformance.Count != 0)
+                                {
+                                    stationNoActivities.Add(activityPerformance.Pop());
+                                }
+                                dailyReportActivities.Add(new DailyActivityPerformReportDto
+                                {
+                                    StationName = stationName,
+                                    LocationName = locationName,
+                                    StationNo = stationNo,
+                                    ActivityPerform = stationNoActivities
+                                });
+                            }
+                            else if (stationNo == dailyActivityPerform.StationNo &&
+                                    locationName == dailyActivityPerform.LocationName &&
+                                    activityName != dailyActivityPerform.ActivityName && !string.IsNullOrEmpty(activityName))
+                            {
+                                activityPerformance.Push(new ActivityPerformance
+                                {
+                                    ActivityName = activityName,
+                                    Perform = perform
+                                });
+                                perform = 0;
+                            }
+
+                            stationNo = dailyActivityPerform.StationNo;
+                            locationName = dailyActivityPerform.LocationName;
+                            perform = dailyActivityPerform.Perform + perform;
+                            activityName = dailyActivityPerform.ActivityName;
                         }
 
                         reportDto.Add(new ReportDto
                         {
                             StationName = stationName,
                             DailyActivityPerformReport = dailyReportActivities,
-                            Activities = reportActivities.Any() ? reportActivities : null,
+                            Activities = activities.Any() ? activities.ToList() : null,
                         });
+                        if (activities.Any())
+                            activities.Clear();
+
                     }
 
-                    activities.Push(model.ActivityName);
+                    activities.Add(model.ActivityName);
 
                     stationName = model.StationName;
+
                     dailyActivities.Push(model);
                 }
 
