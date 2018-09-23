@@ -13,11 +13,14 @@ import {
   Button
 } from "reactstrap";
 import queryString from "query-string";
+import "react-dates/initialize";
+import { DateRangePicker } from "react-dates";
+import moment from "moment";
+import "react-dates/lib/css/_datepicker.css";
 import { ApiClient } from "./ApiClient";
 
 /**
-  @typedef {Object} ActivityDetail
-  @property {boolean} isPerform  
+  @typedef {Object} ActivityPerformance
   @property {string} perform
   @property {string} activityName
  */
@@ -26,7 +29,7 @@ import { ApiClient } from "./ApiClient";
   @typedef {Object} DailyActivityPerform
   @property {number} stationNo
   @property {string} locationName
-  @property {ActivityDetail[]} activityPerform
+  @property {ActivityPerformance[]} activityPerform
  */
 
 /**
@@ -45,48 +48,42 @@ import { ApiClient } from "./ApiClient";
 /**
   @typedef {Object} State
   @property {Report[]} reports
-  @property { Date } createdOn
+  @property { moment } fromDate
+  @property { moment } toDate
+  @property { string } focusedInput
   @property { Number } locationId
   @property { Number } branchId
   @property {Location[]} locations
  */
 
 /**
- * @param {number} length
- */
-function createEmptyTd(length) {
-  const elements = [];
-  let counter = length;
-  for (let index = 0; index < length; index++) {
-    elements.push(
-      <td rowSpan="1" colSpan="1" key={counter + "-em"}>
-        &nbsp;
-      </td>
-    );
-    counter++;
-  }
-
-  return elements;
-}
-
-/**
- * @param {ActivityDetail[]} activityDetail
+ * @param {ActivityPerformance[]} activityPerformance
  * @param {string[]} activities
  */
-function createActivities(activityDetail, activities) {
-  if (activityDetail.length === 0) return null;
-
+function createActivities(activityPerformance, activities) {
   const activitiesElements = [];
-  for (let index = 0; index < activities.length; index++) {
-    const activity = activities[index];
-    const activityInfo = activityDetail.find(i => i.activityName === activity);
-    if (activityInfo) {
-      activitiesElements.push(
-        <td rowSpan="1" colSpan="1" key={index}>
-          {activityInfo.perform}
-        </td>
+  if (activityPerformance) {
+    for (let index = 0; index <= activities.length - 1; index++) {
+      const activity = activities[index];
+      const activityInfo = activityPerformance.find(
+        i => i.activityName === activity
       );
-    } else {
+      if (activityInfo) {
+        activitiesElements.push(
+          <td rowSpan="1" colSpan="1" key={index}>
+            {activityInfo.perform}
+          </td>
+        );
+      } else {
+        activitiesElements.push(
+          <td rowSpan="1" colSpan="1" key={index}>
+            &nbsp;
+          </td>
+        );
+      }
+    }
+  } else {
+    for (let index = 0; index <= activities.length - 1; index++) {
       activitiesElements.push(
         <td rowSpan="1" colSpan="1" key={index}>
           &nbsp;
@@ -100,10 +97,9 @@ function createActivities(activityDetail, activities) {
 
 /**
  * @param {Report} report
- * @param {Date} createdOn
  * @param {Number} index
  */
-function createTable(report, createdOn, index) {
+function createTable(report, index) {
   const trData = report.dailyActivityPerformReport.map(
     (dailyActivityPerform, index) => (
       <tr key={index}>
@@ -113,13 +109,10 @@ function createTable(report, createdOn, index) {
         <td rowSpan="1" colSpan="1">
           {dailyActivityPerform.locationName}
         </td>
-        {dailyActivityPerform.activityPerform &&
-          createActivities(
-            dailyActivityPerform.activityPerform,
-            report.activities
-          )}
-        {!dailyActivityPerform.activityPerform &&
-          createEmptyTd(report.activities.length)}
+        {createActivities(
+          dailyActivityPerform.activityPerform,
+          report.activities
+        )}
       </tr>
     )
   );
@@ -135,7 +128,7 @@ function createTable(report, createdOn, index) {
             </td>
             {report.activities && (
               <td rowSpan="1" colSpan={report.activities.length}>
-                Activity Perform ({createdOn})
+                Activity Perform
               </td>
             )}
           </tr>
@@ -167,7 +160,9 @@ class App extends Component {
     /** @type {State} */
     this.state = {
       reports: [],
-      createdOn: "",
+      fromDate: null,
+      toDate: null,
+      focusedInput: null,
       locationId: 0,
       branchId: parsed.branchId,
       locations: []
@@ -175,6 +170,7 @@ class App extends Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.onDatesChange = this.onDatesChange.bind(this);
   }
 
   componentDidMount() {
@@ -195,6 +191,13 @@ class App extends Component {
     );
   }
 
+  onDatesChange({ startDate, endDate }) {
+    this.setState({
+      fromDate: startDate || null,
+      toDate: endDate || null
+    });
+  }
+
   /**
    * @param {Event} event
    */
@@ -207,11 +210,13 @@ class App extends Component {
    * @param {Event} event
    */
   handleSubmit(event) {
-    ApiClient.get(
-      `/Company/data?branchId=${this.state.branchId}&locationId=${
-        this.state.locationId === 0 ? null : this.state.locationId
-      }&createdOn=${this.state.createdOn}`
-    ).then(json => {
+    const data = queryString.stringify({
+      branchId: this.state.branchId,
+      locationId: this.state.locationId === 0 ? null : this.state.locationId,
+      fromDate: moment(this.state.fromDate).format("DD/MM/YYYY"),
+      toDate: moment(this.state.toDate).format("DD/MM/YYYY")
+    });
+    ApiClient.get(`/Company/data?${data}`).then(json => {
       this.setState({
         reports: [...json.data]
       });
@@ -221,7 +226,7 @@ class App extends Component {
 
   render() {
     const tables = this.state.reports.map((report, index) =>
-      createTable(report, this.state.createdOn, index)
+      createTable(report, index)
     );
     return (
       <Container>
@@ -235,12 +240,17 @@ class App extends Component {
                   <Label for="txtCreatedOn" className="mr-sm-2">
                     Created On
                   </Label>
-                  <Input
-                    type="date"
-                    id="txtCreatedOn"
-                    name="createdOn"
-                    value={this.state.createdOn}
-                    onChange={this.handleChange}
+                  <DateRangePicker
+                    startDate={this.state.fromDate} // momentPropTypes.momentObj or null,
+                    startDateId="fromDate" // PropTypes.string.isRequired,
+                    endDate={this.state.toDate} // momentPropTypes.momentObj or null,
+                    endDateId="toDate" // PropTypes.string.isRequired,
+                    onDatesChange={this.onDatesChange} // PropTypes.func.isRequired,
+                    focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
+                    onFocusChange={focusedInput =>
+                      this.setState({ focusedInput })
+                    } // PropTypes.func.isRequired,
+                    isOutsideRange={day => moment().diff(day) < 0}
                   />
                 </FormGroup>
                 <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
