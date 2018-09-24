@@ -18,6 +18,7 @@ namespace Host.Business.IDbServices
         string GetUserIdByEmail(string email);
         ForgetPasswordDto GetEmailById(string userId);
         UserInfoModel GetUserInfoByEmai(string email);
+        void UpdateUserRole(string userId, string roleId);
         
     }
 }

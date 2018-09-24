@@ -92,6 +92,39 @@ namespace IdentityServer4.Quickstart.UI
         {
             if (!ModelState.IsValid)
                 return View("NewHire", user);
+            if(user.Id != null)
+            {
+                using (var scope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
+                {
+                    var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
+                    context.Database.Migrate();
+                    var userMgr = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+                    var userEmail = userMgr.FindByEmailAsync(user.Email).Result;
+                    var userProfile = userMgr.FindByEmailAsync(user.Email);
+
+                    userEmail.UserName = user.UserName;
+                    userEmail.Email = user.Email;
+                    userEmail.Status = true;
+                    userEmail.PasswordHash = user.Password;
+                    userEmail.NormalizedUserName = user.NormalizeUserName;
+                            
+
+                        var result = userMgr.UpdateAsync(userEmail).Result;
+                        if (!result.Succeeded)
+                        {
+                            ModelState.AddModelError(result.Errors.ToString(), result.Errors.ToString());
+                            throw new Exception(result.Errors.First().Description);
+                        }
+
+                        _roleService.UpdateUserRole(userEmail.Id, user.RoleId);
+
+                        Console.WriteLine("User Updated");
+
+                        return RedirectToAction("EmployeeProfile", "Employee");
+                    }
+                    return View();
+                
+            }
             using (var scope = _serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
@@ -217,10 +250,17 @@ namespace IdentityServer4.Quickstart.UI
         }
 
         [Authorize(Roles="Admin")]
-        public IActionResult NewHire()
+        public IActionResult NewHire(string userId)
         {
-            
             var roleList = _roleService.GetAllRoles();
+            if (userId != null)
+            {
+                var userModel = _employeeProfileService.GetUserInfoByUserId(userId);
+                userModel.Roles = new SelectList(roleList, "RoleId", "Name", userModel.RoleId);
+                
+                return View("NewHire", userModel);
+            }
+            
             var userInfoModel = new UserInfoModel
             {
                 Roles = new SelectList(roleList, "RoleId", "Name")

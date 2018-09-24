@@ -24,10 +24,6 @@
                             <a class="btn btn-xs btn-default" href="@Url.Action("NewHire","Account")">New User</a>
                         </th>
                         <th>
-                            <a>Created</a>
-                        </th>
-                        <th></th>
-                        <th>
                             Email/Login
                         </th>
                         <th>
@@ -41,16 +37,15 @@
                         </th>
 
                         <th>
-                            <a>Options</a>
+                            <a>***Action***</a>
                         </th>
                     </tr>
                     @foreach (var s in Model)
                     {
                         <tr>
                             <th></th>
-                            <th></th>
-                            <th></th>
                             <th>@s.Email</th>
+                            <th>@s.UserName</th>
                             <th>@s.NormalizeUserName</th>
                             <th>@s.RoleName</th>
                             <th>
@@ -63,6 +58,7 @@
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 
                                             <a class="dropdown-item fa fa-edit" href="#" onClick='@($"window.location.href='/Employee/UserInActive?userId={s.Id}'")'>Delete</a>
+                                            <a class="dropdown-item fa fa-edit" href="#" onClick='@($"window.location.href='/Account/NewHire?UserId={s.Id}'")'>Edit</a>
 
                                         </div>
 

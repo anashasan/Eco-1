@@ -26,6 +26,7 @@
                         </div>
                         <div class="panel-body">
                             <form asp-controller="Account" asp-action="CreateUser" class="form-horizontal" method="post">
+                                <input type="hidden" asp-for="Id"/>
                                 <input type="hidden" data-val="true" data-val-required="The UserId field is required." id="UserId" name="UserId" value="00000000-0000-0000-0000-000000000000">
                                 <input type="hidden" data-val="true" data-val-required="The SiteId field is required." id="SiteId" name="SiteId" value="a9d9c0b8-1930-4059-a58c-e52648bee1ba">
                                 <div class="form-group">

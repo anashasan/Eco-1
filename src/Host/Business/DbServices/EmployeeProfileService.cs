@@ -2,6 +2,7 @@
 using Host.DataContext;
 using Host.DataModel;
 using Host.Models;
+using Host.Models.AccountViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -150,6 +151,31 @@ namespace Host.Business.DbServices
 
                                            }).SingleOrDefault();
                 return employeeProfileModel;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public UserInfoModel GetUserInfoByUserId(string userId)
+        {
+            try
+            {
+                var userInfo = _context.AspNetUsers
+                               .AsNoTracking()
+                               .Where(i => i.Id == userId)
+                               .Select(j => new UserInfoModel
+                               {
+                                   Id = j.Id,
+                                   Email = j.Email,
+                                   RoleId = j.AspNetUserRoles.Select(i => i.RoleId).SingleOrDefault(),
+                                   EmailConfirmed = j.EmailConfirmed,
+                                   UserName = j.UserName,
+                                   NormalizeUserName = j.NormalizedUserName
+                               }).SingleOrDefault();
+                return userInfo;
             }
             catch (Exception e)
             {

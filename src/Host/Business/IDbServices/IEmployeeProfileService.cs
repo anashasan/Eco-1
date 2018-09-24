@@ -1,4 +1,5 @@
 ﻿using Host.DataModel;
+using Host.Models.AccountViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,5 +16,6 @@ namespace Host.Business.IDbServices
         EmployeeProfileDto GetEmployeeProfileByUserId(string UserId);
         bool IsEmailExist(string email);
         bool IsUserNameExist(string email);
+        UserInfoModel GetUserInfoByUserId(string userId);
     }
 }
