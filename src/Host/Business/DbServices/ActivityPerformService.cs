@@ -151,10 +151,19 @@ namespace Host.Business.DbServices
                 var perform = 0;
                 var dailyActivities = new Stack<DailyActivityPerformReportDto>();
                 var activities = new HashSet<string>();
-                foreach (var model in models)
+                for (var index = 0; index < models.Count; index++)
                 {
-                    if (stationName != model.StationName && !string.IsNullOrEmpty(stationName))
+                    var model = models[index];
+                    if ((stationName != model.StationName && !string.IsNullOrEmpty(stationName)) || index == models.Count - 1)
                     {
+                        if (index == models.Count - 1)
+                        {
+                            activities.Add(model.ActivityName);
+
+                            stationName = model.StationName;
+
+                            dailyActivities.Push(model);
+                        }
                         var dailyReportActivities = new List<DailyActivityPerformReportDto>(dailyActivities.Count);
                         var stationNo = 0;
                         var locationName = string.Empty;
@@ -164,14 +173,17 @@ namespace Host.Business.DbServices
                         while (dailyActivities.Count != 0)
                         {
                             var dailyActivityPerform = dailyActivities.Pop();
-                            if (stationNo != dailyActivityPerform.StationNo && stationNo != 0 &&
-                                locationName != dailyActivityPerform.LocationName && !string.IsNullOrEmpty(locationName))
+                            if ((stationNo != dailyActivityPerform.StationNo && stationNo != 0 &&
+                                 locationName != dailyActivityPerform.LocationName &&
+                                 !string.IsNullOrEmpty(locationName)) ||
+                                dailyActivities.Count == 0)
                             {
                                 var stationNoActivities = new List<ActivityPerformance>(activityPerformance.Count);
                                 while (activityPerformance.Count != 0)
                                 {
                                     stationNoActivities.Add(activityPerformance.Pop());
                                 }
+
                                 dailyReportActivities.Add(new DailyActivityPerformReportDto
                                 {
                                     StationName = stationName,
@@ -181,8 +193,9 @@ namespace Host.Business.DbServices
                                 });
                             }
                             else if (stationNo == dailyActivityPerform.StationNo &&
-                                    locationName == dailyActivityPerform.LocationName &&
-                                    activityName != dailyActivityPerform.ActivityName && !string.IsNullOrEmpty(activityName))
+                                     locationName == dailyActivityPerform.LocationName &&
+                                     activityName != dailyActivityPerform.ActivityName &&
+                                     !string.IsNullOrEmpty(activityName))
                             {
                                 activityPerformance.Push(new ActivityPerformance
                                 {
@@ -206,7 +219,6 @@ namespace Host.Business.DbServices
                         });
                         if (activities.Any())
                             activities.Clear();
-
                     }
 
                     activities.Add(model.ActivityName);
