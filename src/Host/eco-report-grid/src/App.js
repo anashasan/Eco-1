@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from "react";
+import PropTypes from "prop-types";
 import {
   Table,
   Container,
@@ -45,8 +46,8 @@ import { ApiClient } from "./ApiClient";
 /**
   @typedef {Object} State
   @property {Report[]} reports
-  @property { moment } fromDate
-  @property { moment } toDate
+  @property { Date } fromDate
+  @property { Date } toDate
   @property { string } focusedInput
   @property { Number } locationId
   @property { Number } branchId
@@ -280,5 +281,36 @@ class App extends Component {
     );
   }
 }
+
+App.propTypes = {
+  reports: PropTypes.arrayOf(
+    PropTypes.shape({
+      stationName: PropTypes.string,
+      dailyActivityPerformReport: PropTypes.arrayOf(
+        PropTypes.shape({
+          stationNo: PropTypes.number,
+          locationName: PropTypes.string,
+          activityPerform: PropTypes.arrayOf(
+            PropTypes.shape({
+              perform: PropTypes.string,
+              activityName: PropTypes.string
+            })
+          )
+        })
+      ),
+      activities: PropTypes.arrayOf(PropTypes.string)
+    })
+  ),
+  fromDate: PropTypes.instanceOf(Date),
+  toDate: PropTypes.instanceOf(Date),
+  locationId: PropTypes.number,
+  branchId: PropTypes.number,
+  locations: PropTypes.arrayOf(
+    PropTypes.shape({
+      locationId: PropTypes.number,
+      locationName: PropTypes.string
+    })
+  )
+};
 
 export default App;
