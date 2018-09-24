@@ -13,10 +13,7 @@ import {
   Button
 } from "reactstrap";
 import queryString from "query-string";
-import "react-dates/initialize";
-import { DateRangePicker } from "react-dates";
 import moment from "moment";
-import "react-dates/lib/css/_datepicker.css";
 import { ApiClient } from "./ApiClient";
 
 /**
@@ -160,9 +157,8 @@ class App extends Component {
     /** @type {State} */
     this.state = {
       reports: [],
-      fromDate: null,
-      toDate: null,
-      focusedInput: null,
+      fromDate: "",
+      toDate: "",
       locationId: 0,
       branchId: parsed.branchId,
       locations: []
@@ -170,7 +166,6 @@ class App extends Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.onDatesChange = this.onDatesChange.bind(this);
   }
 
   componentDidMount() {
@@ -189,13 +184,6 @@ class App extends Component {
         });
       }
     );
-  }
-
-  onDatesChange({ startDate, endDate }) {
-    this.setState({
-      fromDate: startDate || null,
-      toDate: endDate || null
-    });
   }
 
   /**
@@ -237,20 +225,27 @@ class App extends Component {
             <CardBody>
               <Form inline onSubmit={this.handleSubmit}>
                 <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
-                  <Label for="txtCreatedOn" className="mr-sm-2">
-                    Created On
+                  <Label for="fromDate" className="mr-sm-2">
+                    Starting Date
                   </Label>
-                  <DateRangePicker
-                    startDate={this.state.fromDate} // momentPropTypes.momentObj or null,
-                    startDateId="fromDate" // PropTypes.string.isRequired,
-                    endDate={this.state.toDate} // momentPropTypes.momentObj or null,
-                    endDateId="toDate" // PropTypes.string.isRequired,
-                    onDatesChange={this.onDatesChange} // PropTypes.func.isRequired,
-                    focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
-                    onFocusChange={focusedInput =>
-                      this.setState({ focusedInput })
-                    } // PropTypes.func.isRequired,
-                    isOutsideRange={day => moment().diff(day) < 0}
+                  <Input
+                    type="date"
+                    id="fromDate"
+                    name="fromDate"
+                    value={this.state.fromDate}
+                    onChange={this.handleChange}
+                  />
+                </FormGroup>
+                <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
+                  <Label for="toDate" className="mr-sm-2">
+                    Ending Date
+                  </Label>
+                  <Input
+                    type="date"
+                    id="toDate"
+                    name="toDate"
+                    value={this.state.toDate}
+                    onChange={this.handleChange}
                   />
                 </FormGroup>
                 <FormGroup className="mb-2 mr-sm-2 mb-sm-0">
