@@ -41,6 +41,8 @@ namespace Host.Controllers
         private readonly IEmployeesService _employeeService;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IJsonDataService _jsonDataService;
+        private readonly IClientCompanyService _clientCompanyService;
+        private readonly IEmployeeProfileService _employeeProfileService;
 
         /// <summary>
         /// 
@@ -63,7 +65,9 @@ namespace Host.Controllers
                                  IGraphService graphService,
                                  IEmployeesService employeesService,
                                  IHostingEnvironment hostingEnvironment,
-                                 IJsonDataService jsonDataService
+                                 IJsonDataService jsonDataService,
+                                 IClientCompanyService clientCompanyService,
+                                 IEmployeeProfileService employeeProfileService
                                  )
         {
             _companyService = companyService;
@@ -80,6 +84,8 @@ namespace Host.Controllers
             _employeeService = employeesService;
             _hostingEnvironment = hostingEnvironment;
             _jsonDataService = jsonDataService;
+            _clientCompanyService = clientCompanyService;
+            _employeeProfileService = employeeProfileService;
         }
 
         /// <summary>
@@ -802,6 +808,52 @@ namespace Host.Controllers
         }
 
 
+        public async Task<IActionResult> AddClientCompany(Guid clientCompanId, int companyId, string userId)
+        {
+
+            var companies = new List<CompanyDto>();
+            var users = new List<ClientDto>();
+            var model = new ClientCompanyDropDownDto();
+            if (Guid.Empty != clientCompanId)
+            {
+                companies = await _companyService.GetAllCompany();
+                users = _employeeProfileService.GetAllClient();
+                model = new ClientCompanyDropDownDto();
+                model.ClientCompanyId = clientCompanId;
+                model.Companies = new SelectList(companies, "CompanyId", "Name", companyId);
+                model.Users = new SelectList(users, "UserId", "ClientName", userId);
+
+                return View("AddClientCompany", model);
+            }
+            companies = await _companyService.GetAllCompany();
+            users = _employeeProfileService.GetAllClient();
+            model = new ClientCompanyDropDownDto();
+            model.Companies = new SelectList(companies, "CompanyId", "Name");
+            model.Users = new SelectList(users, "UserId", "ClientName");
+
+            return View("AddClientCompany", model);
+
+
+        }
+
+        [HttpPost]
+        public IActionResult AddClientCompany(ClientComanyDto dto)
+        {
+            if (Guid.Empty != dto.ClientCompanyId)
+            {
+                _clientCompanyService.UpdateClientCompany(dto);
+                return RedirectToAction("ClientCompany");
+            }
+            else
+
+            {
+                _clientCompanyService.AddClientCompany(dto);
+
+                return RedirectToAction("ClientCompany");
+            }
+        }
+
+
         /*  public  IActionResult EditStationLocation(int locationId,int stationlocationId)
           {
               if (stationlocationId != 0)
@@ -1173,6 +1225,27 @@ namespace Host.Controllers
         public IActionResult Test()
         {
             return View("Test");
+        }
+
+
+        public IActionResult ClientCompany()
+        {
+            try
+            {
+                var model = _clientCompanyService.GetAllClientCompany();
+                if (model != null)
+                {
+                    return View("ClientCompany", model);
+                }
+
+                var models = new List<ClientComanyDto>();
+                return View("ClientCompany", models);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         //[AllowAnonymous]

@@ -65,6 +65,7 @@ namespace Host
            // services.AddScoped<IEfHepler, EfHepler>();
             services.AddScoped<IGraphService, GraphService>();
             services.AddScoped<IJsonDataService, JsonDataService>();
+            services.AddScoped<IClientCompanyService, ClientCompanyService>();
 
             services.AddCors(options =>
             {

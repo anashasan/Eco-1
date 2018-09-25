@@ -17,5 +17,7 @@ namespace Host.Business.IDbServices
         bool IsEmailExist(string email);
         bool IsUserNameExist(string email);
         UserInfoModel GetUserInfoByUserId(string userId);
+        List<ClientDto> GetAllClient();
+
     }
 }

@@ -1,0 +1,40 @@
+﻿@model Host.DataModel.ClientCompanyDropDownDto
+@{
+    ViewData["Title"] = "AddClientCompany";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="main-contents">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box">
+                <div class="box-header">
+                    <h4 style="font-family:'Times New Roman'">Add Station Location</h4>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <form class="form-horizontal" asp-controller="Company" asp-action="AddClientCompany" method="post">
+
+                                <input type="hidden" asp-for="ClientCompanyId" />
+                                <span id="message"></span>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label" for="Company">Location</label>
+                                    <div class="col-md-3">
+                                        <select class="form-control" asp-items="@Model.Users" asp-for="UserId" placeholder="Select Business Name..."></select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label" for="Company">Station Name</label>
+                                    <div class="col-md-3">
+                                        <select class="form-control" asp-items="@Model.Companies" asp-for="CompanyId" placeholder="Select Business Name..."></select>
+                                    </div>
+                                </div>
+                                <button id="btn" type="submit" class="btn-primary top-right">Add</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -25,6 +25,7 @@ namespace Host.DataContext
         public virtual DbSet<Branch> Branch { get; set; }
         public virtual DbSet<BranchEmployee> BranchEmployee { get; set; }
         public virtual DbSet<BranchLocation> BranchLocation { get; set; }
+        public virtual DbSet<ClientCompany> ClientCompany { get; set; }
         public virtual DbSet<Company> Company { get; set; }
         public virtual DbSet<CompanyBranch> CompanyBranch { get; set; }
         public virtual DbSet<EmployeeProfile> EmployeeProfile { get; set; }
@@ -139,6 +140,22 @@ namespace Host.DataContext
                     .HasConstraintName("Fk_BranchLocation_Location_LocationId");
             });
 
+            modelBuilder.Entity<ClientCompany>(entity =>
+            {
+                entity.Property(e => e.PkClientCompanyId).HasDefaultValueSql("(newid())");
+
+                entity.HasOne(d => d.FkCompany)
+                    .WithMany(p => p.ClientCompany)
+                    .HasForeignKey(d => d.FkCompanyId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("Fk_ClientCompany_Company_FkCompanyId");
+
+                entity.HasOne(d => d.FkEmployee)
+                    .WithMany(p => p.ClientCompany)
+                    .HasForeignKey(d => d.FkEmployeeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
+            });
+
             modelBuilder.Entity<Company>(entity =>
             {
                 entity.HasOne(d => d.FkUser)
@@ -205,10 +222,6 @@ namespace Host.DataContext
 
             modelBuilder.Entity<StationLocation>(entity =>
             {
-                entity.HasIndex(e => e.Sno)
-                    .HasName("SNo_StationLocation")
-                    .IsUnique();
-
                 entity.HasOne(d => d.FkLocation)
                     .WithMany(p => p.StationLocation)
                     .HasForeignKey(d => d.FkLocationId)

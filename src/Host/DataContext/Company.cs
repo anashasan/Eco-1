@@ -9,6 +9,7 @@ namespace Host.DataContext
     {
         public Company()
         {
+            ClientCompany = new HashSet<ClientCompany>();
             CompanyBranch = new HashSet<CompanyBranch>();
         }
 
@@ -32,6 +33,8 @@ namespace Host.DataContext
         [ForeignKey("FkUserId")]
         [InverseProperty("Company")]
         public AspNetUsers FkUser { get; set; }
+        [InverseProperty("FkCompany")]
+        public ICollection<ClientCompany> ClientCompany { get; set; }
         [InverseProperty("FkCompany")]
         public ICollection<CompanyBranch> CompanyBranch { get; set; }
     }

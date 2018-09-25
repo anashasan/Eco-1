@@ -1,5 +1,6 @@
 ﻿using Host.Business.IDbServices;
 using Host.DataContext;
+using Host.DataModel;
 using Host.Models;
 using Host.Models.AccountViewModels;
 using Microsoft.EntityFrameworkCore;
@@ -136,5 +137,6 @@ namespace Host.Business.DbServices
                 throw;
             }
         }
+
     }
 }

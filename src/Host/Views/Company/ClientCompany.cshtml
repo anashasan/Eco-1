@@ -1,0 +1,65 @@
+﻿@model List<Host.DataModel.ClientComanyDto>
+@{
+    ViewData["Title"] = "ClientCompany";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<style>
+    #th {
+        background-color: #323232;
+        color: white
+    }
+</style>
+<div class="col-xs-12">
+    <div class="box col-md-12">
+        <div class="box-header">
+            <h3 class="box-title">Client Company</h3></br>
+            </br>
+            <!-- Trigger the modal with a button -->
+            <a class="btn  btn-primary " id="th" onclick='@($"window.location.href='/Company/AddClientCompany'")'>Add Client Company</a>
+        </div>
+
+        <!-- /.box-header -->
+        <div class="box-body">
+           
+
+            <table id="example2" class="table table-bordered table-hover">
+                <thead id="th">
+                    <tr>
+                        <th>Client Name</th>
+                        <th>Company Name</th>
+                        <th>Options</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var a in Model)
+                    {
+                    <tr>
+                        <td style="text-align:center">@a.ClientName</td>
+                        <td style="text-align:center">@a.CompanyName</td>
+                        <td style="text-align:center">
+                            <a class="fa fa-edit " href='#' onclick='@($"window.location.href='/Company/AddClientCompany?clientCompanId={a.ClientCompanyId}&companyId={a.CompanyId}&userId={a.UserId}'")'>Edit</a>
+                        </td>
+                    </tr>
+
+
+                    }
+
+
+
+            </table>
+        </div>
+        <!-- /.box-body -->
+    </div>
+</div>
+@section Scripts{
+    <link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+    <script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#example2').DataTable();
+        });
+
+    </script>
+}
+

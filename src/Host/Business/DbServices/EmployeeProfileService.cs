@@ -64,6 +64,28 @@ namespace Host.Business.DbServices
             }
         }
 
+        public List<ClientDto> GetAllClient()
+        {
+            try
+            {
+                string clientName = "Client";
+                return _context.AspNetUsers
+                       .AsNoTracking()
+                       .Where(i => clientName.Contains(i.AspNetUserRoles.Select(j => j.Role.Name).SingleOrDefault()))
+                       .Select(j => new ClientDto
+                       {
+                           ClientName = j.UserName,
+                           UserId = j.Id
+                       })
+                       .ToList();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
