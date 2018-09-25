@@ -149,6 +149,9 @@ namespace Host.Business.DbServices
                 var reportDto = new List<ReportDto>();
                 var stationName = string.Empty;
                 var perform = 0;
+                var stationNo = 0;
+                var locationName = string.Empty;
+                var activityName = string.Empty;
                 var dailyActivities = new Stack<DailyActivityPerformReportDto>();
                 var activities = new HashSet<string>();
                 for (var index = 0; index < models.Count; index++)
@@ -165,24 +168,30 @@ namespace Host.Business.DbServices
                             dailyActivities.Push(model);
                         }
                         var dailyReportActivities = new List<DailyActivityPerformReportDto>(dailyActivities.Count);
-                        var stationNo = 0;
-                        var locationName = string.Empty;
-                        var activityName = string.Empty;
                         var activityPerformance = new Stack<ActivityPerformance>();
 
                         while (dailyActivities.Count != 0)
                         {
                             var dailyActivityPerform = dailyActivities.Pop();
-                            if ((stationNo != dailyActivityPerform.StationNo && stationNo != 0 &&
-                                 locationName != dailyActivityPerform.LocationName &&
-                                 !string.IsNullOrEmpty(locationName)) ||
+                            if (stationNo != dailyActivityPerform.StationNo && stationNo != 0 &&
+                                !string.IsNullOrEmpty(locationName) ||
                                 dailyActivities.Count == 0)
                             {
+                                if (dailyActivities.Count == 0)
+                                    activityPerformance.Push(new ActivityPerformance
+                                    {
+                                        ActivityName = dailyActivityPerform.ActivityName,
+                                        Perform = dailyActivityPerform.Perform
+                                    });
+
+                                activityPerformance.Push(new ActivityPerformance
+                                {
+                                    ActivityName = activityName,
+                                    Perform = perform
+                                });
                                 var stationNoActivities = new List<ActivityPerformance>(activityPerformance.Count);
                                 while (activityPerformance.Count != 0)
-                                {
                                     stationNoActivities.Add(activityPerformance.Pop());
-                                }
 
                                 dailyReportActivities.Add(new DailyActivityPerformReportDto
                                 {
@@ -191,11 +200,11 @@ namespace Host.Business.DbServices
                                     StationNo = stationNo,
                                     ActivityPerform = stationNoActivities
                                 });
+                                perform = 0;
                             }
-                            else if (stationNo == dailyActivityPerform.StationNo &&
-                                     locationName == dailyActivityPerform.LocationName &&
+                            else if ((stationNo == dailyActivityPerform.StationNo &&
                                      activityName != dailyActivityPerform.ActivityName &&
-                                     !string.IsNullOrEmpty(activityName))
+                                     !string.IsNullOrEmpty(activityName)) || dailyActivityPerform.LocationName != locationName)
                             {
                                 activityPerformance.Push(new ActivityPerformance
                                 {
@@ -220,6 +229,9 @@ namespace Host.Business.DbServices
                         if (activities.Any())
                             activities.Clear();
                     }
+
+                    perform = stationNo = 0;
+                    activityName = locationName = string.Empty;
 
                     activities.Add(model.ActivityName);
 
