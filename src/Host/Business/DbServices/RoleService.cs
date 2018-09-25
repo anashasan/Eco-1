@@ -195,5 +195,32 @@ namespace Host.Business.DbServices
                 throw;
             }
         }
+
+        public void UpdateUserRole(string userId, string roleId)
+        {
+
+
+
+            var userExistRoles = _context.AspNetUserRoles
+                           .AsNoTracking()
+                           .Where(i => i.UserId == userId)
+                           .Select(i => new AspNetUserRoles
+                           {
+                               RoleId = i.RoleId,
+                               UserId = i.UserId
+                           })
+                           .SingleOrDefault();
+            _context.AspNetUserRoles.Remove(userExistRoles);
+            _context.SaveChanges();
+
+            var userNewRoles = new AspNetUserRoles
+            {
+                RoleId = roleId,
+                UserId = userId
+            };
+
+            _context.AspNetUserRoles.Add(userNewRoles);
+            _context.SaveChanges();
+        }
     }
 }
