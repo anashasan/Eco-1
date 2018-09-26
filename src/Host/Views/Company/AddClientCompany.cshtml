@@ -17,13 +17,13 @@
                                 <input type="hidden" asp-for="ClientCompanyId" />
                                 <span id="message"></span>
                                 <div class="form-group">
-                                    <label class="col-md-2 control-label" for="Company">Location</label>
+                                    <label class="col-md-2 control-label" for="Company">Client</label>
                                     <div class="col-md-3">
                                         <select class="form-control" asp-items="@Model.Users" asp-for="UserId" placeholder="Select Business Name..."></select>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-md-2 control-label" for="Company">Station Name</label>
+                                    <label class="col-md-2 control-label" for="Company">Company Name</label>
                                     <div class="col-md-3">
                                         <select class="form-control" asp-items="@Model.Companies" asp-for="CompanyId" placeholder="Select Business Name..."></select>
                                     </div>
