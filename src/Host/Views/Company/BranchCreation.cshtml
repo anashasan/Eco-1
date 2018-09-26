@@ -126,10 +126,10 @@
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         @if (User.IsInRole("Admin"))
-                                        {
-                                            <a class="dropdown-item fa fa-edit" href="#" onClick='@($"window.location.href='/Company/DeleteBranch?branchId={s.BranchId}&companyId={ViewBag.CompanyId}'")'>Delete</a>
-                                            <div class="dropdown-divider"></div>
-                                        }
+    {
+                                    <a class="dropdown-item fa fa-edit" href="#" onClick='@($"window.location.href='/Company/DeleteBranch?branchId={s.BranchId}&companyId={ViewBag.CompanyId}'")'>Delete</a>
+                                    <div class="dropdown-divider"></div>
+}
 
                                         <a class="dropdown-item fa fa-edit" href="#" onClick='@($"window.location.href='/Company/AddBranch?companyId={ViewBag.CompanyId}&branchId={s.BranchId}'")'>Edit</a>
                                         <div class="dropdown-divider"></div>
@@ -141,6 +141,8 @@
 
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item fa fa-user-o" asp-action="ActivityPerfromReport" asp-route-branchId="@s.BranchId">Daily Report</a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item fa fa-user-o"onclick='@($"window.location.href='/Company/ObservationReportForm?branchId={s.BranchId}'")'>Observation Report</a>
                                     </div>
                                 </div>
 

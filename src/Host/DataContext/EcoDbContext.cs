@@ -10,6 +10,7 @@ namespace Host.DataContext
         {
 
         }
+
         public virtual DbSet<Activity> Activity { get; set; }
         public virtual DbSet<ActivityObservation> ActivityObservation { get; set; }
         public virtual DbSet<ActivityPerform> ActivityPerform { get; set; }
@@ -38,7 +39,7 @@ namespace Host.DataContext
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-           
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

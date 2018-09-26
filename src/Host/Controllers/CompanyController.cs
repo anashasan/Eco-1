@@ -1248,6 +1248,41 @@ namespace Host.Controllers
             }
         }
 
+        [HttpPost("Company/ObservationReport")]
+        public IActionResult ObservationReport([FromQuery]int branchId, [FromQuery]int? locationId, [FromQuery]DateTime? fromDate, [FromQuery]DateTime? toDate)
+        {
+            try
+            {
+                var observationReport = _activityService.GetObservationReport(branchId, locationId, fromDate, toDate);
+                return Json(observationReport);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        
+        [HttpGet]
+        public IActionResult ObservationReportForm(int branchId)
+        {
+            try
+            {
+                int? locationId = null ;
+                DateTime? fromDate = null;
+                DateTime? toDate = null;
+                var observationReport = _activityService.GetObservationReport(branchId, locationId, fromDate, toDate);
+                return View("ObservationReport", observationReport);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+
         //[AllowAnonymous]
         //[HttpGet("Company/GraphReport")]
         //public IActionResult GetGraphReport()

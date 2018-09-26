@@ -1,0 +1,122 @@
+﻿@model List<Host.DataModel.ObservationReportDto>
+@{
+    ViewData["Title"] = "ObservationReport";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    #th {
+        background-color: #323232;
+        color: white;
+        font-size: xx-small;
+    }
+
+    table {
+        text-align: left !important;
+        font-size: small;
+    }
+</style>
+<div class="col-xs-12">
+    <form class="form-inline">
+    <div class="mb-2 mr-sm-2 mb-sm-0 position-relative form-group">
+        <label for="fromDate" class="mr-sm-2">Starting Date</label>
+        <input id="fromDate" name="fromDate" type="date" class="form-control" value="2018-09-24">'
+        </div><div class="mb-2 mr-sm-2 mb-sm-0 position-relative form-group">
+        <label for="toDate" class="mr-sm-2">Ending Date</label>
+        <input id="toDate" name="toDate" type="date" class="form-control" value="2018-09-24"></div>'
+    <div class="mb-2 mr-sm-2 mb-sm-0 position-relative form-group">
+        <label for="locationDropDown" class="mr-sm-2">Location</label>
+        <select id="locationDropDown" name="locationId" class="form-control"></select>
+        </div>
+        </form>
+    <div class="box">
+        <div class="box-header">
+            <h3 class="box-title" style="font-family:'Times New Roman'">Observation Report</h3>
+        </div>
+
+        <!-- /.box-header -->
+        <div class="box-body" style="width: 100%; ">
+
+            <table id="example2" class="table table-bordered table-hover">
+                <thead id="th">
+                    <tr>
+                        <th>Observation Number</th>
+                        <th>Obervation Date</th>
+                        <th>Station Name</th>
+                        <th>Station No</th>
+                        <th>Location</th>
+                        <th>Observation Description</th>
+                        <th>Action On Client End</th>
+                        <th>Date Of Client End</th>
+                        <th>Status</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var s in Model)
+                    {
+                        <tr>
+                            <td style="text-align: center">@s.ObervationNumber</td>
+                            <td style="text-align: center">@s.ObservationDate</td>
+                            <td style="text-align: center">@s.StationName</td>
+                            <td style="text-align: center">@s.StationNumber</td>
+                            <td style="text-align: center">@s.LocationName</td>
+                            <td style="text-align: center">@s.Description</td>
+                            <td style="text-align: center">@s.ClientReview<input type="text" asp-for="@s.ClientReview" /></td>
+                            <td style="text-align: center">@s.ClientReviewDate</td>
+                            <td>
+                                <select class="form-control" placeholder="Select Business Name...">
+                                    <option selected="selected">Select</option>
+                                    <option>Pending</option>
+                                    <option>Complete</option>
+                                </select>
+                            </td>
+                            @*<td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            Options
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            @if (User.IsInRole("Admin"))
+                                            {
+                                                <a class="dropdown-item fa fa-edit" href="#" onClick='@($"window.location.href='/Company/DeleteBranch?branchId={s.BranchId}&companyId={ViewBag.CompanyId}'")'>Delete</a>
+                                                <div class="dropdown-divider"></div>
+                                            }
+
+                                            <a class="dropdown-item fa fa-edit" href="#" onClick='@($"window.location.href='/Company/AddBranch?companyId={ViewBag.CompanyId}&branchId={s.BranchId}'")'>Edit</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item fa fa-location-arrow" href='#' onclick='@($"window.location.href='/Company/GetLocationById?id={s.BranchId}&companyId={ViewBag.CompanyId}'")'>Location</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item fa fa-user-o" href='#' onclick='@($"window.location.href='/Company/GetBranchEmployeeByBranchId?branchId={s.BranchId}&companyId={ViewBag.CompanyId}'")'>BranchEmployee</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item fa fa-user-o" href='#' onclick='@($"window.location.href='/Company/GetStationByBranchId?branchId={s.BranchId}&companyId={ViewBag.CompanyId}'")'>BranchStation</a>
+
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item fa fa-user-o" asp-action="ActivityPerfromReport" asp-route-branchId="@s.BranchId">Daily Report</a>
+                                        </div>
+                                    </div>
+
+                                </td>*@
+                        </tr>
+                    }
+
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+    <script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#example2').DataTable();
+        });
+
+
+
+
+    </script>
+}
+

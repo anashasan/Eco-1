@@ -198,6 +198,46 @@ namespace Host.Business.DbServices
                    }).ToList();
         }
 
+        public List<ObservationReportDto> GetObservationReport(int branchId, int? locationId, DateTime? fromDate, DateTime? toDate)
+        {
+            try
+            {
+                var observationReport = (from activityObservation in _context.ActivityObservation
+                                         join activitPerformDetail in _context.ActivityPerformDetail on activityObservation.FkActivityPerformDetailId equals activitPerformDetail.PkActivityPerformDetailId
+                                         join activityPerform in _context.ActivityPerform on activitPerformDetail.FkActivityPerformId equals activityPerform.PkActivityPerformId
+                                         join stationLocation in _context.StationLocation on activityPerform.FkStationLocationId equals stationLocation.PkStationLocationId
+                                         join station in _context.Station on stationLocation.FkStationId equals station.PkStationId
+                                         join branchLocation in _context.BranchLocation on stationLocation.FkLocationId equals branchLocation.FkLocationId
+                                         join location in _context.Location on branchLocation.FkLocationId equals location.PkLocationId
+                                         where branchLocation.FkBranchId == branchId &
+                                               (!locationId.HasValue || branchLocation.FkLocationId == locationId ) &
+                                               ((!fromDate.HasValue & !toDate.HasValue) || activitPerformDetail.CreatedOn >= fromDate && activitPerformDetail.CreatedOn <= toDate)
+                                         select new ObservationReportDto
+                                         {
+                                             ActivityObservationId = activityObservation.PkActivityObservationId,
+                                             BranchId = branchId,
+                                             ClientReview = activityObservation.ClientReview,
+                                             ClientReviewDate = activityObservation.ClinetReviewDate,
+                                             Description = activityObservation.Description,
+                                             LocationName = location.Name,
+                                             LocationId = location.PkLocationId,
+                                             ObervationNumber = 0,
+                                             StationId = station.PkStationId,
+                                             StationName= station.Name,
+                                             StationNumber = stationLocation.Sno,
+                                             Status = activityObservation.Status,
+                                             ObservationDate = activitPerformDetail.CreatedOn.ToShortDateString()
+                                         }).ToList();
+
+                return observationReport;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
         public async Task<int> UpdateActivity(ActivityDto requestDto)
         {
             try

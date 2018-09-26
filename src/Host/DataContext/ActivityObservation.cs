@@ -12,6 +12,11 @@ namespace Host.DataContext
         public int FkActivityPerformDetailId { get; set; }
         [StringLength(250)]
         public string Description { get; set; }
+        public string ClientReview { get; set; }
+        [StringLength(50)]
+        public string Status { get; set; }
+        [Column("CLinetReviewDate", TypeName = "date")]
+        public DateTime? ClinetReviewDate { get; set; }
 
         [ForeignKey("FkActivityPerformDetailId")]
         [InverseProperty("ActivityObservation")]

@@ -18,6 +18,6 @@ namespace Host.Business.IDbServices
        // GetStationActivityDto GetActivityByStationId(int id);
         List<ActivityDto> GetActivityByStationId(int id);
         int DeleteActivityById(int id);
-
+        List<ObservationReportDto> GetObservationReport(int branchId, int? locationId,DateTime? fromDate, DateTime? toDate );
     }
 }
