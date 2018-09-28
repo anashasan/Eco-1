@@ -115,7 +115,7 @@ $.ajax("/Company/GraphReport")
     div.id = "newDiv" + i;
     const parentDiv = document.getElementById("myDiv");
       parentDiv.appendChild(div);
-      Plotly.newPlot("newDiv" + i, graphData, layout, { editable: true });
+      Plotly.newPlot("newDiv" + i, graphData, layout, { editable: false });
   })
   .fail(function(err) {
     console.error(err);

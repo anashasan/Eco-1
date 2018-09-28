@@ -10,6 +10,8 @@ namespace Host.DataModel
     public class ObservationReportDto
     {
         public int BranchId { get; set; }
+        public string CompanyName { get; set; }
+        public string BranchName { get; set; }
         public int ObervationNumber { get; set; }
         public string ObservationDate { get; set; }
         public int ActivityObservationId { get; set; }
