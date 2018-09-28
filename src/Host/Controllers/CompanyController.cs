@@ -1249,7 +1249,7 @@ namespace Host.Controllers
         }
 
         [HttpPost("Company/ObservationReport")]
-        public IActionResult ObservationReport([FromQuery]int branchId, [FromQuery]int? locationId, [FromQuery]DateTime? fromDate, [FromQuery]DateTime? toDate)
+        public IActionResult ObservationReport([FromQuery]int branchId,int? locationId, [FromQuery]DateTime? fromDate, [FromQuery]DateTime? toDate)
         {
             try
             {
@@ -1265,13 +1265,16 @@ namespace Host.Controllers
 
         
         [HttpGet]
-        public IActionResult ObservationReportForm(int branchId)
+        public IActionResult ObservationReportForm(int branchId, string branchname,string companyname)
         {
             try
             {
+                ViewBag.CompanyName = companyname;
+                ViewBag.BranchName = branchname;
                 int? locationId = null ;
                 DateTime? fromDate = null;
                 DateTime? toDate = null;
+          
                 var observationReport = _activityService.GetObservationReport(branchId, locationId, fromDate, toDate);
                 return View("ObservationReport", observationReport);
             }
@@ -1282,12 +1285,32 @@ namespace Host.Controllers
             }
         }
 
+        [HttpPost]
+        public IActionResult UpdateObservationForm(ObservationReportDto dto)
+        {
+            try
+            {
+                if(!ModelState.IsValid)
+                {
+                    return View(dto);
+                }
+      
+                _activityService.UpdateActivityObservation(dto);
+                return RedirectToAction("ObservationReportForm");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
 
-        //[AllowAnonymous]
-        //[HttpGet("Company/GraphReport")]
-        //public IActionResult GetGraphReport()
-        //{
-        //    return Json(_activityPerformService.StationReport());
-        //}
+
+        [AllowAnonymous]
+        [HttpGet("Company/GraphReport")]
+        public IActionResult GetGraphReport()
+        {
+            return Json(_activityPerformService.StationReport());
+        }
     }
 }

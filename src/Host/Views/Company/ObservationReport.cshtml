@@ -3,7 +3,7 @@
     ViewData["Title"] = "ObservationReport";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
     #th {
         background-color: #323232;
@@ -15,20 +15,37 @@
         text-align: left !important;
         font-size: small;
     }
+
+ 
 </style>
-<div class="col-xs-12">
-    <form class="form-inline">
-    <div class="mb-2 mr-sm-2 mb-sm-0 position-relative form-group">
-        <label for="fromDate" class="mr-sm-2">Starting Date</label>
-        <input id="fromDate" name="fromDate" type="date" class="form-control" value="2018-09-24">'
-        </div><div class="mb-2 mr-sm-2 mb-sm-0 position-relative form-group">
-        <label for="toDate" class="mr-sm-2">Ending Date</label>
-        <input id="toDate" name="toDate" type="date" class="form-control" value="2018-09-24"></div>'
-    <div class="mb-2 mr-sm-2 mb-sm-0 position-relative form-group">
-        <label for="locationDropDown" class="mr-sm-2">Location</label>
-        <select id="locationDropDown" name="locationId" class="form-control"></select>
+
+
+<div class="col-xs-12">     
+    <div>
+        <div class="header">
+            <a href="#default" class="logo"></a>
+            <div class="header-right">
+            <img style="width:20%" src="~/images/Eco.jpg" />
+                <a class="active" style="font-size:x-large" href="#home" >@ViewBag.CompanyName</a>
+                <a href="#contact" style="font-size:x-large"> @ViewBag.BranchName </a>
+               
+                
+            </div>
         </div>
-        </form>
+    </div>
+    <form class="form-inline">
+        <div class="mb-2 mr-sm-2 mb-sm-0 position-relative form-group">
+            <label for="fromDate" class="mr-sm-2">Starting Date</label>
+            <input id="fromDate" name="fromDate" type="date" class="form-control" value="">'
+        </div><div class="mb-2 mr-sm-2 mb-sm-0 position-relative form-group">
+            <label for="toDate" class="mr-sm-2">Ending Date</label>
+            <input id="toDate" name="toDate" type="date" class="form-control" value="">
+        </div>'
+        <div class="mb-2 mr-sm-2 mb-sm-0 position-relative form-group">
+            <label for="locationDropDown" class="mr-sm-2">Location</label>
+            <select id="locationDropDown" name="locationId" class="form-control"></select>
+        </div>
+    </form>
     <div class="box">
         <div class="box-header">
             <h3 class="box-title" style="font-family:'Times New Roman'">Observation Report</h3>
@@ -49,6 +66,7 @@
                         <th>Action On Client End</th>
                         <th>Date Of Client End</th>
                         <th>Status</th>
+                        <th>Option</th>
 
                     </tr>
                 </thead>
@@ -67,9 +85,13 @@
                             <td>
                                 <select class="form-control" placeholder="Select Business Name...">
                                     <option selected="selected">Select</option>
-                                    <option>Pending</option>
-                                    <option>Complete</option>
+                                    <option>WorkDone</option>
+                                    <option>WorkInProgress</option>
+                                    <option>Rejected</option>
                                 </select>
+                            </td>
+                            <td>
+                                <form style="text-align:center" type="submit" class="btn-primary top-right" asp-controller="Company" asp-action="UpdateObservationForm" method="post">Save</form>
                             </td>
                             @*<td>
                                     <div class="dropdown">

@@ -11,6 +11,7 @@ namespace Host.Business.IDbServices
 
         // Task<int> AddActivity(StationActivityDto requestDto);
         // Task<int> UpdateActivity(StationActivityDto requestDto);
+        void UpdateActivityObservation(ObservationReportDto dto);
         Task<int> AddActivity(ActivityDto requestDto);
         Task<int> UpdateActivity(ActivityDto requestDto);
         ActivityDto GetActivityById(int id);
