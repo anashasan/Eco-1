@@ -3,7 +3,7 @@
     ViewData["Title"] = "ObservationReport";
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
     #th {
         background-color: #323232;
@@ -16,19 +16,35 @@
         font-size: small;
     }
 </style>
-<div class="col-xs-12">
-    <form class="form-inline">
-    <div class="mb-2 mr-sm-2 mb-sm-0 position-relative form-group">
-        <label for="fromDate" class="mr-sm-2">Starting Date</label>
-        <input id="fromDate" name="fromDate" type="date" class="form-control" >'
-        </div><div class="mb-2 mr-sm-2 mb-sm-0 position-relative form-group">
-        <label for="toDate" class="mr-sm-2">Ending Date</label>
-        <input id="toDate" name="toDate" type="date" class="form-control" ></div>'
-    <div class="mb-2 mr-sm-2 mb-sm-0 position-relative form-group">
-        <label for="locationDropDown" class="mr-sm-2">Location</label>
-        <select id="locationDropDown" name="locationId" class="form-control"></select>
+
+<div class="box">
+    <div class="col-xs-12">
+        <div>
+            <div class="header">
+                <a href="#default" class="logo"></a>
+                <div class="header-right">
+                    <img style="width:20%" src="~/images/Eco.jpg" />
+                    <a class="active" style="font-size:x-large" href="#home">@ViewBag.CompanyName</a>
+
+                    <a href="#contact" style="font-size:x-large"> @ViewBag.BranchName </a>
+                </div>
+            </div>
+            <label> @DateTime.Now</label>
         </div>
-        </form>
+    </div>
+    <form class="form-inline">
+        <div class="mb-2 mr-sm-2 mb-sm-0 position-relative form-group">
+            <label for="fromDate" class="mr-sm-2">Starting Date</label>
+            <input id="fromDate" name="fromDate" type="date" class="form-control" value="">'
+        </div><div class="mb-2 mr-sm-2 mb-sm-0 position-relative form-group">
+            <label for="toDate" class="mr-sm-2">Ending Date</label>
+            <input id="toDate" name="toDate" type="date" class="form-control" value="">
+        </div>'
+        <div class="mb-2 mr-sm-2 mb-sm-0 position-relative form-group">
+            <label for="locationDropDown" class="mr-sm-2">Location</label>
+            <select id="locationDropDown" name="locationId" class="form-control"></select>
+        </div>
+    </form>
     <div class="box">
         <div class="box-header">
             <h3 class="box-title" style="font-family:'Times New Roman'">Observation Report</h3>
@@ -36,71 +52,52 @@
 
         <!-- /.box-header -->
         <div class="box-body" style="width: 100%; ">
-
-            <table id="example2" class="table table-bordered table-hover">
-                <thead id="th">
-                    <tr>
-                        <th>Observation Number</th>
-                        <th>Obervation Date</th>
-                        <th>Station Name</th>
-                        <th>Station No</th>
-                        <th>Location</th>
-                        <th>Observation Description</th>
-                        <th>Action On Client End</th>
-                        <th>Date Of Client End</th>
-                        <th>Status</th>
-
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var s in Model)
-                    {
+                <table id="example2" class="table table-bordered table-hover">
+                    <thead id="th">
                         <tr>
-                            <td style="text-align: center">@s.ObervationNumber</td>
-                            <td style="text-align: center">@s.ObservationDate</td>
-                            <td style="text-align: center">@s.StationName</td>
-                            <td style="text-align: center">@s.StationNumber</td>
-                            <td style="text-align: center">@s.LocationName</td>
-                            <td style="text-align: center">@s.Description</td>
-                            <td style="text-align: center">@s.ClientReview<input type="text" asp-for="@s.ClientReview" /></td>
-                            <td style="text-align: center">@s.ClientReviewDate</td>
-                            <td>
-                                <select class="form-control" placeholder="Select Business Name...">
-                                    <option selected="selected">Select</option>
-                                    <option>Pending</option>
-                                    <option>Complete</option>
-                                </select>
-                            </td>
-                            @*<td>
-                                    <div class="dropdown">
-                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Options
-                                        </button>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            @if (User.IsInRole("Admin"))
-                                            {
-                                                <a class="dropdown-item fa fa-edit" href="#" onClick='@($"window.location.href='/Company/DeleteBranch?branchId={s.BranchId}&companyId={ViewBag.CompanyId}'")'>Delete</a>
-                                                <div class="dropdown-divider"></div>
-                                            }
+                            <th>Observation Number</th>
+                            <th>Obervation Date</th>
+                            <th>Station Name</th>
+                            <th>Station No</th>
+                            <th>Location</th>
+                            <th>Observation Description</th>
+                            <th>Action On Client End</th>
+                            <th>Date Of Client End</th>
+                            <th>Status</th>
+                            <th>Option</th>
 
-                                            <a class="dropdown-item fa fa-edit" href="#" onClick='@($"window.location.href='/Company/AddBranch?companyId={ViewBag.CompanyId}&branchId={s.BranchId}'")'>Edit</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item fa fa-location-arrow" href='#' onclick='@($"window.location.href='/Company/GetLocationById?id={s.BranchId}&companyId={ViewBag.CompanyId}'")'>Location</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item fa fa-user-o" href='#' onclick='@($"window.location.href='/Company/GetBranchEmployeeByBranchId?branchId={s.BranchId}&companyId={ViewBag.CompanyId}'")'>BranchEmployee</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item fa fa-user-o" href='#' onclick='@($"window.location.href='/Company/GetStationByBranchId?branchId={s.BranchId}&companyId={ViewBag.CompanyId}'")'>BranchStation</a>
-
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item fa fa-user-o" asp-action="ActivityPerfromReport" asp-route-branchId="@s.BranchId">Daily Report</a>
-                                        </div>
-                                    </div>
-
-                                </td>*@
                         </tr>
-                    }
+                    </thead>
+                    <tbody>
+                        @foreach (var s in Model)
+                        {
+                            <tr>
+                                <td style="text-align: center">@s.ObervationNumber</td>
+                                <td style="text-align: center">@s.ObservationDate</td>
+                                <td style="text-align: center">@s.StationName</td>
+                                <td style="text-align: center">@s.StationNumber</td>
+                                <td style="text-align: center">@s.LocationName</td>
+                                <td style="text-align: center">@s.Description</td>
+                                <td style="text-align: center">@s.ClientReview<input type="text" asp-for="@s.ClientReview" /></td>
+                                <td style="text-align: center">@s.ClientReviewDate</td>
+                                <td>
+                                    <select class="form-control" placeholder="Select Business Name...">
+                                        <option selected="selected">Select</option>
+                                        <option>WorkDone</option>
+                                        <option>WorkInProgress</option>
+                                        <option>Rejected</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <button id="btn" type="button" class="btn-primary top-right">Save</button>
+                                </td>
 
-            </table>
+                            </tr>
+
+
+
+                        }
+                </table>
         </div>
     </div>
 </div>
@@ -114,9 +111,24 @@
             $('#example2').DataTable();
         });
 
-
-
-
+        $(document).ready(function () {
+            $('#example2').dataTable({
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "scripts/post.php",
+                    "type": "POST"
+                },
+                "columns": [
+                    { "data": "first_name" },
+                    { "data": "last_name" },
+                    { "data": "position" },
+                    { "data": "office" },
+                    { "data": "start_date" },
+                    { "data": "salary" }
+                ]
+            });
+        });
     </script>
 }
 

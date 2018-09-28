@@ -216,6 +216,8 @@ namespace Host.Business.DbServices
                                          {
                                              ActivityObservationId = activityObservation.PkActivityObservationId,
                                              BranchId = branchId,
+                                             BranchName=branchLocation.FkBranch.Name,
+                                             CompanyName=branchLocation.FkBranch.CompanyBranch.Select(i=>i.FkCompany.Name).SingleOrDefault(),
                                              ClientReview = activityObservation.ClientReview,
                                              ClientReviewDate = activityObservation.ClinetReviewDate,
                                              Description = activityObservation.Description,
@@ -261,41 +263,19 @@ namespace Host.Business.DbServices
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="requestDto"></param>
-        /// <returns></returns>
-      /*  public async Task<int> UpdateActivity(StationActivityDto requestDto)
+        public void UpdateActivityObservation(ObservationReportDto dto)
         {
             try
             {
-                var stationActivities = _context.StationActivity
-                                        .AsNoTracking()
-                                        .Where(i => i.FkStationId ==  requestDto.StationId)
-                                        .ToList();
-                _context.StationActivity.RemoveRange(stationActivities);
+
+                var model = new ActivityObservation { PkActivityObservationId = dto.ActivityObservationId };
+
+                _context.ActivityObservation.Attach(model);
+
+                model.ClientReview = dto.ClientReview;
+                model.ClinetReviewDate = DateTime.Now;
+                model.Status = dto.Status;
                 _context.SaveChanges();
-
-                    var activities = requestDto.Activities.Select(i => new Activity
-                {
-                    PkActivityId = i.ActivityId,
-                    Name = i.Name,
-                    Description = i.Description,
-                    CreateOn = DateTime.Now,
-                    StationActivity = new List<StationActivity>
-                    {
-                        new StationActivity
-                        {
-                            FkStationId = requestDto.StationId
-                        }
-                    }
-                });
-
-                _context.Activity.UpdateRange(activities);
-                await _context.SaveChangesAsync();
-                return await Task.FromResult(_context.SaveChanges());
-
             }
             catch (Exception e)
             {
@@ -303,7 +283,50 @@ namespace Host.Business.DbServices
                 throw;
             }
         }
-        */
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="requestDto"></param>
+        /// <returns></returns>
+        /*  public async Task<int> UpdateActivity(StationActivityDto requestDto)
+          {
+              try
+              {
+                  var stationActivities = _context.StationActivity
+                                          .AsNoTracking()
+                                          .Where(i => i.FkStationId ==  requestDto.StationId)
+                                          .ToList();
+                  _context.StationActivity.RemoveRange(stationActivities);
+                  _context.SaveChanges();
+
+                      var activities = requestDto.Activities.Select(i => new Activity
+                  {
+                      PkActivityId = i.ActivityId,
+                      Name = i.Name,
+                      Description = i.Description,
+                      CreateOn = DateTime.Now,
+                      StationActivity = new List<StationActivity>
+                      {
+                          new StationActivity
+                          {
+                              FkStationId = requestDto.StationId
+                          }
+                      }
+                  });
+
+                  _context.Activity.UpdateRange(activities);
+                  await _context.SaveChangesAsync();
+                  return await Task.FromResult(_context.SaveChanges());
+
+              }
+              catch (Exception e)
+              {
+                  Console.WriteLine(e);
+                  throw;
+              }
+          }
+          */
 
     }
 }
