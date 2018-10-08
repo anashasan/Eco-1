@@ -1,6 +1,7 @@
-﻿@using Microsoft.AspNetCore.Authorization
+﻿@model List<Host.DataModel.CompanyDto>
+@using Microsoft.AspNetCore.Authorization
 @inject IAuthorizationService AuthorizationService
-@model List<Host.DataModel.CompanyDto>
+
 
 @{
     Layout = "_AdminLayout";
@@ -43,56 +44,83 @@
                         <th>Options</th>
                     </tr>
                 </thead>
-                <tbody>
+                @*<tbody>
                     @foreach (var s in Model)
-                    {
+                {
 
-                        <tr>
-                            <td style="text-align: center">
-                                @s.Name
-                                <a class="text-primary"></a>
-                            </td>
-                            <td style="text-align: center">
-                                @s.Type
-                                <span>
-                                    <i class='zmdi large-size'></i>
-                                </span>
-                            </td>
+                    <tr>
+                        <td style="text-align: center">
+                            @s.Name
+                            <a class="text-primary"></a>
+                        </td>
+                        <td style="text-align: center">
+                            @s.Type
+                            <span>
+                                <i class='zmdi large-size'></i>
+                            </span>
+                        </td>
 
-                            <td style="text-align: center">
-                                @s.Url
-                                <span>
-                                    <i class='zmdi large-size'></i>
-                                </span>
-                            </td>
-                            <td>
-                                <div class="dropdown">
-                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                        Options
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        @if (User.IsInRole("Admin"))
-                                        {
+                        <td style="text-align: center">
+                            @s.Url
+                            <span>
+                                <i class='zmdi large-size'></i>
+                            </span>
+                        </td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    Options
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    @if (User.IsInRole("Admin"))
+                                {
 
-                                            <a class="dropdown-item fa fa-edit" href="#" onClick='@($"window.location.href='/Company/DeleteCompany?companyId={s.CompanyId}'")'>Delete</a>
-                                            <div class="dropdown-divider"></div>
-                                        }
+                                    <a class="dropdown-item fa fa-edit" href="#" onClick='@($"window.location.href='/Company/DeleteCompany?companyId={s.CompanyId}'")'>Delete</a>
+                                    <div class="dropdown-divider"></div>
+                            }
 
-                                        <a class="dropdown-item fa fa-edit" href="#" onClick='@($"window.location.href='/Company/GetCompanyById?id={s.CompanyId}'")'>Edit</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item fa fa-delicious" href='#' onclick='@($"window.location.href='/Company/GetBranchByCompanyId?companyId={s.CompanyId}'")'>Branches</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item fa fa-comment-o" href='#' onclick='@($"window.location.href='/Company/GetBranchEmployeeByCompanyId?companyId={s.CompanyId}'")'>Correspondants</a>
+                                    <a class="dropdown-item fa fa-edit" href="#" onClick='@($"window.location.href='/Company/GetCompanyById?id={s.CompanyId}'")'>Edit</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item fa fa-delicious" href='#' onclick='@($"window.location.href='/Company/GetBranchByCompanyId?companyId={s.CompanyId}'")'>Branches</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item fa fa-comment-o" href='#' onclick='@($"window.location.href='/Company/GetBranchEmployeeByCompanyId?companyId={s.CompanyId}'")'>Correspondants</a>
 
-                                    </div>
                                 </div>
-                            </td>
-                        </tr>
+                            </div>
+                        </td>
+                    </tr>
 
 
-                    }
+            }
+                </tbody>*@
             </table>
+            <div class="modal fade" id="myModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <a href="#" class="close" data-dismiss="modal">&times;</a>
+                            <h3 class="modal-title">Delete Company</h3>
+                        </div>
+                        <div class="modal-body">
+                            <h4>Are you sure ? You want to delete this. </h4>
+
+                            <div style="text-align:center;display:none" id="loaderDiv">
+                                <img src="~/Content/InternetSlowdown_Day.gif" width="150" />
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                            <a href="#" class="btn btn-success" onclick="DeleteCompany()">Confirm</a>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
         </div>
+        <input type="hidden" id="hiddenCompanyId" />
         <!-- /.box-body -->
     </div>
 </div>
@@ -101,10 +129,81 @@
     <link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
     <script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script>
+        
+        var datatable;
+        var isAdminRole = "@User.IsInRole("Admin")" === "True" ;
         $(document).ready(function () {
-            $('#example2').DataTable();
+            datatable = $('#example2').DataTable({
+                ajax: {
+                    url: "/company/company/data",
+                    type: "GET",
+                    dataType: "json"
+                },
+                columns: [
+                    { data: "name", name: "name", autowidth: true },
+                    { data: "type", name: "type", autowidth: true },
+                    { data: "url", name: "url", autowidth: true },
+
+                    {
+                        render: function (data, type, row) {
+                            return ` <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    Options
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                   
+                                   ${isAdminRole ? `
+                                    <a class="dropdown-item fa fa-edit" href="#" onClick="window.location.href='/Company/DeleteCompany?companyId=${row.companyId}'">Delete</a>
+                                    <div class="dropdown-divider"></div>` : ""}
+                                    
+                                    <a class="dropdown-item fa fa-edit" href="#" onclick="ConfirmDelete(${row.companyId})">Delete</a>
+                                    <div class="dropdown-divider" ></div >
+                                  <a class="dropdown-item fa fa-edit" href="#" onClick="window.location.href='/Company/GetCompanyById?id=${row.companyId}'">Edit</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item fa fa-delicious" href='#' onclick="window.location.href='/Company/GetBranchByCompanyId?companyId=${row.companyId}'">Branches</a>
+
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item fa fa-comment-o" href='#' onclick="window.location.href='/Company/GetBranchEmployeeByCompanyId?companyId=${row.companyId}'")'>Correspondants</a>
+
+                                </div>
+                            </div>`;
+                        }
+                    }
+                ]
+            });
         });
 
+      
+
+        var ConfirmDelete = function (CompanyId) {
+
+            $("#hiddenCompanyId").val(CompanyId);
+            $("#myModal").modal('show');
+
+        }
+
+        var DeleteCompany = function () {
+
+            $("#loaderDiv").show();
+
+            var companyId = $("#hiddenCompanyId").val();
+
+            $.ajax({
+
+                type: "GET",
+                url: "/Company/DeleteCompany",
+                data: { CompanyId: companyId },
+                success: function (result) {
+                    datatable.ajax.reload();
+                    $("#loaderDiv").hide();
+                    $("#myModal").modal("hide");
+                }
+
+            })
+
+        }
+
+        
     </script>
 }
 

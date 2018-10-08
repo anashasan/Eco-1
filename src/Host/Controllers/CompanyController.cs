@@ -43,6 +43,7 @@ namespace Host.Controllers
         private readonly IJsonDataService _jsonDataService;
         private readonly IClientCompanyService _clientCompanyService;
         private readonly IEmployeeProfileService _employeeProfileService;
+        private readonly DownloadObservationPdf _downloadObservationPdf;
 
         /// <summary>
         /// 
@@ -67,7 +68,8 @@ namespace Host.Controllers
                                  IHostingEnvironment hostingEnvironment,
                                  IJsonDataService jsonDataService,
                                  IClientCompanyService clientCompanyService,
-                                 IEmployeeProfileService employeeProfileService
+                                 IEmployeeProfileService employeeProfileService,
+                                 DownloadObservationPdf downloadObservationPdf
                                  )
         {
             _companyService = companyService;
@@ -86,6 +88,7 @@ namespace Host.Controllers
             _jsonDataService = jsonDataService;
             _clientCompanyService = clientCompanyService;
             _employeeProfileService = employeeProfileService;
+            _downloadObservationPdf = downloadObservationPdf;
         }
 
         /// <summary>
@@ -120,7 +123,7 @@ namespace Host.Controllers
             var models = _graphService.GetTotalCountActivity();
             return Json(models);
         }
-
+        [HttpGet]
         public IActionResult ActivityPerfromReport(int branchId)
         {
             return View("ActivityPerformReport");
@@ -388,6 +391,8 @@ namespace Host.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
+        /// 
+
         public IActionResult Branch()
         {
             var branchModel = _branchService.GetAllBranch();
@@ -460,10 +465,16 @@ namespace Host.Controllers
         [HttpGet]
         public IActionResult GetBranchByCompanyId(int companyId)
         {
-            var branch = _branchService.GetBranchByCompanyId(companyId);
+            //var branch = _branchService.GetBranchByCompanyId(companyId);
             ViewBag.CompanyId = companyId;
-            return View("BranchCreation", branch);
+            return View("BranchCreation");
 
+        }
+        [HttpGet("Company/GetAllBranchesByCompanyId/data")]
+        public IActionResult GetAllBranchesByCompanyId(int companyId)
+        {
+            var branch = _branchService.GetBranchByCompanyId(companyId);
+            return Json(new { data = branch });
         }
 
         /// <summary>
@@ -623,11 +634,11 @@ namespace Host.Controllers
         {
             return View("Activity");
         }
-
+        [HttpGet("company/location/data")]
         public IActionResult LocationCreation()
         {
             var location = _locationService.GetAllLocation();
-            return View("LocationCreation", location);
+            return Json(new { data = location });
         }
 
         public IActionResult AddLocation(int id, int companyId, int locationId)
@@ -682,10 +693,16 @@ namespace Host.Controllers
         [HttpGet]
         public IActionResult GetLocationById(int id, int companyId)
         {
-            var location = _locationService.GetLocationByBranchId(id);
+        //  var location = _locationService.GetLocationByBranchId(id);
             ViewBag.BranchId = id;
             ViewBag.CompanyId = companyId;
-            return View("LocationCreation", location);
+            return View("LocationCreation");
+        }
+        [HttpGet("Company/GetAllLocationById/data")]
+        public IActionResult GetAllLocationById(int id,int companyId)
+        {
+            var location = _locationService.GetLocationByBranchId(id);
+            return Json(new { data = location });
         }
 
         [HttpGet]
@@ -883,6 +900,27 @@ namespace Host.Controllers
             return View("ActivityCreation");
         }
 
+        public IActionResult DownloadObservationReport(int branchId, int? locationId, DateTime? fromDate,DateTime? toDate)
+        {
+            try
+            {
+                
+                System.IO.MemoryStream memoryStream = new System.IO.MemoryStream();
+                var bytes = _downloadObservationPdf.DownloadObservation(branchId, locationId, fromDate, toDate,_hostingEnvironment);
+                memoryStream.Close();
+                Response.Clear();
+                Response.ContentType = "application/pdf";
+                var response = File(bytes, "application/pdf", $"{"abc"}.pdf");
+                Response.ContentType = "application/pdf";
+                return response;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
         [HttpGet]
         public IActionResult Download(int id, int locationId, string code, int sno)
         {
@@ -910,7 +948,7 @@ namespace Host.Controllers
             }
         }
 
-        [HttpPost]
+        
         [HttpPost]
         public IActionResult DownloadAllPdf([FromBody]List<DownloadPdfDto> downloadPdf)
         {
@@ -1002,8 +1040,27 @@ namespace Host.Controllers
 
         public IActionResult Station()
         {
+            return View("StationCreation");
+        }
+
+        [HttpGet("company/station/data")]
+        public IActionResult GetAllStation()
+        {
             var station = _stationService.GetAllStation();
-            return View("StationCreation", station);
+            return Json(new { data = station });
+        }
+
+        [HttpGet("company/company/data")]
+        public async Task<IActionResult> GetallCompanyAsync()
+        {
+            var company = await _companyService.GetAllCompany();
+            return Json(new { data = company });
+        }
+      
+        public IActionResult GetAllBranches()
+        {
+            var branch = _branchService.GetAllBranch();
+            return Json(new { data = branch });
         }
 
         [HttpPost]
@@ -1080,7 +1137,8 @@ namespace Host.Controllers
             return Json(id);
         }
 
-        [HttpGet]
+       
+       
         public IActionResult GetStationByBranchId(int branchId, int companyId)
         {
             var stationbranch = _stationLocationService.GetStationLocationByBranchId(branchId);
@@ -1089,6 +1147,22 @@ namespace Host.Controllers
             return View("StationBranch", stationbranch);
 
         }
+        [HttpGet("Company/GetAllStationByBranchId/data")]
+        public IActionResult GetAllStationByBranchId(int branchId,int companyId)
+        {
+            var stationbranch = _stationLocationService.GetStationLocationByBranchId(branchId);
+            return Json(new { data = stationbranch });
+        }
+
+        [HttpGet("Company/GetStations/data")]
+        public IActionResult GetStationofBranch(int branchId)
+        {
+            var stationbranch = _stationLocationService.GetStationLocationByBranchId(branchId);
+            return Json(new { data = stationbranch });
+        }
+
+
+    
 
         [HttpGet("Company/DailyReport")]
         public IActionResult DailyReport([FromQuery]DateTime to, [FromQuery]DateTime from)
@@ -1175,6 +1249,20 @@ namespace Host.Controllers
             }
         }
 
+        public IActionResult DeleteStationActivity(int activityId)
+        {
+            try
+            {
+                _activityService.DeleteActivityById(activityId);
+                return RedirectToAction("GetActivityById");
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
+        }
+
         [HttpGet("Company/Report/BranchId/{branchId}/locationId/{locationId}")]
         public IActionResult GetActivityPerformReport([FromRoute]int branchId, [FromRoute] int locationId)
         {
@@ -1249,7 +1337,7 @@ namespace Host.Controllers
         }
 
         [HttpPost("Company/ObservationReport")]
-        public IActionResult ObservationReport([FromQuery]int branchId,int? locationId, [FromQuery]DateTime? fromDate, [FromQuery]DateTime? toDate)
+        public IActionResult ObservationReport([FromQuery]int branchId, int? locationId, [FromQuery]DateTime? fromDate, [FromQuery]DateTime? toDate)
         {
             try
             {
@@ -1263,18 +1351,19 @@ namespace Host.Controllers
             }
         }
 
-        
+
         [HttpGet]
-        public IActionResult ObservationReportForm(int branchId, string branchname,string companyname)
+        public IActionResult ObservationReportForm(int branchId, string branchname, string companyname)
         {
             try
             {
                 ViewBag.CompanyName = companyname;
                 ViewBag.BranchName = branchname;
-                int? locationId = null ;
+                ViewBag.BranchId = branchId;
+                int? locationId = null;
                 DateTime? fromDate = null;
                 DateTime? toDate = null;
-          
+
                 var observationReport = _activityService.GetObservationReport(branchId, locationId, fromDate, toDate);
                 return View("ObservationReport", observationReport);
             }
@@ -1285,18 +1374,18 @@ namespace Host.Controllers
             }
         }
 
-        [HttpPost]
-        public IActionResult UpdateObservationForm(ObservationReportDto dto)
+        [HttpPost("Company/UpdateObservation")]
+        public IActionResult UpdateObservationForm([FromBody]ObservationReportDto dto)
         {
             try
             {
-                if(!ModelState.IsValid)
+                if (!ModelState.IsValid)
                 {
                     return View(dto);
                 }
-      
+
                 _activityService.UpdateActivityObservation(dto);
-                return RedirectToAction("ObservationReportForm");
+                return Ok();
             }
             catch (Exception e)
             {

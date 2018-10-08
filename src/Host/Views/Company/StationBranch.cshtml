@@ -47,7 +47,7 @@
             <table id="myTable" class="table table-bordered table-hover">
                 <thead id="th">
                     <tr>
-                        <th>Check All</th>
+                        @*<th>Check All</th>*@
                         <th>S No</th>
                         <th>Station Name</th>
                         <th> Location Name</th>
@@ -56,29 +56,56 @@
                         <th>Options</th>
                     </tr>
                 </thead>
-                <tbody id="tbody">
-                    @foreach (var a in Model)
-                    {
-                        <tr>
-                            <td><input type="checkbox" /></td>
-                            <td>@a.Sno</td>
-                            <td>@a.StationName</td>
-                            <td>@a.LocationName</td>
-                            <td>@a.StationLocationId</td>
-                            <td id="@(a.StationLocationId)"> </td>
-                            <td style="text-align:center">
-                                <a class="fa fa-edit " onClick='@($"window.location.href='/Company/UpdateBranchStation?stationlocationId={a.StationLocationId}&branchId={@ViewBag.BranchId}&locationId={a.LocationId}&companyId={ViewBag.CompanyId}'")'>Edit</a>
-                                @if (User.IsInRole("Admin"))
-                                {
-                                    <a class="fa fa-remove " onClick='@($"window.location.href='/Company/DeleteStationLocation?stationlocationId={a.StationLocationId}&branchId={@ViewBag.BranchId}&companyId={ViewBag.CompanyId}'")'>Delete</a>
-                                }
+                @*<tbody id="tbody">
+                   @foreach (var a in Model)
+            {
+                <tr>
+                    <td><input type="checkbox" /></td>
+                    <td>@a.Sno</td>
+                    <td>@a.StationName</td>
+                    <td>@a.LocationName</td>
+                    <td>@a.StationLocationId</td>
+                    <td id="@(a.StationLocationId)"> </td>
+                    <td style="text-align:center">
+                        <a class="fa fa-edit " onClick='@($"window.location.href='/Company/UpdateBranchStation?stationlocationId={a.StationLocationId}&branchId={@ViewBag.BranchId}&locationId={a.LocationId}&companyId={ViewBag.CompanyId}'")'>Edit</a>
+                        @if (User.IsInRole("Admin"))
+                {
+                    <a class="fa fa-remove " onClick='@($"window.location.href='/Company/DeleteStationLocation?stationlocationId={a.StationLocationId}&branchId={@ViewBag.BranchId}&companyId={ViewBag.CompanyId}'")'>Delete</a>
+                            <a class="fa fa-remove" onclick="ConfirmDelete()">Delete</a>
+        }
 
-                                <a class="fa fa-download" onClick='@($"window.location.href='/Company/Download?id={a.StationLocationId}&locationId={a.LocationId}&code={a.Code}&sno={a.Sno}'")'>Download</a>
-                            </td>
-                        </tr>
+                        <a class="fa fa-download" onClick='@($"window.location.href='/Company/Download?id={a.StationLocationId}&locationId={a.LocationId}&code={a.Code}&sno={a.Sno}'")'>Download</a>
+                    </td>
+                </tr>
 
-                    }
+    }
+                    </tbody>*@
             </table>
+            <div class="modal fade" id="myModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <a href="#" class="close" data-dismiss="modal">&times;</a>
+                            <h3 class="modal-title">Delete Station</h3>
+                        </div>
+                        <div class="modal-body">
+                            <h4>Are you sure ? You want to delete this. </h4>
+
+                            <div style="text-align:center;display:none" id="loaderDiv">
+                                <img src="~/Content/InternetSlowdown_Day.gif" width="150" />
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                            <a href="#" class="btn btn-success" onclick="DeleteStation()">Confirm</a>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <input type="hidden" id="hiddenstationLocationId" />
         </div>
         <!-- /.box-body -->
     </div>
@@ -125,9 +152,7 @@
             element.appendChild(oImg);
         }
 
-        $(document).ready(function () {
-            $('#myTable').DataTable();
-        });
+       
 
         $("#download")
             .submit(function (event) {
@@ -157,21 +182,83 @@
 
     </script>
     <script>
-        $(document).ready(function () {
-            var t = $('#example').DataTable({
-                "columnDefs": [{
-                    "searchable": false,
-                    "orderable": false,
-                    "targets": 0
-                }],
-                "order": [[1, 'asc']]
-            });
+        //$(document).ready(function () {
+        //    var t = $('#example').DataTable({
+        //        "columnDefs": [{
+        //            "searchable": false,
+        //            "orderable": false,
+        //            "targets": 0
+        //        }],
+        //        "order": [[1, 'asc']]
+        //    });
 
-            t.on('order.dt search.dt', function () {
-                t.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
-                    cell.innerHTML = i + 1;
-                });
-            }).draw();
+        //    t.on('order.dt search.dt', function () {
+        //        t.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+        //            cell.innerHTML = i + 1;
+        //        });
+        //    }).draw();
+        //});
+
+        var datatable;
+        var branchid =@ViewBag.BranchId;
+        var companyid = @ViewBag.CompanyId;
+        $(document).ready(function () {
+            datatable = $('#myTable').DataTable({
+                ajax: {
+                    url: "/Company/GetAllStationByBranchId/data?branchId=" + branchid + "&companyId=" + companyid,
+                    type: "GET",
+                    dataType: "json"
+                },
+                columns: [
+                    { data: "sno", name: "sno", autowidth: true },
+                    { data: "stationName", name: "stationName", autowidth: true },
+                    { data: "locationName", name: "locationName", autowidth: true },
+                    { data: "stationLocationId", name: "stationLocationId", autowidth: true },
+                    { data: "stationlocationid", name: "stationlocationid", autowidth: true },
+                    {
+                        render: function (data, type, row) {
+                            return ` <a class="fa fa-edit " onClick="window.location.href='/Company/UpdateBranchStation?stationlocationId=${row.StationLocationId}&branchId=${branchid}&locationId=${row.LocationId}&companyId=${companyid}'")'>Edit</a>
+                       
+                {
+                   
+                            <a class="fa fa-remove" href='#' onclick="ConfirmDelete(${row.stationLocationId})">Delete</a>
+        }
+
+                        <a class="fa fa-download" onClick="window.location.href='/Company/Download?id=${row.StationLocationId}&locationId=${row.LocationId}&code={a.Code}&sno={a.Sno}'")'>Download</a>`;
+                        }
+                    }
+                ]
+            });
         });
+
+
+        var ConfirmDelete = function (stationLocationId) {
+
+            $("#hiddenstationLocationId").val(stationLocationId);
+            $("#myModal").modal('show');
+
+        }
+
+        var DeleteStation = function () {
+
+            $("#loaderDiv").show();
+
+            var stationid = $("#hiddenstationLocationId").val();
+
+            $.ajax({
+
+                type: "GET",
+                url: "/Company/DeleteStation",
+                data: { stationLocationId: stationid },
+                success: function (result) {
+                    datatable.ajax.reload();
+                    $("#loaderDiv").hide();
+                    $("#myModal").modal("hide");
+                }
+
+            })
+
+        }
+
     </script>
 }
