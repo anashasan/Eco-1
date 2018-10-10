@@ -1353,7 +1353,7 @@ namespace Host.Controllers
 
 
         [HttpGet]
-        public IActionResult ObservationReportForm(int branchId, string branchname, string companyname)
+        public IActionResult ObservationReportForm(int branchId, string branchname, string companyname, DateTime? fromdate, DateTime? todate)
         {
             try
             {
@@ -1361,8 +1361,8 @@ namespace Host.Controllers
                 ViewBag.BranchName = branchname;
                 ViewBag.BranchId = branchId;
                 int? locationId = null;
-                DateTime? fromDate = null;
-                DateTime? toDate = null;
+                DateTime?  fromDate = fromdate;
+                DateTime? toDate = todate;
 
                 var observationReport = _activityService.GetObservationReport(branchId, locationId, fromDate, toDate);
                 return View("ObservationReport", observationReport);

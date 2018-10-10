@@ -149,7 +149,7 @@ namespace Host.Helper
                
                 
                 table.SpacingBefore = 70;
-
+                table.WidthPercentage = 100;
                 table.DefaultCell.Border = Table.NO_BORDER;
                 //cell.Phrase = new Phrase("Observation No");
                 //table.AddCell(cell);

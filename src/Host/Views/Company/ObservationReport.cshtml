@@ -45,6 +45,7 @@
             <label for="locationDropDown" class="mr-sm-2">Location</label>
             <select id="locationDropDown" name="locationId" class="form-control"></select>
         </div>
+        <input type="button" value="Search" onclick='@($"window.location.href='/Company/ObservationReportForm?branchId={@ViewBag.BranchId}&branchname={@ViewBag.BranchName}&companyname={@ViewBag.CompanyName}'")' class="btn-submit btn-primary top-right">
         <a class="fa fa-download  " onClick='@($"window.location.href='/Company/DownloadObservationReport?branchId={@ViewBag.BranchId}&locationId={ViewBag.locationId}&fromDate={ViewBag.FromDate}&toDate={ViewBag.ToDate}'")'>Download</a>
     </form>
     <div class="box">
@@ -148,6 +149,12 @@
                     window.location = '/company/ObservationReportForm?branchid=' + branchid + "&companyname" + companyname + "&branchname" + branchname;
                 });
         })
+
+        $("#fromDate").datepicker()
+            .on('changeDate', function (e) {
+                // `e` here contains the extra attributes
+                console.log(e);
+            });;
     </script>
 }
 

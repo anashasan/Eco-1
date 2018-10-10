@@ -47,7 +47,7 @@
             <table id="myTable" class="table table-bordered table-hover">
                 <thead id="th">
                     <tr>
-                        @*<th>Check All</th>*@
+                        <th>Check All</th>
                         <th>S No</th>
                         <th>Station Name</th>
                         <th> Location Name</th>
@@ -56,7 +56,7 @@
                         <th>Options</th>
                     </tr>
                 </thead>
-                @*<tbody id="tbody">
+                <tbody id="tbody">
                    @foreach (var a in Model)
             {
                 <tr>
@@ -71,7 +71,7 @@
                         @if (User.IsInRole("Admin"))
                 {
                     <a class="fa fa-remove " onClick='@($"window.location.href='/Company/DeleteStationLocation?stationlocationId={a.StationLocationId}&branchId={@ViewBag.BranchId}&companyId={ViewBag.CompanyId}'")'>Delete</a>
-                            <a class="fa fa-remove" onclick="ConfirmDelete()">Delete</a>
+                           
         }
 
                         <a class="fa fa-download" onClick='@($"window.location.href='/Company/Download?id={a.StationLocationId}&locationId={a.LocationId}&code={a.Code}&sno={a.Sno}'")'>Download</a>
@@ -79,9 +79,9 @@
                 </tr>
 
     }
-                    </tbody>*@
+                    </tbody>
             </table>
-            <div class="modal fade" id="myModal">
+            @*<div class="modal fade" id="myModal">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -106,9 +106,10 @@
                 </div>
             </div>
             <input type="hidden" id="hiddenstationLocationId" />
-        </div>
+        </div>*@
         <!-- /.box-body -->
-    </div>
+    
+        </div>
 </div>
 
 @section Scripts{
@@ -179,10 +180,12 @@
                     .catch(ex => { });
                 return false;
             });
-
+        $(document).ready(function () {
+            $('#myTable').DataTable();
+        });
     </script>
-    <script>
-        //$(document).ready(function () {
+   
+        @*//$(document).ready(function () {
         //    var t = $('#example').DataTable({
         //        "columnDefs": [{
         //            "searchable": false,
@@ -197,9 +200,9 @@
         //            cell.innerHTML = i + 1;
         //        });
         //    }).draw();
-        //});
+        //});*@
 
-        var datatable;
+        @*var datatable;
         var branchid =@ViewBag.BranchId;
         var companyid = @ViewBag.CompanyId;
         $(document).ready(function () {
@@ -258,7 +261,7 @@
 
             })
 
-        }
+        }*@
 
-    </script>
+   
 }
