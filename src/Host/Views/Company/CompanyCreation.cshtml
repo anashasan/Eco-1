@@ -153,11 +153,10 @@
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                    
                                    ${isAdminRole ? `
-                                    <a class="dropdown-item fa fa-edit" href="#" onClick="window.location.href='/Company/DeleteCompany?companyId=${row.companyId}'">Delete</a>
-                                    <div class="dropdown-divider"></div>` : ""}
+                                  
                                     
                                     <a class="dropdown-item fa fa-edit" href="#" onclick="ConfirmDelete(${row.companyId})">Delete</a>
-                                    <div class="dropdown-divider" ></div >
+                                    <div class="dropdown-divider" ></div > ` : ""}
                                   <a class="dropdown-item fa fa-edit" href="#" onClick="window.location.href='/Company/GetCompanyById?id=${row.companyId}'">Edit</a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item fa fa-delicious" href='#' onclick="window.location.href='/Company/GetBranchByCompanyId?companyId=${row.companyId}'">Branches</a>

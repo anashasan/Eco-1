@@ -1397,9 +1397,29 @@ namespace Host.Controllers
 
         [AllowAnonymous]
         [HttpGet("Company/GraphReport")]
-        public IActionResult GetGraphReport()
+        public IActionResult GetGraphReport(
+               [FromQuery]int? locationId,
+            [FromQuery]string fromDate,
+            [FromQuery]string toDate,
+            [FromQuery]int branchId)
         {
-            return Json(_activityPerformService.StationReport());
+
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var cultureInfo = new CultureInfo("ur-PK");
+            var isValidStartDate = DateTime.TryParse(fromDate, cultureInfo,
+                DateTimeStyles.NoCurrentDateDefault, out var startDate);
+
+            var isValidEndDate = DateTime.TryParse(toDate, cultureInfo,
+                DateTimeStyles.NoCurrentDateDefault, out var endDate);
+            return Json(_activityPerformService.StationReport(
+                 locationId,
+                isValidStartDate ? startDate : (DateTime?)null,
+                isValidEndDate ? endDate : (DateTime?)null,
+                branchId));
+        }
+        public IActionResult DailyGraph(int branchid)
+        {
+            return View("TestGraph");
         }
     }
 }

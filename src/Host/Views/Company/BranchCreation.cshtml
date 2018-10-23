@@ -101,9 +101,9 @@
                     <tr>
                         <th>Branch Name</th>
                         <th>Company Name</th>
+                        <th>Phone</th>
                         <th>Location</th>
                         <th>Address</th>
-                        <th>Phone</th>
                         <th>Email</th>
                         <th>Options</th>
 
@@ -197,11 +197,10 @@
                 },
                 columns: [
                     { data: "name", name: "name", autowidth: true },
-                  // { data: "companyName", name: "companyName", autowidth: true },
+                    { data: "companyName", name: "companyName", autowidth: true },
                     { data: "phone", name: "phone", autowidth: true },
                     { data: "location", name: "location", autowidth: true },
                     { data: "address", name: "address", autowidth: true },
-                    { data: "phone", name: "phone", autowidth: true },
                     { data: "email", name: "email", autowidth: true },
                     {
                         render: function (data, type, row) {
@@ -228,6 +227,8 @@
                                 <a class="dropdown-item fa fa-user-o" onclick="window.location.href='/Company/ActivityPerfromReport?branchId=${row.branchId}'">Daily Report</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item fa fa-user-o" onclick="window.location.href='/Company/ObservationReportForm?branchId=${row.branchId}&branchname=${row.name}&companyname=${row.companyname}'")'>Observation Report</a>
+     <div class="dropdown-divider"></div>
+                                <a class="dropdown-item fa fa-user-o" onclick="window.location.href='/Company/DailyGraph?branchId=${row.branchId}'")'>Daily Graph</a>
                             </div>
                         </div>`;
                         }

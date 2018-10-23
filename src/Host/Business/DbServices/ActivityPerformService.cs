@@ -91,14 +91,18 @@ namespace Host.Business.DbServices
                 {
                     if (activity.Observation != null && activity.Observation.Any())
                     {
+                        //  byte j = 0;
                         lstActivityPerformDetail.Add(new ActivityPerformDetail
                         {
+
                             FkActivityId = activity.ActivityId,
                             FkActivityPerformId = activityPerform.PkActivityPerformId,
                             CreatedOn = DateTime.Now,
                             ActivityObservation = activity.Observation.Select(i => new ActivityObservation
                             {
                                 Description = i,
+                                //ObservationImage = activity.ObservationImage.IndexOf(j) == null ? activity.ObservationImage.IndexOf(j) : (object)DBNull.Value
+
                             })
                             .ToList()
                         });
@@ -248,45 +252,170 @@ namespace Host.Business.DbServices
                 throw;
             }
         }
-
-        public List<GraphActivityPerform> StationReport()
+        public List<Graph> StationReport(int? locationId, DateTime? fromDate, DateTime? toDate, int? branchId)
         {
             var connection = _context.Database.GetDbConnection();
 
             var models = connection.Query<StationReportDto>
-                ("[dbo].[usp_Graphreport]", commandType: CommandType.StoredProcedure)
-                  .ToList();
-            var stationreport = new List<GraphActivityPerform>();
-            var dailyactivitiesperform = new Stack<MonthlyPerform>();
-            var activityName = string.Empty;
+                ("[dbo].[usp_DailyGraphReport]",
+                 new
+                 {
+                     @paramLocationId = locationId,
+                     @paramFromDate = fromDate,
+                     @paramToDate = toDate,
+                     @paramBranchId = branchId
+                 },
+                commandType: CommandType.StoredProcedure)
+               .ToList();
 
-            foreach (var model in models)
-            {
-                if (activityName != model.Activity && !string.IsNullOrEmpty(activityName))
+
+            //var graph = new List<Graph>();
+            //var station = new List<GraphActivityPerform>();
+            //var activities = new List<Activities>();
+
+            //var dailyactivitiesperform = new Stack<MonthlyPerform>();
+            //var activityName = string.Empty;
+            //var locationname = string.Empty;
+            //var stationname = string.Empty;
+
+            var data = models
+                .GroupBy(i => i.LocationName)
+                .Select(g => new Graph
                 {
-                    var monthlyPerform = new List<MonthlyPerform>(dailyactivitiesperform.Count);
-                    while (dailyactivitiesperform.Count != 0)
-                    {
-                        monthlyPerform.Add(dailyactivitiesperform.Pop());
-                    }
+                    LocationName = g.Key,
+                    Stations = g
+                        .GroupBy(f => f.StationName)
+                        .Select(i => new GraphActivityPerform
+                        {
+                            StationName = i.Key,
+                            Activity = i
+                                .GroupBy(o => o.ActivityName)
+                                .Select(j => new Activities
+                                {
+                                    ActivityName = j.Key,
+                                    MonthlyPerform = j
+                                        .GroupBy(z => z.Month )
+                                        .Select(z => new MonthlyPerform
+                                        {
+                                            Month = z.Key,
+                                            Perform = z.Sum(X => X.Perform)
+                                        })
+                                        .ToList()
+                                })
+                                .ToList()
+                        })
+                    .ToList()
+                })
+                .ToList();
 
-                    stationreport.Add(new GraphActivityPerform
-                    {
-                        Activity = activityName,
-                        MonthlyPerform = monthlyPerform
-                    });
-                }
+            return data;
+            //{
+            //    var model = models[i];
+                
+            //    if (locationname != model.LocationName && !string.IsNullOrEmpty(locationname))
+            //    {
+            //        graph.Add(new Graph
+            //        {
+            //            LocationName = locationname,
+            //            Stations = station,
+            //        });
 
-                activityName = model.Activity;
-                dailyactivitiesperform.Push(new MonthlyPerform
-                {
-                    Month = model.Month,
-                    Value = model.ActivityType == "Input" ? model.Perform : model.isperform,
-                });
-            }
+            //        station = null;
+            //        station = new List<GraphActivityPerform>();
+            //    }
 
-            return stationreport;
+            //    if (stationname != model.StationName && !string.IsNullOrEmpty(stationname))
+            //    {
+            //        station.Add(new GraphActivityPerform
+            //        {
+            //            StationName = stationname,
+            //            Activity = activities
+            //        });
+
+            //        activities = null;
+            //        activities = new List<Activities>();
+            //    }
+
+            //    if (activityName != model.ActivityName && !string.IsNullOrEmpty(activityName))
+            //    {
+            //        var monthlyPerform = new List<MonthlyPerform>(dailyactivitiesperform.Count);
+            //        while (dailyactivitiesperform.Count != 0)
+            //        {
+            //            monthlyPerform.Add(dailyactivitiesperform.Pop());
+            //        }
+
+            //        activities.Add(new Activities
+            //        {
+
+            //            ActivityName = activityName,
+            //            MonthlyPerform = monthlyPerform
+            //        });
+
+                    
+            //    }
+
+            //    dailyactivitiesperform.Push(new MonthlyPerform
+            //    {
+            //        Month = model.Month,
+            //        Perform = model.Perform
+            //    });
+            //    locationname = model.LocationName;
+            //    activityName = model.ActivityName;
+            //    stationname = model.StationName;
+            //}
+
+            //return graph;
         }
+
+
+        //        public List<GraphActivityPerform> StationReport(int? locationId, DateTime? fromDate, DateTime? toDate, int? branchId)
+        //        {
+        //            var connection = _context.Database.GetDbConnection();
+
+        //            var models = connection.Query<StationReportDto>
+        //                ("[dbo].[usp_DailyGraphReport]",
+        //                 new
+        //                 {
+        //                     @paramLocationId = locationId,
+        //                     @paramFromDate = fromDate,
+        //                     @paramToDate = toDate,
+        //                     @paramBranchId = branchId
+        //                 },
+        //                commandType: CommandType.StoredProcedure)
+        //               .ToList();
+
+
+        //            var stationreport = new List<GraphActivityPerform>();
+        //        var dailyactivitiesperform = new Stack<MonthlyPerform>();
+        //        var activityName = string.Empty;
+
+        //            foreach (var model in models)
+        //            {
+        //                if (activityName != model.ActivityName && !string.IsNullOrEmpty(activityName))
+        //                {
+        //                    var monthlyPerform = new List<MonthlyPerform>(dailyactivitiesperform.Count);
+        //                    while (dailyactivitiesperform.Count != 0)
+        //                    {
+        //                        monthlyPerform.Add(dailyactivitiesperform.Pop());
+        //                    }
+
+        //    stationreport.Add(new GraphActivityPerform
+        //                    {
+        //                        Activity = activityName,
+        //                        MonthlyPerform = monthlyPerform
+        //});
+        //                }
+
+        //                activityName = model.ActivityName;
+        //                dailyactivitiesperform.Push(new MonthlyPerform
+        //                {
+        //                    Month = model.Month,
+        //                    Value = model.ActivityType == "Input" ? model.Perform : model.isperform,
+        //                });
+        //            }
+
+        //            return stationreport;
+        //        }
 
         //public List<GraphActivityPerform> StationReport()
         //{
