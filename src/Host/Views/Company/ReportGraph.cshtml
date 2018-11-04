@@ -1,0 +1,172 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+
+    Layout = "_AdminLayout";
+}
+<form class="form-inline">
+    <div class="mb-2 mr-sm-2 mb-sm-0 position-relative form-group">
+        <h1>Daily Graph</h1>
+
+        <div class="mb-2 mr-sm-2 mb-sm-0 position-relative form-group">
+            <label for="fromDate" class="mr-sm-2 " style="font-size:large"> Starting Date</label>
+            <input id="fromDate" name="fromDate" type="date" class="form-control" value="">'
+        </div><div class="mb-2 mr-sm-2 mb-sm-0 position-relative form-group">
+            <label for="toDate" class="mr-sm-2" style="font-size:large">Ending Date</label>
+            <input id="toDate" name="toDate" type="date" class="form-control" value="">
+        </div>'
+
+        <label for="locationDropDown" class="mr-sm-2" style="font-size:large">Location</label>
+        <select id="locationDropDown" name="locationId" class="form-control"></select>
+
+        <button type="button" id="btn" class="btn btn-secondary">Seacrch</button>
+    </div>
+</form>
+<div id="container" style="width: 100%;">
+    <div id="parent"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script type="text/javascript">
+
+    const getParameterByName = function (name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        const regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return "";
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    };
+
+    const branchId = getParameterByName('branchId');
+
+    function makeGraph(params = {}) {
+        const chartOptions = {
+            responsive: true,
+            legend: {
+                position: "top"
+
+            },
+            title: {
+                display: true,
+                text: "Chart"
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        };
+
+
+        const monthNames = ['Jan', 'Feb', 'March', 'April', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const backgroundColor = ['#ED2939', '#5E1914', '#C21807', 'Yellow', '#FB607F', '#7C4700', '#B43757', '#795C32', '#FFE5B4', '#708238', 'BLACK', 'Green'];
+        const borderColor = ['Green', 'Purple', 'red', 'blue', 'Yellow', 'Green', 'Purple', 'red', 'blue', 'Yellow', 'Purple', 'red'];
+        const parent = document.getElementById("parent");
+        parent.innerHTML = null;
+
+        params.branchId = branchId;
+
+        $.ajax(`/Company/GraphReport?${$.param(params)}`)
+            //$.ajax(`/Company/GraphReport?branchId=1024`)
+            .done(function (data) {
+                const locations = data.map(function (a) { return a.locationName; });
+                for (let i = 0; i < locations.length; i++) {
+                    const location = locations[i];
+
+
+                    const stations = data.reduce(function (filtered, option) {
+                        if (option.locationName === location) {
+                            filtered.push(...option.stations);
+                        }
+                        return filtered;
+                    }, []);
+
+                    const locationHeading = document.createElement('h3');
+                    locationHeading.textContent = 'Location Name: ' + location;
+                    parent.appendChild(locationHeading);
+
+                    for (let j = 0; j < stations.length; j++) {
+                        const activities = stations[j].activity.map(i => i.activityName);
+                        const monthlyPerform = stations[j].activity.map(i => i.monthlyPerform);
+                        const dataset = [];
+
+                        const station = stations[j];
+                        const stationName = station.stationName;
+                        const stationHeading = document.createElement('h3');
+                        stationHeading.textContent = 'Station Name: ' + stationName;
+                        parent.appendChild(stationHeading);
+
+
+                        for (var a = 1; a <= 12; a++) {
+                            dataset.push({
+                                label: monthNames[a - 1],
+                                backgroundColor: backgroundColor[a - 1],
+                                borderColor: borderColor[a - 1],
+                                borderWidth: 1,
+                                data: monthlyPerform
+                                    .reduce(function (filtered, option) {
+                                        filtered.push(option.find(u => u.month === a).perform);
+                                        return filtered;
+                                    }, [])
+                            })
+                        }
+
+                        const barChartData = {
+                            labels: activities,
+                            datasets: dataset
+                        }
+
+                        const nestedDiv = document.createElement('canvas');
+                        nestedDiv.id = `${j}${i}Canvas`;
+                        parent.appendChild(nestedDiv);
+                        const ctx = document.getElementById(`${j}${i}Canvas`).getContext("2d");
+
+                        const br_tag = document.createElement('br');
+                        parent.appendChild(br_tag);
+
+
+
+                        window.myBar = new Chart(ctx, {
+                            type: "bar",
+                            data: barChartData,
+                            options: chartOptions
+
+                        });
+                    }
+                }
+            });
+    }
+    makeGraph();
+
+
+    $.getJSON('/Company/locations/branchId/' + branchId)
+        .done(function (data) {
+            $.each(data, function () {
+                $('#locationDropDown').append(`<option value="${this.locationId}">${this.locationName}</option>`);
+
+
+            });
+
+        })
+        .fail(function (err) {
+            console.error(err);
+        });
+
+
+    $("#btn").click(function () {
+        const id = $("#locationDropDown").val();
+        const FromDate = $("#fromDate").val();
+        const ToDate = $("#toDate").val();
+        makeGraph({
+            locationId: id,
+            fromDate: FromDate,
+            toDate: ToDate
+        });
+    });
+</script>

@@ -1,4 +1,4 @@
-﻿@*
+﻿@*@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
@@ -12,29 +12,35 @@
 
     .axis path,
     .axis line {
-        fill: none;
+        fill: #808080;
         stroke: #000;
         shape-rendering: crispEdges;
     }
 
     .x.axis path {
-        display: none;
+        display: inline;
+        fill: #000;
     }
 </style>
 <form class="form-inline">
     <div class="mb-2 mr-sm-2 mb-sm-0 position-relative form-group">
-        <label for="fromDate" class="mr-sm-2 " style="font-size:large"> Starting Date</label>
-        <input id="fromDate" name="fromDate" type="date" class="form-control" value="">'
-    </div><div class="mb-2 mr-sm-2 mb-sm-0 position-relative form-group">
-              <label for="toDate" class="mr-sm-2" style="font-size:large">Ending Date</label>
-        <input id="toDate" name="toDate" type="date" class="form-control" value="">
-    </div>'
-    <div class="mb-2 mr-sm-2 mb-sm-0 position-relative ">
+        <h1>Daily Graph</h1>
+
+        <div class="mb-2 mr-sm-2 mb-sm-0 position-relative form-group">
+            <label for="fromDate" class="mr-sm-2 " style="font-size:large"> Starting Date</label>
+            <input id="fromDate" name="fromDate" type="date" class="form-control" value="">'
+        </div><div class="mb-2 mr-sm-2 mb-sm-0 position-relative form-group">
+            <label for="toDate" class="mr-sm-2" style="font-size:large">Ending Date</label>
+            <input id="toDate" name="toDate" type="date" class="form-control" value="">
+        </div>'
+
         <label for="locationDropDown" class="mr-sm-2" style="font-size:large">Location</label>
         <select id="locationDropDown" name="locationId" class="form-control"></select>
+
+        <button type="button" id="btn" class="btn btn-secondary">Seacrch</button>
     </div>
 </form>
-<div id="body" style="overflow-x: auto;" onchange="scrollWin()">
+<div id="body" style="overflow-x: auto;">
 
 </div>
 
@@ -44,59 +50,72 @@
 
 
 <script type="text/javascript">
-    
+
     const getParameterByName = function (name, url) {
         if (!url) url = window.location.href;
         name = name.replace(/[\[\]]/g, "\\$&");
-        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        const regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
             results = regex.exec(url);
         if (!results) return null;
         if (!results[2]) return "";
         return decodeURIComponent(results[2].replace(/\+/g, " "));
     };
 
-    var branchId = getParameterByName('branchId');
+    const branchId = getParameterByName('branchId');
 
     function makeGraph(params = {}) {
-        var margin = { top: 20, right: 20, bottom: 30, left: 40 },
-            width = 2000 - margin.left - margin.right,
+        const margin = { top: 20, right: 20, bottom: 30, left: 40 },
+            width = 1200 - margin.left - margin.right,
             height = 500 - margin.top - margin.bottom;
 
-        var x0 = d3.scale.ordinal()
-            .rangeRoundBands([0, width], .4);
+        //const x0 = d3.scale.ordinal()
+        //    .rangeRoundBands([0, width], .1);
 
-        var x1 = d3.scale.ordinal();
+        //const x1 = d3.scale.ordinal();
 
-        var y = d3.scale.linear()
-            .range([height, 0]);
+        //const y = d3.scale.linear()
+        //    .range([height, 0]);
 
-        var xAxis = d3.svg.axis()
-            .scale(x0)
-            .tickSize(0)
-            .orient("bottom");
+        //const xAxis = d3.svg.axis()
+        //    .scale(x0)
+        //    .tickSize(0)
+        //    .orient("bottom");
 
-        var yAxis = d3.svg.axis()
-            .scale(y)
-            .orient("left");
+        //const yAxis = d3.svg.axis()
+        //    .scale(y)
+        //    .orient("left");
 
-        var color = d3.scale.ordinal()
-            .range(["#ca0020", "#f4a582", "#d5d5d5", "#92c5de", "#0571b0"]);
+        //const color = d3.scale.ordinal()
+        //    .range(["#ca0020", "#f4a582"]);
+
+        //const margin = { top: 20, right: 20, bottom: 30, left: 40 },
+        //    width = 960 - margin.left - margin.right,
+        //    height = 500 - margin.top - margin.bottom;
 
 
-        var mainDiv = document.getElementById('body');
-        mainDiv.innerHTML = null;   
+
+        const svg = d3.select('body').append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+
+        const mainDiv = document.getElementById('body');
+        mainDiv.innerHTML = null;
         /* d3.json("data.json", function (error, data)*/
 
         params.branchId = branchId;
-        
+
         $.ajax(`/Company/GraphReport?${$.param(params)}`)
             .done(function (data) {
-                var locations = data.map(function (a) { return a.locationName; });
+                const locations = data.map(function (a) { return a.locationName; });
 
-                for (var i = 0; i < locations.length; i++) {
-                    var location = locations[i];
+                for (let i = 0; i < locations.length; i++) {
+                    const location = locations[i];
 
-                    var stations = data.reduce(function (filtered, option) {
+                    const stations = data.reduce(function (filtered, option) {
                         if (option.locationName === location) {
                             filtered.push(...option.stations);
                         }
@@ -104,117 +123,147 @@
                     }, []);
 
                     if (stations.length !== 0) {
-                        var locationHeading = document.createElement('h3');
+                        const locationHeading = document.createElement('h3');
                         locationHeading.textContent = 'Location Name: ' + location;
                         mainDiv.appendChild(locationHeading);
 
-                        for (var j = 0; j < stations.length; j++) {
-                            var station = stations[j];
-                            var stationName = station.stationName;
+                        for (let j = 0; j < stations.length; j++) {
+                            (() => {
+                                const x0 = d3.scale.ordinal()
+                                    .rangeRoundBands([0, width], .1);
 
-                            var stationHeading = document.createElement('h3');
-                            stationHeading.textContent = 'Station Name: ' + stationName;
-                            mainDiv.appendChild(stationHeading);
+                                const x1 = d3.scale.ordinal();
+
+                                const y = d3.scale.linear()
+                                    .range([height, 0]);
+
+                                const xAxis = d3.svg.axis()
+                                    .scale(x0)
+                                    .tickSize(0)
+                                    .orient("bottom");
+
+                                const yAxis = d3.svg.axis()
+                                    .scale(y)
+                                    .orient("left");
+
+                                const color = d3.scale.ordinal()
+                                    .range(["#ca0020", "#f4a582", "#d5d5d5", "#92c5de", "#0571b0"]);
+                                const station = stations[j];
+                                const stationName = station.stationName;
+
+                                const stationHeading = document.createElement('h3');
+                                stationHeading.textContent = 'Station Name: ' + stationName;
+                                mainDiv.appendChild(stationHeading);
 
 
-                            var nestedDiv = document.createElement('div');
-                            nestedDiv.id = `graph${i}${j}`;
+                                const nestedDiv = document.createElement('div');
+                                nestedDiv.id = `graph${i}${j}`;
 
-                            mainDiv.appendChild(nestedDiv);
-                            var svg = d3.select(`#graph${i}${j}`).append("svg")
-                                .attr("width", width + margin.left + margin.right)
-                                .attr("height", height + margin.top + margin.bottom)
-                                .append("g")
-                                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                                mainDiv.appendChild(nestedDiv);
+                                const svg = d3.select(`#graph${i}${j}`).append("svg")
 
-                            x0.domain(station.activity.map(i => i.activityName));
-                            x1.domain(station.activity.map(i => i.monthlyPerform.month)).rangeRoundBands([0, x0.rangeBand()]);
-                            y.domain([0, d3.max(station.activity, function (activities) {
-                                return d3.max(activities.monthlyPerform, function (d) {
-                                    return d.perform;
-                                });
-                            })]);
+                                    .attr("width", width + margin.left + margin.right)
+                                    .attr("height", height + margicn.top + margin.bottom)
+                                    .append("g")
+                                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                                const activitiesNames = station.activity.map(i => i.activityName);
+                                const monthNames = station.activity.map(i => i.monthlyPerform.month);
 
-                            svg.append("g")
-                                .attr("class", "x axis")
-                                .attr("transform", "translate(0," + height + ")")
-                                .call(xAxis);
+                                x0.domain(activitiesNames);
+                                x1.domain(monthNames).rangeRoundBands([0, x0.rangeBand()]);
+                                y.domain([0, d3.max(station.activity, function (activities) {
+                                    return d3.max(activities.monthlyPerform, function (d) {
+                                        return d.perform;
+                                    });
+                                })]);
 
-                            svg.append("g")
-                                .attr("class", "y axis")
-                                .style('opacity', '0')
-                                .call(yAxis)
-                                .append("text")
-                                .attr("transform", "rotate(-90)")
-                                .attr("y", 6)
-                                .attr("dy", ".71em")
-                                .style("text-anchor", "end")
-                                .style('font-weight', 'bold')
-                                .text("Perform");
+                                svg.append("g")
+                                    .attr("class", "x axis")
+                                    .attr("transform", "translate(0," + height + ")")
+                                    .call(xAxis);
 
-                            svg.select('.y').transition().duration(500).delay(1300).style('opacity', '1');
+                                svg.append("g")
+                                    .attr("class", "y axis")
+                                    .style('opacity', '0')
+                                    .call(yAxis)
+                                    .append("text")
+                                    .attr("transform", "rotate(-90)")
+                                    .attr("y", 6)
+                                    .attr("dy", ".71em")
+                                    .style("text-anchor", "end")
+                                    .style('font-weight', 'bold')
+                                    .text("Perform");
 
-                            var slice = svg.selectAll(".slice")
-                                .data(station.activity)
-                                .enter().append("g")
-                                .attr("class", "g")
-                                .attr("transform", function (d) { return "translate(" + x0(d.activityName) + ",0)"; });
+                                svg.select('.y').transition().duration(500).delay(1300).style('opacity', '1');
 
-                            slice.selectAll("rect")
-                                .data(function (d) { return d.monthlyPerform; })
-                                .enter()
-                                .append("rect")
-                                .attr("width", x1.rangeBand())
-                                .attr("x", function (d) { return x1(d.month); })
-                                .style("fill", function (d) { return color(d.month) })
-                                .attr("y", function (d) { return y(0); })
-                                .attr("height", function (d) { return height - y(0); })
-                                .on("mouseover", function (d) {
-                                    d3.select(this).style("fill", d3.rgb(color(d.month)).darker(2));
-                                })
-                                .on("mouseout", function (d) {
-                                    d3.select(this).style("fill", color(d.month));
-                                });
 
-                            slice.selectAll("rect")
-                                .transition()
-                                .delay(function (d) { return Math.random() * 1000; })
-                                .duration(1000)
-                                .attr("y", function (d) { return y(d.perform); })
-                                .attr("height", function (d) { return height - y(d.perform); });
+                                const slice = svg.selectAll(".slice")
+                                    .data(station.activity)
+                                    .enter().append("g")
+                                    .attr("class", "g")
+                                    .attr("transform", function (d) { return "translate(" + x0(d.activityName) + ",0)"; });
 
-                            var legend = svg.selectAll(".legend")
-                                .data(station.activity[0].monthlyPerform.map(function (d) {
-                                    return d.month;
-                                })
-                                    .reverse())
-                                .enter().append("g")
-                                .attr("class", "legend")
-                                .attr("transform", function (d, i) { return "translate(0," + i * 20 + ")"; })
-                                .style("opacity", "0");
 
-                            legend.append("rect")
-                                .attr("x", width - 18)
-                                .attr("width", 18)
-                                .attr("height", 18)
-                                .style("fill", function (d) { return color(d); });
+                                slice.selectAll("rect")
+                                    .data(function (d) { return d.monthlyPerform; })
+                                    .enter().append("rect")
+                                    .attr("width", x1.rangeBand())
+                                    .attr("x", function (d) { return x1(d.month); })
+                                    .style("fill", function (d) { return color(d.month) })
+                                    .attr("y", function (d) { return y(0); })
+                                    .attr("height", function (d) { return height - y(0); })
+                                    .on("mouseover", function (d) {
+                                        d3.select(this).style("fill", d3.rgb(color(d.month)).darker(2));
+                                    })
+                                    .on("mouseout", function (d) {
+                                        d3.select(this).style("fill", color(d.month));
+                                    });
 
-                            legend.append("text")
-                                .attr("x", width - 24)
-                                .attr("y", 9)
-                                .attr("dy", ".35em")
-                                .style("text-anchor", "end")
-                                .text(function (d) { return d; });
 
-                            legend.transition()
-                                .duration(500)
-                                .delay(function (d, i) {
-                                    return 1300 + 100 * i;
-                                }).style("opacity", "1");
 
+                                slice.selectAll("rect")
+                                    .transition()
+                                    .delay(function (d) { return Math.random() * 1000; })
+                                    .duration(1000)
+                                    .attr("y", function (d) { return y(d.perform); })
+                                    .attr("height", function (d) { return height - y(d.perform); });
+
+                                const legend = svg.selectAll(".legend")
+                                    .data(station.activity[0].monthlyPerform.map(function (d) {
+                                        return d.month;
+                                    })
+                                        .reverse())
+                                    .enter().append("g")
+                                    .attr("class", "legend")
+                                    .attr("transform", function (d, i) { return "translate(0," + i * 20 + ")"; })
+                                    .style("opacity", "0");
+
+                                legend.append("rect")
+                                    .attr("x", width - 18)
+                                    .attr("width", 18)
+                                    .attr("height", 18)
+                                    .style("fill", function (d) { return color(d); });
+
+                                legend.append("text")
+                                    .attr("x", width - 24)
+                                    .attr("y", 9)
+                                    .attr("dy", ".35em")
+                                    .style("text-anchor", "end")
+                                    .text(function (d) { return d; });
+
+                                legend.transition()
+                                    .duration(500)
+                                    .delay(function (d, i) {
+                                        return 1300 + 100 * i;
+                                    }).style("opacity", "1");
+                            })()
                         }
                     }
                 }
+
+                $("rect").attr("width", "15");
+
+
             });
 
     }
@@ -228,7 +277,7 @@
             $.each(data, function () {
                 $('#locationDropDown').append(`<option value="${this.locationId}">${this.locationName}</option>`);
 
-              
+
             });
 
         })
@@ -236,20 +285,32 @@
             console.error(err);
         });
 
-    $("#locationDropDown").change(function () {
-        var id = $("#locationDropDown").val();
+
+    $("#btn").click(function () {
+        const id = $("#locationDropDown").val();
+        const FromDate = $("#fromDate").val();
+        const ToDate = $("#toDate").val();
         makeGraph({
             locationId: id,
-        });
-    });
-
-    $("#fromDate").change(function () {
-        var FromDate = $("#fromDate").val();
-        var ToDate = $("#toDate").val();
-        makeGraph({
             fromDate: FromDate,
             toDate: ToDate
         });
     });
+
+    //$("#locationDropDown").change(function () {
+    //    const id = $("#locationDropDown").val();
+    //    makeGraph({
+    //        locationId: id,
+    //    });
+    //});
+
+    //$("#fromDate").change(function () {
+    //    const FromDate = $("#fromDate").val();
+    //    const ToDate = $("#toDate").val();
+    //    makeGraph({
+    //        fromDate: FromDate,
+    //        toDate: ToDate
+    //    });
+    //});
 
 </script>

@@ -1417,9 +1417,14 @@ namespace Host.Controllers
                 isValidEndDate ? endDate : (DateTime?)null,
                 branchId));
         }
+        //public IActionResult DailyGraph(int branchid)
+        //{
+        //    return View("TestGraph");
+        //}
+       
         public IActionResult DailyGraph(int branchid)
         {
-            return View("TestGraph");
+            return View("ReportGraph");
         }
     }
 }

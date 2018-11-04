@@ -294,10 +294,10 @@ namespace Host.Business.DbServices
                                 {
                                     ActivityName = j.Key,
                                     MonthlyPerform = j
-                                        .GroupBy(z => z.Month )
+                                        .GroupBy(z => z.Month)
                                         .Select(z => new MonthlyPerform
                                         {
-                                            Month = z.Key,
+                                            Month = int.Parse(z.Key),
                                             Perform = z.Sum(X => X.Perform)
                                         })
                                         .ToList()
@@ -308,10 +308,38 @@ namespace Host.Business.DbServices
                 })
                 .ToList();
 
+            foreach (var model in data)
+            {
+
+                foreach (var stations in model.Stations)
+                {
+                    foreach (var activities in stations.Activity)
+                    {
+                        foreach(var monthNumber in Enumerable.Range(1, 12))
+                        {
+                            if (!activities.MonthlyPerform.Any() ||
+                                activities.MonthlyPerform.All(i => i.Month != monthNumber))
+                            {
+                                activities.MonthlyPerform.Add(new MonthlyPerform
+                                {
+                                    Month = monthNumber,
+                                    Perform = 0 
+                                });
+                            }
+                        }
+                        activities.MonthlyPerform = activities.MonthlyPerform
+                            .OrderBy(i => i.Month)
+                            .ToList();
+                        
+                    }
+                }
+            }
+
+
             return data;
             //{
             //    var model = models[i];
-                
+
             //    if (locationname != model.LocationName && !string.IsNullOrEmpty(locationname))
             //    {
             //        graph.Add(new Graph
@@ -351,7 +379,7 @@ namespace Host.Business.DbServices
             //            MonthlyPerform = monthlyPerform
             //        });
 
-                    
+
             //    }
 
             //    dailyactivitiesperform.Push(new MonthlyPerform

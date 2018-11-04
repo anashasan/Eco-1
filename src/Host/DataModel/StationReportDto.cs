@@ -17,7 +17,7 @@ namespace Host.DataModel
 
     public class MonthlyPerform
     {
-        public string Month { get; set; }
+        public int Month { get; set; }
         public int Perform { get; set; }
     }
 
