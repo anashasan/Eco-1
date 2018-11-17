@@ -28,6 +28,11 @@
     <Content Remove="wwwroot\dist\js\ExampleGraph.js" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Properties\PublishProfiles\ecoservices.pk - Web Deploy.pubxml" />
+    <None Remove="Properties\PublishProfiles\FolderProfile.pubxml" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="1.50.5" />
@@ -117,6 +122,10 @@
     <Content Update="Views\**\*;wwwroot\**\*;tempkey.rsa">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
 
 </Project>
