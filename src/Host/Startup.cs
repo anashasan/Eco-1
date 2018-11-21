@@ -32,7 +32,8 @@ namespace Host
         // This method gets called by the runtime.Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var connectionString = Environment.GetEnvironmentVariable("DefaultConnection");
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+                //Environment.GetEnvironmentVariable("DefaultConnection");
             Debug.Assert(connectionString != null, nameof(connectionString) + " != null");
 
             services.AddDbContext<ApplicationDbContext>(options =>
@@ -72,8 +73,6 @@ namespace Host
                 options.AddPolicy("eco-report-grid",
                     builder => builder.WithOrigins("http://localhost:3000"));
             });
-
-            services.AddMvc();
 
             services.AddIdentityServer()
                 .AddDeveloperSigningCredential()

@@ -30,11 +30,13 @@
 
 
   <ItemGroup>
+    <PackageReference Include="AspNetCore.ReportViewer" Version="2.0.3.58" />
     <PackageReference Include="Dapper" Version="1.50.5" />
     <PackageReference Include="iTextSharp.LGPLv2.Core" Version="1.4.4" />
     <PackageReference Include="IdentityServer4" Version="2.1.3" />
     <PackageReference Include="MailKit" Version="2.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Buffering" Version="0.2.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.1" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.2" PrivateAssets="All" />
@@ -117,6 +119,10 @@
     <Content Update="Views\**\*;wwwroot\**\*;tempkey.rsa">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Report\" />
   </ItemGroup>
 
 </Project>
