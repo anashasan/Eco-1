@@ -101,56 +101,80 @@
                     <tr>
                         <th>Branch Name</th>
                         <th>Company Name</th>
+                        <th>Phone</th>
                         <th>Location</th>
                         <th>Address</th>
-                        <th>Phone</th>
                         <th>Email</th>
                         <th>Options</th>
 
                     </tr>
                 </thead>
-                <tbody>
-                    @foreach (var s in Model)
-                    {
-                        <tr>
-                            <td style="text-align: center">@s.Name</td>
-                            <td style="text-align: center">@s.CompanyName</td>
-                            <td style="text-align: center">@s.Location</td>
-                            <td style="text-align: center">@s.Address</td>
-                            <td style="text-align: center">@s.Phone</td>
-                            <td style="text-align: center">@s.Email</td>
-                            <td>
-                                <div class="dropdown">
-                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Options
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        @if (User.IsInRole("Admin"))
-    {
-                                    <a class="dropdown-item fa fa-edit" href="#" onClick='@($"window.location.href='/Company/DeleteBranch?branchId={s.BranchId}&companyId={ViewBag.CompanyId}'")'>Delete</a>
-                                    <div class="dropdown-divider"></div>
-}
+                @*<tbody>
+                                    @foreach (var s in Model)
+                            {
+                                <tr>
+                                    <td style="text-align: center">@s.Name</td>
+                                    <td style="text-align: center">@s.CompanyName</td>
+                                    <td style="text-align: center">@s.Location</td>
+                                    <td style="text-align: center">@s.Address</td>
+                                    <td style="text-align: center">@s.Phone</td>
+                                    <td style="text-align: center">@s.Email</td>
+                                    <td>
+                                        <div class="dropdown">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Options
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                @if (User.IsInRole("Admin"))
+                                        {
+                                            <a class="dropdown-item fa fa-edit" href="#" onClick='@($"window.location.href='/Company/DeleteBranch?branchId={s.BranchId}&companyId={ViewBag.CompanyId}'")'>Delete</a>
+                                            <div class="dropdown-divider"></div>
+                                }
 
-                                        <a class="dropdown-item fa fa-edit" href="#" onClick='@($"window.location.href='/Company/AddBranch?companyId={ViewBag.CompanyId}&branchId={s.BranchId}'")'>Edit</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item fa fa-location-arrow" href='#' onclick='@($"window.location.href='/Company/GetLocationById?id={s.BranchId}&companyId={ViewBag.CompanyId}'")'>Location</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item fa fa-user-o" href='#' onclick='@($"window.location.href='/Company/GetBranchEmployeeByBranchId?branchId={s.BranchId}&companyId={ViewBag.CompanyId}'")'>BranchEmployee</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item fa fa-user-o" href='#' onclick='@($"window.location.href='/Company/GetStationByBranchId?branchId={s.BranchId}&companyId={ViewBag.CompanyId}'")'>BranchStation</a>
+                                                <a class="dropdown-item fa fa-edit" href="#" onClick='@($"window.location.href='/Company/AddBranch?companyId={ViewBag.CompanyId}&branchId={s.BranchId}'")'>Edit</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item fa fa-location-arrow" href='#' onclick='@($"window.location.href='/Company/GetLocationById?id={s.BranchId}&companyId={ViewBag.CompanyId}'")'>Location</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item fa fa-user-o" href='#' onclick='@($"window.location.href='/Company/GetBranchEmployeeByBranchId?branchId={s.BranchId}&companyId={ViewBag.CompanyId}'")'>BranchEmployee</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item fa fa-user-o" href='#' onclick='@($"window.location.href='/Company/GetStationByBranchId?branchId={s.BranchId}&companyId={ViewBag.CompanyId}'")'>BranchStation</a>
 
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item fa fa-user-o" asp-action="ActivityPerfromReport" asp-route-branchId="@s.BranchId">Daily Report</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item fa fa-user-o"onclick='@($"window.location.href='/Company/ObservationReportForm?branchId={s.BranchId}&branchname={s.Name}&companyname={s.CompanyName}'")'>Observation Report</a>
-                                    </div>
-                                </div>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item fa fa-user-o" asp-action="ActivityPerfromReport" asp-route-branchId="@s.BranchId">Daily Report</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item fa fa-user-o" onclick='@($"window.location.href='/Company/ObservationReportForm?branchId={s.BranchId}&branchname={s.Name}&companyname={s.CompanyName}'")'>Observation Report</a>
+                                            </div>
+                                        </div>
 
-                            </td>
-                        </tr>
-                    }
+                                    </td>
+                                </tr>
+                    }*@
 
             </table>
+            <div class="modal fade" id="myModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <a href="#" class="close" data-dismiss="modal">&times;</a>
+                            <h3 class="modal-title">Delete Branch</h3>
+                        </div>
+                        <div class="modal-body">
+                            <h4>Are you sure ? You want to delete this. </h4>
+
+                            <div style="text-align:center;display:none" id="loaderDiv">
+                                <img src="~/Content/InternetSlowdown_Day.gif" width="150" />
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <a href="#" class="btn btn-default" data-dismiss="modal">Cancel</a>
+                            <a href="#" class="btn btn-success" onclick="DeleteBranch()">Confirm</a>
+                        </div>
+
+                    </div>
+                    <input type="hidden" id="hiddenBranchId" />
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -158,14 +182,95 @@
 @section Scripts{
     <link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
     <script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-  
-    <script>
-        $(document).ready(function () {
-            $('#example2').DataTable();
-        });
-        
 
-       
+    <script>
+        var datatable;
+        var companyid = @ViewBag.CompanyId;
+        var isAdminRole = "@User.IsInRole("Admin")" === "True" ;
+        
+        $(document).ready(function () {
+            datatable = $('#example2').DataTable({
+                ajax: {
+                    url: "/Company/GetAllBranchesByCompanyId/data?companyId=" + companyid,
+                    type: "GET",
+                    dataType: "json"
+                },
+                columns: [
+                    { data: "name", name: "name", autowidth: true },
+                    { data: "companyName", name: "companyName", autowidth: true },
+                    { data: "phone", name: "phone", autowidth: true },
+                    { data: "location", name: "location", autowidth: true },
+                    { data: "address", name: "address", autowidth: true },
+                    { data: "email", name: "email", autowidth: true },
+                    {
+                        render: function (data, type, row) {
+                            return ` <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Options
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+
+                     ${isAdminRole ?` 
+                            <a class="dropdown-item fa fa-edit" href="#" onClick="ConfirmDelete(${row.branchId})">Delete</a>
+                                <div class="dropdown-divider"></div>` : ""}
+
+
+                                <a class="dropdown-item fa fa-edit" href="#" onClick="window.location.href='/Company/AddBranch?companyId=${companyid}&branchId=${row.branchid}'">Edit</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item fa fa-location-arrow" href='#' onclick="window.location.href='/Company/GetLocationById?id=${row.branchId}&companyId=${companyid}'")'>Location</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item fa fa-user-o" href='#' onclick="window.location.href='/Company/GetBranchEmployeeByBranchId?branchId=${row.branchId}&companyId=${companyid}'")'>BranchEmployee</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item fa fa-user-o" href='#' onclick="window.location.href='/Company/GetStationByBranchId?branchId=${row.branchId}&companyId=${companyid}'")'>BranchStation</a>
+
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item fa fa-user-o" onclick="window.location.href='/Company/ActivityPerfromReport?branchId=${row.branchId}'">Daily Report</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item fa fa-user-o" onclick="window.location.href='/Company/ObservationReportForm?branchId=${row.branchId}&branchname=${row.name}&companyname=${row.companyname}'")'>Observation Report</a>
+     <div class="dropdown-divider"></div>
+                                <a class="dropdown-item fa fa-user-o" onclick="window.location.href='/Company/DailyGraph?branchId=${row.branchId}'")'>Daily Graph</a>
+                            </div>
+                        </div>`;
+                        }
+                    }
+                ]
+            });
+        });
+
+
+        var ConfirmDelete = function (branchId) {
+
+            $("#hiddenBranchId").val(branchId);
+            $("#myModal").modal('show');
+
+        }
+
+        var DeleteBranch = function () {
+
+            $("#loaderDiv").show();
+
+            var branchid = $("#hiddenBranchId").val();
+
+            $.ajax({
+
+                type: "GET",
+                url: "/Company/DeleteBranch",
+                data: {
+                    branchId: branchid,
+                    companyId: companyid,
+                },
+                success: function (result) {
+                    datatable.ajax.reload();
+                    $("#loaderDiv").hide();
+                    $("#myModal").modal("hide");
+                }
+
+            })
+
+        }
+
+
+      
 
     </script>
 }

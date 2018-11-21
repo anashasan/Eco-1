@@ -53,20 +53,21 @@
                 </thead>
                 <tbody id="tbody">
                     @foreach (var s in Model)
-                    {
-                        <tr>
-                            <td class="glyphicon-align-center">@s.Sno</td>
-                            <td>@s.StationName</td>
-                            <td id="@(s.StationLocationId)"> </td>
-                            <td>
-                                <a class="fa fa-download  " onClick='@($"window.location.href='/Company/Download?id={s.StationLocationId}&locationId={ViewBag.LocationId}&code={s.Code}&sno={s.Sno}'")'>Download</a>
-                                <a class="fa fa-edit" href='#' onClick='@($"window.location.href='/Company/AddStationLocation?locationId={ViewBag.LocationId}&stationlocationId={s.StationLocationId}&branchId={ViewBag.BranchId}&companyid={ViewBag.CompanyId}'")'>Edit</a>
-                            </td>
-                        </tr>
-                    }
+                {
+                    <tr>
+                        <td class="glyphicon-align-center">@s.Sno</td>
+                        <td>@s.StationName</td>
+                        <td id="@(s.StationLocationId)"> </td>
+                        <td>
+                            <a class="fa fa-download  " onClick='@($"window.location.href='/Company/Download?id={s.StationLocationId}&locationId={ViewBag.LocationId}&code={s.Code}&sno={s.Sno}'")'>Download</a>
+                            <a class="fa fa-edit" href='#' onClick='@($"window.location.href='/Company/AddStationLocation?locationId={ViewBag.LocationId}&stationlocationId={s.StationLocationId}&branchId={ViewBag.BranchId}&companyid={ViewBag.CompanyId}'")'>Edit</a>
+                        </td>
+                    </tr>
+            }
             </table>
+            
         </div>
-
+        
     </div>
     <!-- /.box-body -->
 </div>
@@ -167,6 +168,7 @@
                 $('#example2').DataTable();
             });
 
+           
 
         </script>
 

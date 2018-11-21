@@ -16,7 +16,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication;
 using StackExchange.Profiling.Storage;
-
+using Host.Helper;
 
 namespace Host
 {
@@ -55,6 +55,7 @@ namespace Host
             services.AddScoped<IStationService, StationService>();
             services.AddScoped<IEmployeeProfileService, EmployeeProfileService>();
             services.AddScoped<IBranchService, BranchService>();
+            services.AddScoped<DownloadObservationPdf>();
             //services.AddScoped<QRCodeGenerator>();
             services.AddScoped<IBranchEmployeeService, BranchEmployeeService>();
             services.AddScoped<ILocationService, LocationService>();

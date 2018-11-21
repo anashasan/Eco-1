@@ -16,6 +16,7 @@ namespace Host.DataModel
         public string Type { get; set; }
         public int StationActivityId { get; set; }
         public List<string> Observation { get; set; }
+        public List<byte[]> ObservationImage { get; set; }
         public bool IsPerform { get; set; }
         public string Perform { get; set; }
     }
