@@ -10,20 +10,21 @@ using Host.Configuration;
 using Host.DataContext;
 using Host.Business.IDbServices;
 using Host.Business.DbServices;
-using System;
 using System.Diagnostics;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication;
-using StackExchange.Profiling.Storage;
 using Host.Helper;
 
 namespace Host
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IHostingEnvironment _hostingEnvironment;
+
+        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
         {
+            _hostingEnvironment = hostingEnvironment;
             Configuration = configuration;
         }
 
@@ -32,7 +33,9 @@ namespace Host
         // This method gets called by the runtime.Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var connectionString = Environment.GetEnvironmentVariable("DefaultConnection");
+            var connectionString = _hostingEnvironment.IsDevelopment()
+                ? Configuration.GetConnectionString("Development")
+                : Configuration.GetConnectionString("Production");
             Debug.Assert(connectionString != null, nameof(connectionString) + " != null");
 
             services.AddDbContext<ApplicationDbContext>(options =>
