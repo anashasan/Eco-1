@@ -13,6 +13,7 @@ namespace Host.DataContext
         [StringLength(250)]
         public string Description { get; set; }
         public string ClientReview { get; set; }
+        public byte[] ObservationImage { get; set; }
         [StringLength(50)]
         public string Status { get; set; }
         [Column("CLinetReviewDate", TypeName = "date")]

@@ -58,7 +58,7 @@ namespace Host.Business.DbServices
                     .AsNoTracking()
                     .Select(a => new LocationDto
                     {
-
+                        LocationId = a.PkLocationId,
                         Name = a.Name
                     }).ToList();
 

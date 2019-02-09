@@ -4,6 +4,7 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <style>
     #th {
         background-color: #323232;
@@ -44,6 +45,8 @@
             <label for="locationDropDown" class="mr-sm-2">Location</label>
             <select id="locationDropDown" name="locationId" class="form-control"></select>
         </div>
+        <input type="button" value="Search" onclick='@($"window.location.href='/Company/ObservationReportForm?branchId={@ViewBag.BranchId}&branchname={@ViewBag.BranchName}&companyname={@ViewBag.CompanyName}'")' class="btn-submit btn-primary top-right">
+        <a class="fa fa-download  " onClick='@($"window.location.href='/Company/DownloadObservationReport?branchId={@ViewBag.BranchId}&locationId={ViewBag.locationId}&fromDate={ViewBag.FromDate}&toDate={ViewBag.ToDate}'")'>Download</a>
     </form>
     <div class="box">
         <div class="box-header">
@@ -52,83 +55,106 @@
 
         <!-- /.box-header -->
         <div class="box-body" style="width: 100%; ">
-                <table id="example2" class="table table-bordered table-hover">
-                    <thead id="th">
+            <table id="example2" class="table table-bordered table-hover ">
+                <thead id="th">
+                    <tr>
+                        <th>Observation Number</th>
+                        <th>Obervation Date</th>
+                        <th>Station Name</th>
+                        <th>Station No</th>
+                        <th>Location</th>
+                        <th>Observation Description</th>
+                        <th>Action On Client End</th>
+                        <th>Date Of Client End</th>
+                        <th>Status</th>
+                        <th>Option</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var s in Model)
+                    {
                         <tr>
-                            <th>Observation Number</th>
-                            <th>Obervation Date</th>
-                            <th>Station Name</th>
-                            <th>Station No</th>
-                            <th>Location</th>
-                            <th>Observation Description</th>
-                            <th>Action On Client End</th>
-                            <th>Date Of Client End</th>
-                            <th>Status</th>
-                            <th>Option</th>
+                            <td style="text-align: center">@s.ObervationNumber</td>
+                            <td style="text-align: center">@s.ObservationDate</td>
+                            <td style="text-align: center">@s.StationName</td>
+                            <td style="text-align: center">@s.StationNumber</td>
+                            <td style="text-align: center">@s.LocationName</td>
+                            <td style="text-align: center">@s.Description</td>
+                            <td style="text-align: center">@s.ClientReview<input type="text" asp-for="@s.ClientReview" /></td>
+                            <td style="text-align: center">@s.ClientReviewDate</td>
+                            <td>
+                                <select class="form-control" asp-for="@s.Status" placeholder="Select Business Name...">
+                                    <option selected="selected">Select</option>
+                                    <option>WorkDone</option>
+                                    <option>WorkInProgress</option>
+                                    <option>Rejected</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="button" value="submit" class="btn-submit btn-primary top-right" data-value="@s.ActivityObservationId">
+
+                            </td>
 
                         </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var s in Model)
-                        {
-                            <tr>
-                                <td style="text-align: center">@s.ObervationNumber</td>
-                                <td style="text-align: center">@s.ObservationDate</td>
-                                <td style="text-align: center">@s.StationName</td>
-                                <td style="text-align: center">@s.StationNumber</td>
-                                <td style="text-align: center">@s.LocationName</td>
-                                <td style="text-align: center">@s.Description</td>
-                                <td style="text-align: center">@s.ClientReview<input type="text" asp-for="@s.ClientReview" /></td>
-                                <td style="text-align: center">@s.ClientReviewDate</td>
-                                <td>
-                                    <select class="form-control" placeholder="Select Business Name...">
-                                        <option selected="selected">Select</option>
-                                        <option>WorkDone</option>
-                                        <option>WorkInProgress</option>
-                                        <option>Rejected</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <button id="btn" type="button" class="btn-primary top-right">Save</button>
-                                </td>
-
-                            </tr>
 
 
 
-                        }
-                </table>
+                    }
+            </table>
         </div>
     </div>
 </div>
 
 @section Scripts{
     <link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.2/css/buttons.dataTables.min.css" />
     <script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
+
+   
 
     <script>
+        var companyname = '@ViewBag.CompanyName';
+        var branchname = '@ViewBag.BranchName';
+        const urlParams = new URLSearchParams(window.location.search);
+        const branchid = urlParams.get('branchId');
         $(document).ready(function () {
             $('#example2').DataTable();
         });
-
-        $(document).ready(function () {
-            $('#example2').dataTable({
-                "processing": true,
-                "serverSide": true,
-                "ajax": {
-                    "url": "scripts/post.php",
-                    "type": "POST"
+        $(".btn-submit").click(function (event) {
+            var id = event.target.dataset.value;
+            var parent = event.target.parentElement.parentElement;
+            var clientReview = parent.children[6].children[0].value;
+            var clientReviewDate = parent.children[7].textContent;
+            var status = parent.children[8].children[0].value;
+            $.ajax({
+                type: "POST",
+                url: "/Company/UpdateObservation",
+                data: JSON.stringify({
+                    "ClientReview": clientReview,
+                    "clientReviewDate": clientReviewDate,
+                    "status": status,
+                    "activityObservationId": id,
+                }),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
                 },
-                "columns": [
-                    { "data": "first_name" },
-                    { "data": "last_name" },
-                    { "data": "position" },
-                    { "data": "office" },
-                    { "data": "start_date" },
-                    { "data": "salary" }
-                ]
-            });
-        });
+                dataType: 'json'
+            })
+                .done(function () {
+                    window.location = '/company/ObservationReportForm?branchid=' + branchid + "&companyname" + companyname + "&branchname" + branchname;
+                });
+        })
+
+        $("#fromDate").datepicker()
+            .on('changeDate', function (e) {
+                // `e` here contains the extra attributes
+                console.log(e);
+            });;
     </script>
 }
 
