@@ -54,8 +54,8 @@
         </div>
 
         <!-- /.box-header -->
-        <div class="box-body" style="width: 100%; ">
-            <table id="example2" class="table table-bordered table-hover ">
+        <div class="box-body" style="width: 100%; overflow:auto ">
+            <table id="example2" class="table table-bordered table-hover" style="width:100%">
                 <thead id="th">
                     <tr>
                         <th>Observation Number</th>
@@ -64,6 +64,7 @@
                         <th>Station No</th>
                         <th>Location</th>
                         <th>Observation Description</th>
+                        <th>Observation Image</th>
                         <th>Action On Client End</th>
                         <th>Date Of Client End</th>
                         <th>Status</th>
@@ -74,29 +75,33 @@
                 <tbody>
                     @foreach (var s in Model)
                     {
-                        <tr>
-                            <td style="text-align: center">@s.ObervationNumber</td>
-                            <td style="text-align: center">@s.ObservationDate</td>
-                            <td style="text-align: center">@s.StationName</td>
-                            <td style="text-align: center">@s.StationNumber</td>
-                            <td style="text-align: center">@s.LocationName</td>
-                            <td style="text-align: center">@s.Description</td>
-                            <td style="text-align: center">@s.ClientReview<input type="text" asp-for="@s.ClientReview" /></td>
-                            <td style="text-align: center">@s.ClientReviewDate</td>
-                            <td>
-                                <select class="form-control" asp-for="@s.Status" placeholder="Select Business Name...">
-                                    <option selected="selected">Select</option>
-                                    <option>WorkDone</option>
-                                    <option>WorkInProgress</option>
-                                    <option>Rejected</option>
-                                </select>
-                            </td>
-                            <td>
-                                <input type="button" value="submit" class="btn-submit btn-primary top-right" data-value="@s.ActivityObservationId">
+                    <tr>
+                        <td style="text-align: center">@s.ObervationNumber</td>
+                        <td style="text-align: center">@s.ObservationDate</td>
+                        <td style="text-align: center">@s.StationName</td>
+                        <td style="text-align: center">@s.StationNumber</td>
+                        <td style="text-align: center">@s.LocationName</td>
+                        <td style="text-align: center">@s.Description</td>
+                        <td style="text-align: center">
+                            
+                            <img src="data:image/png;base64, @s.Images"  />
+                        </td>
+                        <td style="text-align: center">@s.ClientReview<input type="text" asp-for="@s.ClientReview" /></td>
+                        <td style="text-align: center">@s.ClientReviewDate</td>
+                        <td>
+                            <select class="form-control" asp-for="@s.Status" placeholder="Select Business Name...">
+                                <option selected="selected">Select</option>
+                                <option>WorkDone</option>
+                                <option>WorkInProgress</option>
+                                <option>Rejected</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="button" value="submit" class="btn-submit btn-primary top-right" data-value="@s.ActivityObservationId">
 
-                            </td>
+                        </td>
 
-                        </tr>
+                    </tr>
 
 
 

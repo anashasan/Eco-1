@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Host.DataModel
 {
-    public class ActivityPerformDetailDto
+    public class ActivityPerformDetailDto1
     {
         public int ActivityId { get; set; }
         [Required]
@@ -19,15 +19,5 @@ namespace Host.DataModel
         public List<string> Images { get; set; }
         public bool IsPerform { get; set; }
         public string Perform { get; set; }
-        public string ActivityDateTime { get; set; }
     }
-
-    //public class ObservationDto
-    //{
-    //    public string Description { get; set; }
-    //    public string ObservationImage { get; set; }
-    //}
 }
-
-
-

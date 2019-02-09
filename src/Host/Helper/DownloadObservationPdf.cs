@@ -179,6 +179,10 @@ namespace Host.Helper
                 cell.Phrase = new Phrase("Status", boldFont);
                 table.AddCell(cell);
 
+
+                cell.Phrase = new Phrase("Images", boldFont);
+                table.AddCell(cell);
+
                 foreach (var observation in observationReportData)
                 {
                     cell.Phrase = new Phrase(observation.ObservationDate);
@@ -204,6 +208,9 @@ namespace Host.Helper
 
                     cell.Phrase = new Phrase(observation.Status);
                     table.AddCell(cell);
+
+                    cell.Phrase = new Phrase(observation.Images);
+                        table.AddCell(cell);
 
                 }
 

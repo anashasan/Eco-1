@@ -1137,8 +1137,17 @@ namespace Host.Controllers
             return Json(id);
         }
 
-       
-       
+        //[AllowAnonymous]
+        //[HttpPost("Company/ActivityPerform1")]
+        //public async Task<IActionResult> ActivityPerform1([FromBody] ActivityPerformDto requestDto1)
+        //{
+        //    if (!ModelState.IsValid)
+        //        return Json("data is not valid");
+        //    var id = await _activityPerformService.ActivityPerform1(requestDto1);
+        //    return Json(id);
+        //}
+
+
         public IActionResult GetStationByBranchId(int branchId, int companyId)
         {
             var stationbranch = _stationLocationService.GetStationLocationByBranchId(branchId);
@@ -1258,7 +1267,7 @@ namespace Host.Controllers
             }
             catch (Exception e)
             {
-
+                Console.WriteLine(e);
                 throw;
             }
         }

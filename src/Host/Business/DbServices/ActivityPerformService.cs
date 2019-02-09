@@ -11,6 +11,7 @@ using System.Data;
 using System.Linq;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
+using System.Globalization;
 
 namespace Host.Business.DbServices
 {
@@ -71,16 +72,28 @@ namespace Host.Business.DbServices
                 throw;
             }
         }
-
         public async Task<int> ActivityPerform(ActivityPerformDto requestDto)
         {
             try
             {
+                //var date = requestDto.Activities.Select(i => i.ActivityDateTime).FirstOrDefault();
+                //var createdOn = DateTime.Parse(date);
+                //var date = requestDto.ActivityDateTime.ToString();
+                //DateTime parsed = DateTime.ParseExact(requestDto.ActivityDateTime,
+                //                      "ddd, dd MMMM yyyy HH:mm:ss Z",
+                //                       CultureInfo.InvariantCulture);
+                //DateTime dateTime = ISODateTimeFormat.dateTimeParser().parseDateTime(timestamp);
+                string date = requestDto.ActivityDateTime;
+                var activityObservations = new List<ActivityObservation>();
                 var activityPerform = new DataContext.ActivityPerform
+
+
                 {
                     FkStationLocationId = requestDto.StationLocationId,
                     FkEmployeeId = requestDto.EmployeeId,
-                    CreatedOn = DateTime.Now,
+                    //CreatedOn = new DateTime(requestDto.ActivityDateTime.FirstOrDefault())
+                    //CreatedOn = DateTime.ParseExact(requestDto.ActivityDateTime, "M/d/yyyy HH:mm:ss", CultureInfo.InvariantCulture)
+                   CreatedOn=DateTime.Parse(date)
 
                 };
                 _context.ActivityPerform.Add(activityPerform);
@@ -91,20 +104,28 @@ namespace Host.Business.DbServices
                 {
                     if (activity.Observation != null && activity.Observation.Any())
                     {
-                        //  byte j = 0;
+                        for (int i = 0; i < activity.Observation.Count; i++)
+                        {
+                            var image = activity.Images[i];
+                            var description = activity.Observation[i];
+                            activityObservations.Add(new ActivityObservation
+                            {
+                                Images = image,
+                                Description = description,
+                                
+                            });
+
+                        }
+                        // byte j = 0;
                         lstActivityPerformDetail.Add(new ActivityPerformDetail
                         {
 
                             FkActivityId = activity.ActivityId,
                             FkActivityPerformId = activityPerform.PkActivityPerformId,
-                            CreatedOn = DateTime.Now,
-                            ActivityObservation = activity.Observation.Select(i => new ActivityObservation
-                            {
-                                Description = i,
-                                //ObservationImage = activity.ObservationImage.IndexOf(j) == null ? activity.ObservationImage.IndexOf(j) : (object)DBNull.Value
-
-                            })
-                            .ToList()
+                            //CreatedOn = createdOn,
+                            ActivityObservation = activityObservations,
+                            CreatedOn = DateTime.Parse(date)
+                            //CreatedOn = new DateTime(requestDto.ActivityDateTime.FirstOrDefault())
                         });
                     }
                     else
@@ -115,7 +136,9 @@ namespace Host.Business.DbServices
                             FkActivityPerformId = activityPerform.PkActivityPerformId,
                             IsPerform = activity.IsPerform,
                             Perform = activity.Perform,
-                            CreatedOn = DateTime.Now,
+                            CreatedOn = DateTime.Parse(date)
+                            //CreatedOn = new DateTime(requestDto.ActivityDateTime.FirstOrDefault())
+                            //CreatedOn = DateTime.Now
                         });
                     }
                 }
@@ -132,6 +155,152 @@ namespace Host.Business.DbServices
                 throw;
             }
         }
+
+        //public async Task<int> ActivityPerform(ActivityPerformDto requestDto)
+        //{
+        //    try
+        //    {
+
+
+        //        var activityPerform = new DataContext.ActivityPerform
+        //        {
+        //            FkStationLocationId = requestDto.StationLocationId,
+        //            FkEmployeeId = requestDto.EmployeeId,
+        //            CreatedOn = DateTime.Now,
+
+        //        };
+        //        _context.ActivityPerform.Add(activityPerform);
+        //        _context.SaveChanges();
+
+        //        var lstActivityPerformDetail = new List<ActivityPerformDetail>();
+        //        foreach (var activity in requestDto.Activities)
+        //        {
+        //            if (activity.Observation != null && activity.Observation.Any())
+        //            {
+        //                //  byte j = 0;
+        //                lstActivityPerformDetail.Add(new ActivityPerformDetail
+        //                {
+
+        //                    FkActivityId = activity.ActivityId,
+        //                    FkActivityPerformId = activityPerform.PkActivityPerformId,
+        //                    CreatedOn = DateTime.Now,
+        //                    ActivityObservation = activity.Observation.Select(i => new ActivityObservation
+        //                    {
+        //                        Description = i
+        //                    })
+
+        //                    .ToList(),
+
+        //                });
+        //            }
+
+
+        //            else
+        //            {
+        //                lstActivityPerformDetail.Add(new ActivityPerformDetail
+        //                {
+        //                    FkActivityId = activity.ActivityId,
+        //                    FkActivityPerformId = activityPerform.PkActivityPerformId,
+        //                    IsPerform = activity.IsPerform,
+        //                    Perform = activity.Perform,
+        //                    CreatedOn = DateTime.Now,
+        //                });
+        //            }
+        //        }
+
+        //        _context.ActivityPerformDetail.AddRange(lstActivityPerformDetail);
+
+        //        return await Task.FromResult(_context.SaveChanges());
+
+
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Console.WriteLine(e);
+        //        throw;
+        //    }
+        //}
+
+        //public async Task<int> ActivityPerform1(ActivityPerformDto1 requestDto1)
+        //{
+        //    try
+        //    {
+        //        var dis = new List<IDictionary<int, string>>();  
+        //        List<ActivityObservation> c = new List<ActivityObservation>();
+        //        c.Add(new ActivityObservation
+        //        {
+        //            req
+        //        })
+        //        List<string> observation;
+        //        List<string> images;
+        //        var a = new ActivityObservation();
+        //        var model = requestDto1.Activities.Select(i => new {i.Images, i.Observation }
+        //        { 
+        //            = i.Observation,
+        //           images = i.Images
+        //        });
+        //        foreach (var item in model)
+        //        {
+        //            foreach (var i in item.images)
+        //            {
+        //                string c = i;
+        //            }
+        //        }
+        //        model.Select(i => new ActivityObservation
+        //        {
+        //            Images = i.images
+        //        })
+
+        //         var activityPerform = new DataContext.ActivityPerform
+        //        {
+        //            FkStationLocationId = requestDto1.StationLocationId,
+        //            FkEmployeeId = requestDto1.EmployeeId,
+        //            CreatedOn = DateTime.Now,
+
+        //        };
+        //        _context.ActivityPerform.Add(activityPerform);
+        //        _context.SaveChanges();
+
+        //        var lstActivityPerformDetail = new List<ActivityPerformDetail>();
+        //        foreach (var activity in requestDto1.Activities)
+        //        {
+        //            if (activity.Observation != null && activity.Observation.Any())
+        //            {
+        //                //  byte j = 0;
+        //                lstActivityPerformDetail.Add(new ActivityPerformDetail
+        //                {
+
+        //                    FkActivityId = activity.ActivityId,
+        //                    FkActivityPerformId = activityPerform.PkActivityPerformId,
+        //                    CreatedOn = DateTime.Now,
+        //                    ActivityObservation = model
+        //                });
+        //            }
+        //            else
+        //            {
+        //                lstActivityPerformDetail.Add(new ActivityPerformDetail
+        //                {
+        //                    FkActivityId = activity.ActivityId,
+        //                    FkActivityPerformId = activityPerform.PkActivityPerformId,
+        //                    IsPerform = activity.IsPerform,
+        //                    Perform = activity.Perform,
+        //                    CreatedOn = DateTime.Now,
+        //                });
+        //            }
+        //        }
+
+        //        _context.ActivityPerformDetail.AddRange(lstActivityPerformDetail);
+
+        //        return await Task.FromResult(_context.SaveChanges());
+
+
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Console.WriteLine(e);
+        //        throw;
+        //    }
+        //}
 
         public async Task<List<ReportDto>> ActivityReport(int? locationId, DateTime? fromDate, DateTime? toDate, int? branchId)
         {
