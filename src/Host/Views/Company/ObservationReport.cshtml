@@ -33,7 +33,7 @@
             <label> @DateTime.Now</label>
         </div>
     </div>
-    <form class="form-inline">
+    @*<form class="form-inline">
         <div class="mb-2 mr-sm-2 mb-sm-0 position-relative form-group">
             <label for="fromDate" class="mr-sm-2">Starting Date</label>
             <input id="fromDate" name="fromDate" type="date" class="form-control" value="">'
@@ -47,6 +47,25 @@
         </div>
         <input type="button" value="Search" onclick='@($"window.location.href='/Company/ObservationReportForm?branchId={@ViewBag.BranchId}&branchname={@ViewBag.BranchName}&companyname={@ViewBag.CompanyName}'")' class="btn-submit btn-primary top-right">
         <a class="fa fa-download  " onClick='@($"window.location.href='/Company/DownloadObservationReport?branchId={@ViewBag.BranchId}&locationId={ViewBag.locationId}&fromDate={ViewBag.FromDate}&toDate={ViewBag.ToDate}'")'>Download</a>
+    </form>*@
+    <form class="form-inline">
+        <div class="mb-2 mr-sm-2 mb-sm-0 position-relative form-group">
+            @*<h1>Daily Graph</h1>*@
+
+            <div class="mb-2 mr-sm-2 mb-sm-0 position-relative form-group">
+                <label for="fromDate" class="mr-sm-2 " style="font-size:large"> Starting Date</label>
+                <input id="fromDate" name="fromDate" type="date" class="form-control" value="">'
+            </div><div class="mb-2 mr-sm-2 mb-sm-0 position-relative form-group">
+                <label for="toDate" class="mr-sm-2" style="font-size:large">Ending Date</label>
+                <input id="toDate" name="toDate" type="date" class="form-control" value="">
+            </div>'
+
+            <label for="locationDropDown" class="mr-sm-2" style="font-size:large">Location</label>
+            <select id="locationDropDown" name="locationId" class="form-control"></select>
+
+            <button type="button" id="btn" class="btn btn-secondary">Seacrch</button>
+            <a class="fa fa-download  " onClick='@($"window.location.href='/Company/DownloadObservationReport?branchId={@ViewBag.BranchId}&locationId={ViewBag.locationId}&fromDate={ViewBag.FromDate}&toDate={ViewBag.ToDate}'")'>Download</a>
+        </div>
     </form>
     <div class="box">
         <div class="box-header">
@@ -75,33 +94,33 @@
                 <tbody>
                     @foreach (var s in Model)
                     {
-                    <tr>
-                        <td style="text-align: center">@s.ObervationNumber</td>
-                        <td style="text-align: center">@s.ObservationDate</td>
-                        <td style="text-align: center">@s.StationName</td>
-                        <td style="text-align: center">@s.StationNumber</td>
-                        <td style="text-align: center">@s.LocationName</td>
-                        <td style="text-align: center">@s.Description</td>
-                        <td style="text-align: center">
-                            
-                            <img src="data:image/png;base64, @s.Images"  />
-                        </td>
-                        <td style="text-align: center">@s.ClientReview<input type="text" asp-for="@s.ClientReview" /></td>
-                        <td style="text-align: center">@s.ClientReviewDate</td>
-                        <td>
-                            <select class="form-control" asp-for="@s.Status" placeholder="Select Business Name...">
-                                <option selected="selected">Select</option>
-                                <option>WorkDone</option>
-                                <option>WorkInProgress</option>
-                                <option>Rejected</option>
-                            </select>
-                        </td>
-                        <td>
-                            <input type="button" value="submit" class="btn-submit btn-primary top-right" data-value="@s.ActivityObservationId">
+                        <tr>
+                            <td style="text-align: center">@s.ObervationNumber</td>
+                            <td style="text-align: center">@s.ObservationDate</td>
+                            <td style="text-align: center">@s.StationName</td>
+                            <td style="text-align: center">@s.StationNumber</td>
+                            <td style="text-align: center">@s.LocationName</td>
+                            <td style="text-align: center">@s.Description</td>
+                            <td style="text-align: center">
 
-                        </td>
+                                <img style="width:80%; height: 80%" ; src="data:image/png;base64, @s.Images" />
+                            </td>
+                            <td style="text-align: center">@s.ClientReview<input type="text" asp-for="@s.ClientReview" /></td>
+                            <td style="text-align: center">@s.ClientReviewDate</td>
+                            <td>
+                                <select class="form-control" asp-for="@s.Status" placeholder="Select Business Name...">
+                                    <option selected="selected">Select</option>
+                                    <option>WorkDone</option>
+                                    <option>WorkInProgress</option>
+                                    <option>Rejected</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="button" value="submit" class="btn-submit btn-primary top-right" data-value="@s.ActivityObservationId">
 
-                    </tr>
+                            </td>
+
+                        </tr>
 
 
 
@@ -122,6 +141,19 @@
    
 
     <script>
+
+        const getParameterByName = function (name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            const regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return "";
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        };
+
+        const branchId = getParameterByName('branchId');
+
         var companyname = '@ViewBag.CompanyName';
         var branchname = '@ViewBag.BranchName';
         const urlParams = new URLSearchParams(window.location.search);
@@ -155,11 +187,32 @@
                 });
         })
 
-        $("#fromDate").datepicker()
-            .on('changeDate', function (e) {
-                // `e` here contains the extra attributes
-                console.log(e);
-            });;
+        $("#btn").click(function () {
+            const id = $("#locationDropDown").locationId.val();
+            const FromDate = $("#fromDate").FromDate.val();
+            const ToDate = $("#toDate").ToDate.val();
+           
+        });
+
+        $.getJSON('/Company/locations/branchId/' + branchId)
+            .done(function (data) {
+                $.each(data, function () {
+                    //$('#locationDropDown').append(`<option value="${this.locationId}">Select All</option>`);
+                    $('#locationDropDown').append(`<option value="${this.locationId}">${this.locationName}</option>`);
+
+                });
+
+            })
+            .fail(function (err) {
+                console.error(err);
+            });
+
+
+        //$("#fromDate").datepicker()
+        //    .on('changeDate', function (e) {
+        //        // `e` here contains the extra attributes
+        //        console.log(e);
+        //    });;
     </script>
 }
 

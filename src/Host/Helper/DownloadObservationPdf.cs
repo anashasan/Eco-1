@@ -170,8 +170,12 @@ namespace Host.Helper
                 cell.Phrase = new Phrase("Observation Description", boldFont);
                 table.AddCell(cell);
 
-                cell.Phrase = new Phrase("Action On Client End", boldFont);
+                //cell.Phrase = new Phrase("Action On Client End", boldFont);
+                //table.AddCell(cell);
+
+                cell.Phrase = new Phrase("Images", boldFont);
                 table.AddCell(cell);
+
 
                 cell.Phrase = new Phrase("Date Of Client End", boldFont);
                 table.AddCell(cell);
@@ -180,9 +184,7 @@ namespace Host.Helper
                 table.AddCell(cell);
 
 
-                cell.Phrase = new Phrase("Images", boldFont);
-                table.AddCell(cell);
-
+               
                 foreach (var observation in observationReportData)
                 {
                     cell.Phrase = new Phrase(observation.ObservationDate);
@@ -200,8 +202,11 @@ namespace Host.Helper
                     cell.Phrase = new Phrase(observation.Description);
                     table.AddCell(cell);
 
-                    cell.Phrase = new Phrase(observation.ClientReview);
+                    cell.Phrase = new Phrase(observation.Images);
                     table.AddCell(cell);
+
+                    //cell.Phrase = new Phrase(observation.ClientReview);
+                    //table.AddCell(cell);
 
                     cell.Phrase = new Phrase(observation.ClientReviewDate.ToString());
                     table.AddCell(cell);
@@ -209,8 +214,7 @@ namespace Host.Helper
                     cell.Phrase = new Phrase(observation.Status);
                     table.AddCell(cell);
 
-                    cell.Phrase = new Phrase(observation.Images);
-                        table.AddCell(cell);
+                  
 
                 }
 

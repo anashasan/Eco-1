@@ -1435,5 +1435,17 @@ namespace Host.Controllers
         {
             return View("ReportGraph");
         }
+        [HttpGet("Company/GetData")]
+        public IActionResult GetData()
+        {
+            var data = _activityPerformService.DailyReport();
+            return Json(data);
+        }
+        [HttpPost("Company/UpdateData")]
+        public IActionResult UpdateData(GetDailyReportDto requestDto)
+        {
+             _activityPerformService.UpdateDailyReport(requestDto);
+            return Ok();
+        }
     }
 }

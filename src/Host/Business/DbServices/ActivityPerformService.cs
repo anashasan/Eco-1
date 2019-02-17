@@ -93,7 +93,7 @@ namespace Host.Business.DbServices
                     FkEmployeeId = requestDto.EmployeeId,
                     //CreatedOn = new DateTime(requestDto.ActivityDateTime.FirstOrDefault())
                     //CreatedOn = DateTime.ParseExact(requestDto.ActivityDateTime, "M/d/yyyy HH:mm:ss", CultureInfo.InvariantCulture)
-                   CreatedOn=DateTime.Parse(date)
+                    CreatedOn = DateTime.Parse(date)
 
                 };
                 _context.ActivityPerform.Add(activityPerform);
@@ -112,7 +112,7 @@ namespace Host.Business.DbServices
                             {
                                 Images = image,
                                 Description = description,
-                                
+
                             });
 
                         }
@@ -484,7 +484,7 @@ namespace Host.Business.DbServices
                 {
                     foreach (var activities in stations.Activity)
                     {
-                        foreach(var monthNumber in Enumerable.Range(1, 12))
+                        foreach (var monthNumber in Enumerable.Range(1, 12))
                         {
                             if (!activities.MonthlyPerform.Any() ||
                                 activities.MonthlyPerform.All(i => i.Month != monthNumber))
@@ -492,14 +492,14 @@ namespace Host.Business.DbServices
                                 activities.MonthlyPerform.Add(new MonthlyPerform
                                 {
                                     Month = monthNumber,
-                                    Perform = 0 
+                                    Perform = 0
                                 });
                             }
                         }
                         activities.MonthlyPerform = activities.MonthlyPerform
                             .OrderBy(i => i.Month)
                             .ToList();
-                        
+
                     }
                 }
             }
@@ -562,6 +562,11 @@ namespace Host.Business.DbServices
             //}
 
             //return graph;
+        }
+
+        public List<GetDailyReportDto> GetDailyReport()
+        {
+            throw new NotImplementedException();
         }
 
 
@@ -656,8 +661,46 @@ namespace Host.Business.DbServices
         //}
 
 
-    }
 
+       
+        public List<GetDailyReportDto> DailyReport()
+        {
+            try
+            {
+                return _context.ActivityPerformDetail
+                        .AsNoTracking()
+                        .Select(i => new GetDailyReportDto
+                        {
+                            Activity=i.FkActivity.Name,
+                            Perform = i.Perform,
+                            IsPerform = i.IsPerform,
+                            ActivityDate=i.CreatedOn
+                          
+                            
+
+
+                        })
+                        .ToList();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+       public void UpdateDailyReport(GetDailyReportDto requestDto)
+        {
+            var model = new ActivityPerformDetail { PkActivityPerformDetailId = requestDto.ActivityPerformDetailId };
+            _context.ActivityPerformDetail.Attach(model);
+            model.Perform = requestDto.Perform;
+            model.IsPerform = requestDto.IsPerform;
+            _context.SaveChanges();
+            
+                
+        }
+    }
 }
+
+
 
 

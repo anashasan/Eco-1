@@ -27,8 +27,14 @@
     <div id="parent"></div>
 </div>
 
+
+<a href="javascript:genPDF()">Download PDF</a>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.js"></script>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.debug.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
+
 <script type="text/javascript">
 
     const getParameterByName = function (name, url) {
@@ -148,8 +154,8 @@
     $.getJSON('/Company/locations/branchId/' + branchId)
         .done(function (data) {
             $.each(data, function () {
+                //$('#locationDropDown').append(`<option value="${this.locationId}">Select All</option>`);
                 $('#locationDropDown').append(`<option value="${this.locationId}">${this.locationName}</option>`);
-
 
             });
 
@@ -169,4 +175,21 @@
             toDate: ToDate
         });
     });
+
+    function genPDF() {
+
+        var doc = new jsPDF();
+
+        var specialElementHandlers = {
+            '#hidediv': function (element, render) { return true; }
+        };
+
+        doc.fromHTML($('#parent').get(0), 20, 20, {
+            'width': 500,
+            'elementHandlers': specialElementHandlers
+        });
+
+        doc.save('Test.pdf');
+
+    }
 </script>
