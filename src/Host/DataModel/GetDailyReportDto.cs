@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,12 +8,15 @@ namespace Host.DataModel
 {
     public class GetDailyReportDto
     {
-        public int ActivityPerformDetailId { get; set; }
-        public string Activity { get; set; }
-        public string Perform { get; set; }
-        public bool? IsPerform { get; set; }
-        public DateTime? ActivityDate { get; set; }
-       
+        
+        public string PkActitvityPerformDetailId { get; set; }
+        public int FkActivityPerformId { get; set; }
+        public string FkActivityId { get; set; }   
+        public DateTime? CreatedOn  { get; set; }       
+        public int Perform { get; set; }
+        public bool IsPerform { get; set; }
+        public string Name { get; set; }
+
     }
 
     

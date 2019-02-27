@@ -1436,16 +1436,28 @@ namespace Host.Controllers
             return View("ReportGraph");
         }
         [HttpGet("Company/GetData")]
-        public IActionResult GetData()
+        public IActionResult GetData( [FromQuery]int? locationId,
+            [FromQuery]string fromDate,
+            [FromQuery]string toDate,
+            [FromQuery]int branchId)
         {
-            var data = _activityPerformService.DailyReport();
-            return Json(data);
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var cultureInfo = new CultureInfo("ur-PK");
+            var isValidStartDate = DateTime.TryParse(fromDate, cultureInfo,
+                DateTimeStyles.NoCurrentDateDefault, out var startDate);
+
+            var isValidEndDate = DateTime.TryParse(toDate, cultureInfo,
+                DateTimeStyles.NoCurrentDateDefault, out var endDate);
+            return Json(_activityPerformService.GetDailyReportByBranchId(locationId,
+                 isValidStartDate ? startDate : (DateTime?)null,
+                 isValidEndDate ? endDate : (DateTime?)null,
+                 branchId));
         }
-        [HttpPost("Company/UpdateData")]
-        public IActionResult UpdateData(GetDailyReportDto requestDto)
-        {
-             _activityPerformService.UpdateDailyReport(requestDto);
-            return Ok();
-        }
+        //[HttpPost("Company/UpdateData")]
+        //public IActionResult UpdateData(GetDailyReportDto requestDto)
+        //{
+        //     _activityPerformService.UpdateDailyReport(requestDto);
+        //    return Ok();
+        //}
     }
 }

@@ -564,10 +564,7 @@ namespace Host.Business.DbServices
             //return graph;
         }
 
-        public List<GetDailyReportDto> GetDailyReport()
-        {
-            throw new NotImplementedException();
-        }
+
 
 
         //        public List<GraphActivityPerform> StationReport(int? locationId, DateTime? fromDate, DateTime? toDate, int? branchId)
@@ -663,24 +660,43 @@ namespace Host.Business.DbServices
 
 
        
-        public List<GetDailyReportDto> DailyReport()
+        public List<GetDailyReportDto> GetDailyReportByBranchId(int? locationId, DateTime? fromDate, DateTime? toDate, int? branchId)
         {
             try
             {
-                return _context.ActivityPerformDetail
-                        .AsNoTracking()
-                        .Select(i => new GetDailyReportDto
-                        {
-                            Activity=i.FkActivity.Name,
-                            Perform = i.Perform,
-                            IsPerform = i.IsPerform,
-                            ActivityDate=i.CreatedOn
-                          
-                            
+                
+                var connection = _context.Database.GetDbConnection();
+                var models = (connection.Query<GetDailyReportDto>(
+                    @"SELECT apd.*,
+	   Activity.Name
+FROM dbo.ActivityPerformDetail AS apd
+INNER JOIN Activity ON FkActivityId = PkActivityId
+WHERE FkActivityPerformId IN (
+	SELECT PkActivityPerformId
+	FROM [dbo].[ActivityPerform]
+	WHERE FkStationLocationId IN
+	(
+		SELECT PkStationLocationId
+		FROM dbo.StationLocation
+		WHERE FkLocationId in
+		(
+			SELECT FkLocationId
+			FROM [dbo].BranchLocation
+			WHERE FkBranchId = @branchId
+		) AND FkLocationId = @locationId
+	)
+) AND Perform != ''
 
 
-                        })
-                        .ToList();
+ ",
+                    new
+                    {
+                        locationId,
+                        branchId
+                    })
+                   ).ToList();
+                return models;
+                
             }
             catch (Exception e)
             {
@@ -688,16 +704,20 @@ namespace Host.Business.DbServices
                 throw;
             }
         }
-       public void UpdateDailyReport(GetDailyReportDto requestDto)
-        {
-            var model = new ActivityPerformDetail { PkActivityPerformDetailId = requestDto.ActivityPerformDetailId };
-            _context.ActivityPerformDetail.Attach(model);
-            model.Perform = requestDto.Perform;
-            model.IsPerform = requestDto.IsPerform;
-            _context.SaveChanges();
-            
-                
-        }
+
+
+
+       
+        //public void UpdateDailyReport(GetDailyReportDto requestDto)
+        //{
+        //    var model = new ActivityPerformDetail { PkActivityPerformDetailId = requestDto.ActivityPerformDetailId };
+        //    _context.ActivityPerformDetail.Attach(model);
+        //    model.Perform = requestDto.Perform;
+        //    model.IsPerform = requestDto.IsPerform;
+        //    _context.SaveChanges();
+
+
+        //}
     }
 }
 
