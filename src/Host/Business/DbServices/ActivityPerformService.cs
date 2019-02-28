@@ -683,12 +683,9 @@ WHERE FkActivityPerformId IN (
 			SELECT FkLocationId
 			FROM [dbo].BranchLocation
 			WHERE FkBranchId = @branchId
-		) AND FkLocationId = @locationId
+		) AND PkStationLocationId = @locationId
 	)
-) AND Perform != ''
-
-
- ",
+) AND Perform != ''",
                     new
                     {
                         locationId,
