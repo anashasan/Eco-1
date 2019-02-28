@@ -707,17 +707,17 @@ WHERE FkActivityPerformId IN (
 
 
 
-       
-        //public void UpdateDailyReport(GetDailyReportDto requestDto)
-        //{
-        //    var model = new ActivityPerformDetail { PkActivityPerformDetailId = requestDto.ActivityPerformDetailId };
-        //    _context.ActivityPerformDetail.Attach(model);
-        //    model.Perform = requestDto.Perform;
-        //    model.IsPerform = requestDto.IsPerform;
-        //    _context.SaveChanges();
+
+        public void UpdateDailyReport(GetDailyReportDto requestDto)
+        {
+            var model = new ActivityPerformDetail { PkActivityPerformDetailId = requestDto.PkActitvityPerformDetailId };
+            _context.ActivityPerformDetail.Attach(model);
+            model.Perform = requestDto.Perform;
+            model.IsPerform = requestDto.IsPerform;
+            _context.SaveChanges();
 
 
-        //}
+        }
     }
 }
 
