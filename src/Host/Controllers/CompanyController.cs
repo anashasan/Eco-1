@@ -1453,11 +1453,11 @@ namespace Host.Controllers
                  isValidEndDate ? endDate : (DateTime?)null,
                  branchId));
         }
-        //[HttpPost("Company/UpdateData")]
-        //public IActionResult UpdateData(GetDailyReportDto requestDto)
-        //{
-        //     _activityPerformService.UpdateDailyReport(requestDto);
-        //    return Ok();
-        //}
+        [HttpPost("Company/UpdateData")]
+        public IActionResult UpdateData(GetDailyReportDto requestDto)
+        {
+            _activityPerformService.UpdateDailyReport(requestDto);
+            return Ok();
+        }
     }
 }

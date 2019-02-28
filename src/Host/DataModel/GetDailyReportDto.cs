@@ -9,7 +9,7 @@ namespace Host.DataModel
         public int FkActivityPerformId { get; set; }
         public int FkActivityId { get; set; }   
         public DateTime? CreatedOn  { get; set; }       
-        public int Perform { get; set; }
+        public string Perform { get; set; }
         public bool IsPerform { get; set; }
         public string Name { get; set; }
 

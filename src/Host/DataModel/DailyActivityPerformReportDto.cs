@@ -9,6 +9,7 @@ namespace Host.DataModel
         public string StationName { get; set; }
         public int StationNo { get; set; }
         public string LocationName { get; set; }
+        public int LocationId { get; set; }
         [JsonIgnore]
         public string ActivityName { get; set; }
         [JsonIgnore]
