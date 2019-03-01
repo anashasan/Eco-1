@@ -325,6 +325,7 @@ namespace Host.Business.DbServices
                 var stationNo = 0;
                 var locationName = string.Empty;
                 var activityName = string.Empty;
+                var stationlocationId = 0;
                 var dailyActivities = new Stack<DailyActivityPerformReportDto>();
                 var activities = new HashSet<string>();
                 for (var index = 0; index < models.Count; index++)
@@ -370,6 +371,7 @@ namespace Host.Business.DbServices
                                 {
                                     StationName = stationName,
                                     LocationName = locationName,
+                                    LocationId=stationlocationId,
                                     StationNo = stationNo,
                                     ActivityPerform = stationNoActivities
                                 });
@@ -389,6 +391,7 @@ namespace Host.Business.DbServices
 
                             stationNo = dailyActivityPerform.StationNo;
                             locationName = dailyActivityPerform.LocationName;
+                            locationId = dailyActivityPerform.LocationId;
                             perform = dailyActivityPerform.Perform + perform;
                             activityName = dailyActivityPerform.ActivityName;
                         }
