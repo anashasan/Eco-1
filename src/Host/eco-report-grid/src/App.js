@@ -11,11 +11,15 @@ import {
   Card,
   CardHeader,
   CardBody,
-  Button
+  Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter
 } from "reactstrap";
-import queryString from "query-string";
 import moment from "moment";
 import { ApiClient } from "./ApiClient";
+import qs from "qs";
 
 /**
   @typedef {Object} ActivityPerformance
@@ -27,6 +31,7 @@ import { ApiClient } from "./ApiClient";
   @typedef {Object} DailyActivityPerform
   @property {number} stationNo
   @property {string} locationName
+  @property {number} locationId
   @property {ActivityPerformance[]} activityPerform
  */
 
@@ -44,6 +49,17 @@ import { ApiClient } from "./ApiClient";
  */
 
 /**
+  @typedef {Object} DailyReport
+  @property {number} pkActivityPerformDetailId
+  @property {number} fkActivityPerformId
+  @property {number} fkActivityId
+  @property {Date} createdOn
+  @property {string} perform
+  @property {Boolean} isPerform
+  @property {string} name
+*/
+
+/**
   @typedef {Object} State
   @property {Report[]} reports
   @property { Date } fromDate
@@ -52,6 +68,9 @@ import { ApiClient } from "./ApiClient";
   @property { Number } locationId
   @property { Number } branchId
   @property {Location[]} locations
+  @property {DailyReport[]} formData
+  @property {Boolean} modal
+  @property {number} selectedLocationId
  */
 
 /**
@@ -96,8 +115,9 @@ function createActivities(activityPerformance, activities) {
 /**
  * @param {Report} report
  * @param {Number} index
+ * @param {function} toggle
  */
-function createTable(report, index) {
+function createTable(report, index, toggle) {
   const trData = report.dailyActivityPerformReport.map(
     (dailyActivityPerform, index) => (
       <tr key={index}>
@@ -111,6 +131,15 @@ function createTable(report, index) {
           dailyActivityPerform.activityPerform,
           report.activities
         )}
+        <td>
+          <Button
+            type="Button"
+            onClick={toggle}
+            value={dailyActivityPerform.locationId}
+          >
+            Edit
+          </Button>
+        </td>
       </tr>
     )
   );
@@ -125,7 +154,7 @@ function createTable(report, index) {
               Station Details
             </td>
             {report.activities && (
-              <td rowSpan="1" colSpan={report.activities.length}>
+              <td rowSpan="1" colSpan={report.activities.length + 1}>
                 Activity Perform
               </td>
             )}
@@ -143,6 +172,7 @@ function createTable(report, index) {
                   {activity}
                 </td>
               ))}
+            <td>Action</td>
           </tr>
           {trData}
         </tbody>
@@ -154,7 +184,7 @@ function createTable(report, index) {
 class App extends Component {
   constructor() {
     super();
-    const parsed = queryString.parse(window.location.search);
+    const parsed = qs.parse(window.location.search.substring(1));
     /** @type {State} */
     this.state = {
       reports: [],
@@ -162,11 +192,17 @@ class App extends Component {
       toDate: "",
       locationId: 0,
       branchId: parsed.branchId,
-      locations: []
+      locations: [],
+      modal: false,
+      formData: [],
+      selectedLocationId: 0
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.toggle = this.toggle.bind(this);
+    this.submitForm = this.submitForm.bind(this);
+    this.handleFormChange = this.handleFormChange.bind(this);
   }
 
   componentDidMount() {
@@ -188,6 +224,28 @@ class App extends Component {
   }
 
   /**
+   * @param {Event} e
+   */
+  toggle(e) {
+    var newState = {
+      modal: !this.state.modal
+    };
+    if (!this.state.modal) {
+      newState.selectedLocationId = e.target.value;
+    }
+    this.setState(
+      {
+        ...newState
+      },
+      () => {
+        if (this.state.modal) {
+          this.loadEditForm(this.state.selectedLocationId, this.state.branchId);
+        }
+      }
+    );
+  }
+
+  /**
    * @param {Event} event
    */
   handleChange(event) {
@@ -198,8 +256,26 @@ class App extends Component {
   /**
    * @param {Event} event
    */
+  handleFormChange(event) {
+    var name = event.target.name;
+    var formData = [...this.state.formData];
+    var index = formData.findIndex(function(el) {
+      return (el.pkActivityPerformDetailId = name.match(/\d+/)[0]);
+    });
+    if (name.replace(/[0-9]/g, "") === "performText") {
+      formData[index].perform = event.target.value;
+    } else if (name.replace(/[0-9]/g, "") === "isPerform") {
+      formData[index].isPerform = event.target.checked;
+    }
+    this.setState({ formData });
+    event.preventDefault();
+  }
+
+  /**
+   * @param {Event} event
+   */
   handleSubmit(event) {
-    const data = queryString.stringify({
+    const data = qs.stringify({
       branchId: this.state.branchId,
       locationId: this.state.locationId === 0 ? null : this.state.locationId,
       fromDate: moment(this.state.fromDate).format("DD/MM/YYYY"),
@@ -213,9 +289,31 @@ class App extends Component {
     event.preventDefault();
   }
 
+  loadEditForm(locationId, branchId) {
+    ApiClient.get(
+      "/Company/GetData?" +
+        qs.stringify({
+          locationId,
+          branchId
+        })
+    ).then(json => {
+      this.setState({
+        formData: [...json.data]
+      });
+    });
+  }
+
+  submitForm() {
+    ApiClient.post("/Company/UpdateData", [...this.state.formData]).then(() => {
+      this.setState(prevState => ({
+        modal: !prevState.modal
+      }));
+    });
+  }
+
   render() {
     const tables = this.state.reports.map((report, index) =>
-      createTable(report, index)
+      createTable(report, index, this.toggle)
     );
     return (
       <Container>
@@ -277,6 +375,67 @@ class App extends Component {
         <Row>
           <div>{tables}</div>
         </Row>
+        <Row>
+          <Modal
+            isOpen={this.state.modal}
+            toggle={this.toggle}
+            className={this.props.className}
+          >
+            <ModalHeader toggle={this.toggle}>Edit</ModalHeader>
+            <ModalBody>
+              <Table responsive={true} striped={true} >
+                <thead>
+                  <tr>
+                    <th>Activity</th>
+                    <th>Date</th>
+                    <th>Is Performed</th>
+                    <th>Perform</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {this.state.formData.map((data, index) => {
+                    var date = new Date(data.createdOn);
+                    return (
+                      <tr key={index}>
+                        <td>{data.name}</td>
+                        <td>
+                          {date.getDate()}/{date.getMonth()}/
+                          {date.getUTCFullYear()}
+                        </td>
+                        <td className="text-center">
+                          <Input
+                            type="checkbox"
+                            checked={data.isPerform}
+                            name={"isPerform" + data.pkActivityPerformDetailId}
+                            onChange={this.handleFormChange}
+                          />
+                        </td>
+                        <td>
+                          <Input
+                            type="number"
+                            value={data.perform}
+                            name={
+                              "performText" + data.pkActivityPerformDetailId
+                            }
+                            onChange={this.handleFormChange}
+                          />
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </Table>
+            </ModalBody>
+            <ModalFooter>
+              <Button color="primary" onClick={this.submitForm}>
+                Save
+              </Button>{" "}
+              <Button color="secondary" onClick={this.toggle}>
+                Cancel
+              </Button>
+            </ModalFooter>
+          </Modal>
+        </Row>
       </Container>
     );
   }
@@ -295,7 +454,8 @@ App.propTypes = {
               perform: PropTypes.string,
               activityName: PropTypes.string
             })
-          )
+          ),
+          locationId: PropTypes.number
         })
       ),
       activities: PropTypes.arrayOf(PropTypes.string)
@@ -309,6 +469,15 @@ App.propTypes = {
     PropTypes.shape({
       locationId: PropTypes.number,
       locationName: PropTypes.string
+    })
+  ),
+  selectedLocationId: PropTypes.number,
+  formData: PropTypes.arrayOf(
+    PropTypes.shape({
+      pkActivityPerformDetailId: PropTypes.number,
+      createdOn: PropTypes.instanceOf(Date),
+      perform: PropTypes.string,
+      isPerform: PropTypes.bool
     })
   )
 };
