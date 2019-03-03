@@ -20,7 +20,7 @@ using Microsoft.AspNetCore.Hosting;
 
 namespace Host.Controllers
 {
-    [Authorize(Roles = "Admin,Operation")]
+    [Authorize(Roles = "Admin,Operation,Client")]
     public class CompanyController : BaseController
     {
 
@@ -372,6 +372,21 @@ namespace Host.Controllers
                 return View("CompanyCreation", model);
             }
 
+            return View("CompanyCreation", allCompany);
+        }
+
+        [Authorize(Roles = "Client")]
+
+        public async Task<IActionResult> ClientCompanyList(CompanyDto companyDto)
+        {
+            var allCompany = new List<CompanyDto>();
+            allCompany.Add(companyDto);
+            if (allCompany == null)
+            {
+                var model = new CompanyDto();
+                return View("CompanyCreation", model);
+            }
+            ViewBag.Role = Getuserrole();
             return View("CompanyCreation", allCompany);
         }
 

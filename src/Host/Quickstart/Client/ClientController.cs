@@ -15,10 +15,14 @@ namespace Host.Quickstart.Client
     public class ClientController : BaseController
     {
         private readonly IEmployeeProfileService _employeeProfileService;
+        private readonly ICompanyService _companyService;
+        private readonly EcoDbContext _context;
 
-        public ClientController(IEmployeeProfileService employeeProfileService)
+        public ClientController(IEmployeeProfileService employeeProfileService, ICompanyService companyService, EcoDbContext context)
         {
             _employeeProfileService = employeeProfileService;
+            _companyService = companyService;
+            _context = context;
         }
 
         public IActionResult Index()
@@ -63,6 +67,19 @@ namespace Host.Quickstart.Client
                 throw;
             }
 
+        }
+
+        public IActionResult ClientCompany()
+        {
+            var companyId = _context.ClientCompany.Where(i => i.FkEmployeeId == GetUserid().ToString()).Select(i => i.FkCompanyId).Single();
+            var companyDto =  _companyService.GetCompanyById(companyId);
+          
+            if (companyDto == null)
+            {
+                var model = new CompanyDto();
+                return RedirectToAction("ClientCompanyList", "Company", companyDto);
+            }
+            return RedirectToAction("ClientCompanyList", "Company", companyDto);
         }
     }
 }

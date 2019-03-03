@@ -4,7 +4,15 @@
 
 
 @{
-    Layout = "_AdminLayout";
+    if (ViewBag.Role == "Admin")
+    {
+        Layout = "_AdminLayout";
+    }
+    else
+    {
+        Layout = "_ClientDashboard";
+
+    }
 }
 
 <style>
@@ -44,7 +52,7 @@
                         <th>Options</th>
                     </tr>
                 </thead>
-                @*<tbody>
+                <tbody>
                     @foreach (var s in Model)
                 {
 
@@ -92,7 +100,7 @@
 
 
             }
-                </tbody>*@
+                </tbody>
             </table>
             <div class="modal fade" id="myModal">
                 <div class="modal-dialog">
@@ -129,7 +137,9 @@
     <link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
     <script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
     <script>
-        
+
+        @*debugger
+        var model = @Html.Raw(Model);
         var datatable;
         var isAdminRole = "@User.IsInRole("Admin")" === "True" ;
         $(document).ready(function () {
@@ -200,7 +210,7 @@
 
             })
 
-        }
+        }*@
 
         
     </script>

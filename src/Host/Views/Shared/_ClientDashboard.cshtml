@@ -377,6 +377,8 @@
                         </a>
                     </li>
                     <li><a href="@Url.Action("Employee","Client")"><i class="fa fa-dashboard"></i> Cient Profile</a></li>
+                    <li><a asp-controller="Client" asp-action="ClientCompany"><i class="fa fa-dashboard"></i> Company</a></li>
+
 
                     <form asp-controller="Account" asp-action="Logout" method="post">
                         <input type="submit" name="Logout" value="Logout" />
@@ -648,6 +650,10 @@
         <!-- AdminLTE for demo purposes -->
         <script src="~/dist/js/demo.js"></script>
     </environment>
+
+
+    @RenderSection("Scripts", required: false)
+    @RenderSection("Script", required: false)
 </body>
 </html>
 

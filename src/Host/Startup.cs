@@ -39,7 +39,7 @@ namespace Host
         public void ConfigureServices(IServiceCollection services)
         {
             var connectionString = _hostingEnvironment.IsDevelopment()
-                ? Configuration.GetConnectionString("Production")
+                ? Configuration.GetConnectionString("Development")
                 : Configuration.GetConnectionString("Production");
             Debug.Assert(connectionString != null, nameof(connectionString) + " != null");
 
