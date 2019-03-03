@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import {
@@ -15,7 +16,8 @@ import {
   Modal,
   ModalHeader,
   ModalBody,
-  ModalFooter
+  ModalFooter,
+  Spinner
 } from "reactstrap";
 import moment from "moment";
 import { ApiClient } from "./ApiClient";
@@ -71,6 +73,7 @@ import qs from "qs";
   @property {DailyReport[]} formData
   @property {Boolean} modal
   @property {number} selectedLocationId
+  @property {Boolean} isLoading
  */
 
 /**
@@ -195,7 +198,8 @@ class App extends Component {
       locations: [],
       modal: false,
       formData: [],
-      selectedLocationId: 0
+      selectedLocationId: 0,
+      isLoading: true
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -203,24 +207,28 @@ class App extends Component {
     this.toggle = this.toggle.bind(this);
     this.submitForm = this.submitForm.bind(this);
     this.handleFormChange = this.handleFormChange.bind(this);
+    this.loadData = this.loadData.bind(this);
   }
 
   componentDidMount() {
-    ApiClient.get(`/Company/data?branchId=${this.state.branchId}`).then(
-      json => {
-        this.setState({
-          reports: [...json.data]
-        });
-      }
-    );
+    this.loadData();
+  }
 
-    ApiClient.get(`/Company/locations/branchId/${this.state.branchId}`).then(
-      json => {
-        this.setState({
-          locations: [...json.data]
-        });
-      }
-    );
+  loadData() {
+    axios
+      .all([
+        ApiClient.get(`/Company/data?branchId=${this.state.branchId}`),
+        ApiClient.get(`/Company/locations/branchId/${this.state.branchId}`)
+      ])
+      .then(
+        axios.spread((reports, locations) => {
+          this.setState({
+            reports: [...reports.data],
+            locations: [...locations.data],
+            isLoading: false
+          });
+        })
+      );
   }
 
   /**
@@ -240,6 +248,11 @@ class App extends Component {
       () => {
         if (this.state.modal) {
           this.loadEditForm(this.state.selectedLocationId, this.state.branchId);
+        } else {
+          this.setState({
+            isLoading: true
+          });
+          this.loadData();
         }
       }
     );
@@ -373,7 +386,15 @@ class App extends Component {
         </Row>
         <br />
         <Row>
-          <div>{tables}</div>
+          {this.state.isLoading ? (
+            <div className="d-flex justify-content-center">
+              <Spinner color="dark">
+                <span class="sr-only">Loading...</span>
+              </Spinner>
+            </div>
+          ) : (
+            <div>{tables}</div>
+          )}
         </Row>
         <Row>
           <Modal
@@ -383,7 +404,7 @@ class App extends Component {
           >
             <ModalHeader toggle={this.toggle}>Edit</ModalHeader>
             <ModalBody>
-              <Table responsive={true} striped={true} >
+              <Table responsive={true} striped={true}>
                 <thead>
                   <tr>
                     <th>Activity</th>
