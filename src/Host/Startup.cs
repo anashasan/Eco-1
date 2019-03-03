@@ -15,16 +15,21 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication;
 using Host.Helper;
+using IdentityServer4.Services;
+using Microsoft.Extensions.Logging;
+using Microsoft.Net.Http.Headers;
 
 namespace Host
 {
     public class Startup
     {
         private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly ILoggerFactory _loggerFactory;
 
-        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
+        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment, ILoggerFactory loggerFactory)
         {
             _hostingEnvironment = hostingEnvironment;
+            this._loggerFactory = loggerFactory;
             Configuration = configuration;
         }
 
@@ -48,7 +53,12 @@ namespace Host
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-           
+            var cors = new DefaultCorsPolicyService(_loggerFactory.CreateLogger<DefaultCorsPolicyService>())
+            {
+                AllowedOrigins = { "http://localhost:3000" }
+            };
+            services.AddSingleton<ICorsPolicyService>(cors);
+
 
             // services Add 
             services.AddScoped<IActivityService, ActivityService>();
@@ -65,16 +75,19 @@ namespace Host
             services.AddScoped<IStationLocationService, StationLocationService>();
             services.AddScoped<IActivityTypeService, ActivityTypeService>();
             services.AddScoped<IActivityPerformService, ActivityPerformService>();
-           // services.AddScoped<IAuditDbContext, AuditDbContext>();
-           // services.AddScoped<IEfHepler, EfHepler>();
+            // services.AddScoped<IAuditDbContext, AuditDbContext>();
+            // services.AddScoped<IEfHepler, EfHepler>();
             services.AddScoped<IGraphService, GraphService>();
             services.AddScoped<IJsonDataService, JsonDataService>();
             services.AddScoped<IClientCompanyService, ClientCompanyService>();
 
             services.AddCors(options =>
             {
-                options.AddPolicy("eco-report-grid",
-                    builder => builder.WithOrigins("http://localhost:3000"));
+                options.AddPolicy("eco-report-grid", builder =>
+                    builder
+                        .WithOrigins("http://localhost:3000")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod());
             });
 
             services.AddMvc();

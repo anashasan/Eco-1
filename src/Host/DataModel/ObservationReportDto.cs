@@ -24,6 +24,7 @@ namespace Host.DataModel
         public string ClientReview { get; set; }
         public DateTime? ClientReviewDate { get; set; }
         public string Status { get; set; }
+        public string Images { get; set; }
 
     }
 }

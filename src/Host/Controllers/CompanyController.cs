@@ -1137,8 +1137,17 @@ namespace Host.Controllers
             return Json(id);
         }
 
-       
-       
+        //[AllowAnonymous]
+        //[HttpPost("Company/ActivityPerform1")]
+        //public async Task<IActionResult> ActivityPerform1([FromBody] ActivityPerformDto requestDto1)
+        //{
+        //    if (!ModelState.IsValid)
+        //        return Json("data is not valid");
+        //    var id = await _activityPerformService.ActivityPerform1(requestDto1);
+        //    return Json(id);
+        //}
+
+
         public IActionResult GetStationByBranchId(int branchId, int companyId)
         {
             var stationbranch = _stationLocationService.GetStationLocationByBranchId(branchId);
@@ -1258,7 +1267,7 @@ namespace Host.Controllers
             }
             catch (Exception e)
             {
-
+                Console.WriteLine(e);
                 throw;
             }
         }
@@ -1425,6 +1434,38 @@ namespace Host.Controllers
         public IActionResult DailyGraph(int branchid)
         {
             return View("ReportGraph");
+        }
+
+        [AllowAnonymous]
+        [EnableCors("eco-report-grid")]
+        [HttpGet("Company/GetData")]
+        public IActionResult GetData( [FromQuery]int? locationId,
+            [FromQuery]string fromDate,
+            [FromQuery]string toDate,
+            [FromQuery]int branchId)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+            var cultureInfo = new CultureInfo("ur-PK");
+            var isValidStartDate = DateTime.TryParse(fromDate, cultureInfo,
+                DateTimeStyles.NoCurrentDateDefault, out var startDate);
+
+            var isValidEndDate = DateTime.TryParse(toDate, cultureInfo,
+                DateTimeStyles.NoCurrentDateDefault, out var endDate);
+            return Json(_activityPerformService.GetDailyReportByBranchId(locationId,
+                 isValidStartDate ? startDate : (DateTime?)null,
+                 isValidEndDate ? endDate : (DateTime?)null,
+                 branchId));
+        }
+
+        [AllowAnonymous]
+        [EnableCors("eco-report-grid")]
+        [HttpPost("Company/UpdateData")]
+        public IActionResult UpdateData([FromBody]List<GetDailyReportDto> requestDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest((ModelState));
+            _activityPerformService.UpdateDailyReport(requestDto);
+            return Ok();
         }
     }
 }

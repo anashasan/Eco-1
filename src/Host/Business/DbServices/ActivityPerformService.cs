@@ -11,6 +11,7 @@ using System.Data;
 using System.Linq;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
+using System.Globalization;
 
 namespace Host.Business.DbServices
 {
@@ -71,17 +72,28 @@ namespace Host.Business.DbServices
                 throw;
             }
         }
-
         public async Task<int> ActivityPerform(ActivityPerformDto requestDto)
         {
             try
             {
+                //var date = requestDto.Activities.Select(i => i.ActivityDateTime).FirstOrDefault();
+                //var createdOn = DateTime.Parse(date);
+                //var date = requestDto.ActivityDateTime.ToString();
+                //DateTime parsed = DateTime.ParseExact(requestDto.ActivityDateTime,
+                //                      "ddd, dd MMMM yyyy HH:mm:ss Z",
+                //                       CultureInfo.InvariantCulture);
+                //DateTime dateTime = ISODateTimeFormat.dateTimeParser().parseDateTime(timestamp);
+                string date = requestDto.ActivityDateTime;
                 var activityObservations = new List<ActivityObservation>();
                 var activityPerform = new DataContext.ActivityPerform
+
+
                 {
                     FkStationLocationId = requestDto.StationLocationId,
                     FkEmployeeId = requestDto.EmployeeId,
-                    CreatedOn = DateTime.Now,
+                    //CreatedOn = new DateTime(requestDto.ActivityDateTime.FirstOrDefault())
+                    //CreatedOn = DateTime.ParseExact(requestDto.ActivityDateTime, "M/d/yyyy HH:mm:ss", CultureInfo.InvariantCulture)
+                    CreatedOn = DateTime.Parse(date)
 
                 };
                 _context.ActivityPerform.Add(activityPerform);
@@ -94,23 +106,26 @@ namespace Host.Business.DbServices
                     {
                         for (int i = 0; i < activity.Observation.Count; i++)
                         {
-                            var image = activity.ObservationImage[i];
+                            var image = activity.Images[i];
                             var description = activity.Observation[i];
                             activityObservations.Add(new ActivityObservation
                             {
-                                ObservationImage = image,
-                                Description = description
+                                Images = image,
+                                Description = description,
+
                             });
 
                         }
-                        //  byte j = 0;
+                        // byte j = 0;
                         lstActivityPerformDetail.Add(new ActivityPerformDetail
                         {
 
                             FkActivityId = activity.ActivityId,
                             FkActivityPerformId = activityPerform.PkActivityPerformId,
-                            CreatedOn = DateTime.Now,
-                            ActivityObservation  = activityObservations
+                            //CreatedOn = createdOn,
+                            ActivityObservation = activityObservations,
+                            CreatedOn = DateTime.Parse(date)
+                            //CreatedOn = new DateTime(requestDto.ActivityDateTime.FirstOrDefault())
                         });
                     }
                     else
@@ -121,7 +136,9 @@ namespace Host.Business.DbServices
                             FkActivityPerformId = activityPerform.PkActivityPerformId,
                             IsPerform = activity.IsPerform,
                             Perform = activity.Perform,
-                            CreatedOn = DateTime.Now,
+                            CreatedOn = DateTime.Parse(date)
+                            //CreatedOn = new DateTime(requestDto.ActivityDateTime.FirstOrDefault())
+                            //CreatedOn = DateTime.Now
                         });
                     }
                 }
@@ -138,6 +155,152 @@ namespace Host.Business.DbServices
                 throw;
             }
         }
+
+        //public async Task<int> ActivityPerform(ActivityPerformDto requestDto)
+        //{
+        //    try
+        //    {
+
+
+        //        var activityPerform = new DataContext.ActivityPerform
+        //        {
+        //            FkStationLocationId = requestDto.StationLocationId,
+        //            FkEmployeeId = requestDto.EmployeeId,
+        //            CreatedOn = DateTime.Now,
+
+        //        };
+        //        _context.ActivityPerform.Add(activityPerform);
+        //        _context.SaveChanges();
+
+        //        var lstActivityPerformDetail = new List<ActivityPerformDetail>();
+        //        foreach (var activity in requestDto.Activities)
+        //        {
+        //            if (activity.Observation != null && activity.Observation.Any())
+        //            {
+        //                //  byte j = 0;
+        //                lstActivityPerformDetail.Add(new ActivityPerformDetail
+        //                {
+
+        //                    FkActivityId = activity.ActivityId,
+        //                    FkActivityPerformId = activityPerform.PkActivityPerformId,
+        //                    CreatedOn = DateTime.Now,
+        //                    ActivityObservation = activity.Observation.Select(i => new ActivityObservation
+        //                    {
+        //                        Description = i
+        //                    })
+
+        //                    .ToList(),
+
+        //                });
+        //            }
+
+
+        //            else
+        //            {
+        //                lstActivityPerformDetail.Add(new ActivityPerformDetail
+        //                {
+        //                    FkActivityId = activity.ActivityId,
+        //                    FkActivityPerformId = activityPerform.PkActivityPerformId,
+        //                    IsPerform = activity.IsPerform,
+        //                    Perform = activity.Perform,
+        //                    CreatedOn = DateTime.Now,
+        //                });
+        //            }
+        //        }
+
+        //        _context.ActivityPerformDetail.AddRange(lstActivityPerformDetail);
+
+        //        return await Task.FromResult(_context.SaveChanges());
+
+
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Console.WriteLine(e);
+        //        throw;
+        //    }
+        //}
+
+        //public async Task<int> ActivityPerform1(ActivityPerformDto1 requestDto1)
+        //{
+        //    try
+        //    {
+        //        var dis = new List<IDictionary<int, string>>();  
+        //        List<ActivityObservation> c = new List<ActivityObservation>();
+        //        c.Add(new ActivityObservation
+        //        {
+        //            req
+        //        })
+        //        List<string> observation;
+        //        List<string> images;
+        //        var a = new ActivityObservation();
+        //        var model = requestDto1.Activities.Select(i => new {i.Images, i.Observation }
+        //        { 
+        //            = i.Observation,
+        //           images = i.Images
+        //        });
+        //        foreach (var item in model)
+        //        {
+        //            foreach (var i in item.images)
+        //            {
+        //                string c = i;
+        //            }
+        //        }
+        //        model.Select(i => new ActivityObservation
+        //        {
+        //            Images = i.images
+        //        })
+
+        //         var activityPerform = new DataContext.ActivityPerform
+        //        {
+        //            FkStationLocationId = requestDto1.StationLocationId,
+        //            FkEmployeeId = requestDto1.EmployeeId,
+        //            CreatedOn = DateTime.Now,
+
+        //        };
+        //        _context.ActivityPerform.Add(activityPerform);
+        //        _context.SaveChanges();
+
+        //        var lstActivityPerformDetail = new List<ActivityPerformDetail>();
+        //        foreach (var activity in requestDto1.Activities)
+        //        {
+        //            if (activity.Observation != null && activity.Observation.Any())
+        //            {
+        //                //  byte j = 0;
+        //                lstActivityPerformDetail.Add(new ActivityPerformDetail
+        //                {
+
+        //                    FkActivityId = activity.ActivityId,
+        //                    FkActivityPerformId = activityPerform.PkActivityPerformId,
+        //                    CreatedOn = DateTime.Now,
+        //                    ActivityObservation = model
+        //                });
+        //            }
+        //            else
+        //            {
+        //                lstActivityPerformDetail.Add(new ActivityPerformDetail
+        //                {
+        //                    FkActivityId = activity.ActivityId,
+        //                    FkActivityPerformId = activityPerform.PkActivityPerformId,
+        //                    IsPerform = activity.IsPerform,
+        //                    Perform = activity.Perform,
+        //                    CreatedOn = DateTime.Now,
+        //                });
+        //            }
+        //        }
+
+        //        _context.ActivityPerformDetail.AddRange(lstActivityPerformDetail);
+
+        //        return await Task.FromResult(_context.SaveChanges());
+
+
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Console.WriteLine(e);
+        //        throw;
+        //    }
+        //}
 
         public async Task<List<ReportDto>> ActivityReport(int? locationId, DateTime? fromDate, DateTime? toDate, int? branchId)
         {
@@ -162,6 +325,7 @@ namespace Host.Business.DbServices
                 var stationNo = 0;
                 var locationName = string.Empty;
                 var activityName = string.Empty;
+                var stationlocationId = 0;
                 var dailyActivities = new Stack<DailyActivityPerformReportDto>();
                 var activities = new HashSet<string>();
                 for (var index = 0; index < models.Count; index++)
@@ -207,6 +371,7 @@ namespace Host.Business.DbServices
                                 {
                                     StationName = stationName,
                                     LocationName = locationName,
+                                    LocationId = stationlocationId,
                                     StationNo = stationNo,
                                     ActivityPerform = stationNoActivities
                                 });
@@ -226,6 +391,7 @@ namespace Host.Business.DbServices
 
                             stationNo = dailyActivityPerform.StationNo;
                             locationName = dailyActivityPerform.LocationName;
+                            stationlocationId = dailyActivityPerform.LocationId;
                             perform = dailyActivityPerform.Perform + perform;
                             activityName = dailyActivityPerform.ActivityName;
                         }
@@ -321,7 +487,7 @@ namespace Host.Business.DbServices
                 {
                     foreach (var activities in stations.Activity)
                     {
-                        foreach(var monthNumber in Enumerable.Range(1, 12))
+                        foreach (var monthNumber in Enumerable.Range(1, 12))
                         {
                             if (!activities.MonthlyPerform.Any() ||
                                 activities.MonthlyPerform.All(i => i.Month != monthNumber))
@@ -329,14 +495,14 @@ namespace Host.Business.DbServices
                                 activities.MonthlyPerform.Add(new MonthlyPerform
                                 {
                                     Month = monthNumber,
-                                    Perform = 0 
+                                    Perform = 0
                                 });
                             }
                         }
                         activities.MonthlyPerform = activities.MonthlyPerform
                             .OrderBy(i => i.Month)
                             .ToList();
-                        
+
                     }
                 }
             }
@@ -400,6 +566,8 @@ namespace Host.Business.DbServices
 
             //return graph;
         }
+
+
 
 
         //        public List<GraphActivityPerform> StationReport(int? locationId, DateTime? fromDate, DateTime? toDate, int? branchId)
@@ -493,8 +661,67 @@ namespace Host.Business.DbServices
         //}
 
 
-    }
 
+
+        public List<GetDailyReportDto> GetDailyReportByBranchId(int? locationId, DateTime? fromDate, DateTime? toDate, int? branchId)
+        {
+            try
+            {
+
+                var connection = _context.Database.GetDbConnection();
+                var models = (connection.Query<GetDailyReportDto>(
+                    @"SELECT apd.*,
+	                             Activity.Name
+                          FROM dbo.ActivityPerformDetail AS apd
+                          INNER JOIN Activity ON FkActivityId = PkActivityId
+                          WHERE FkActivityPerformId IN (
+	                          SELECT PkActivityPerformId
+	                          FROM [dbo].[ActivityPerform]
+	                          WHERE FkStationLocationId IN
+	                          (
+		                          SELECT PkStationLocationId
+		                          FROM dbo.StationLocation
+		                          WHERE FkLocationId in
+		                          (
+			                          SELECT FkLocationId
+			                          FROM [dbo].BranchLocation
+			                          WHERE FkBranchId = @branchId
+		                          ) AND FkLocationId = @locationId
+	                          )
+                          ) AND Perform != ''
+                          ORDER BY Activity.Name",
+                    new
+                    {
+                        locationId,
+                        branchId
+                    })
+                   ).ToList();
+                return models;
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+
+        public void UpdateDailyReport(IEnumerable<GetDailyReportDto> dailyReports)
+        {
+            foreach (var dailyReport in dailyReports)
+            {
+                var model = new ActivityPerformDetail { PkActivityPerformDetailId = dailyReport.PkActivityPerformDetailId };
+                _context.ActivityPerformDetail.Attach(model);
+                model.Perform = dailyReport.Perform;
+                model.IsPerform = dailyReport.IsPerform;
+            }
+           
+            _context.SaveChanges();
+        }
+    }
 }
+
+
 
 

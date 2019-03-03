@@ -228,7 +228,9 @@ namespace Host.Business.DbServices
                                              StationName= station.Name,
                                              StationNumber = stationLocation.Sno,
                                              Status = activityObservation.Status,
+                                             Images = activityObservation.Images,
                                              ObservationDate = activitPerformDetail.CreatedOn.ToShortDateString()
+                                             
                                          }).ToList();
 
                 return observationReport;

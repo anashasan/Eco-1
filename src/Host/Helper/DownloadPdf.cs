@@ -391,7 +391,7 @@ namespace Host.Helper
 
 
 
-                    string LocationName = locationName;
+                    string LocationName = s.LocationName;
                     iTextSharp.text.Paragraph locationname = new iTextSharp.text.Paragraph();
 
                     locationname.SpacingBefore = 10;
