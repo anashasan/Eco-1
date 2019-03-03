@@ -17,11 +17,11 @@ namespace Host
 
             var host = BuildWebHost(args);
 
-            if (seed)
-            {
-                SeedData.EnsureSeedData(host.Services);
-                return;
-            }
+            //if (seed)
+            //{
+            //    SeedData.EnsureSeedData(host.Services);
+            //    return;
+            //}
 
             host.Run();
         }
