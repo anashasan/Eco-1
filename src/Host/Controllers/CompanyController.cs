@@ -1435,6 +1435,9 @@ namespace Host.Controllers
         {
             return View("ReportGraph");
         }
+
+        [AllowAnonymous]
+        [EnableCors("eco-report-grid")]
         [HttpGet("Company/GetData")]
         public IActionResult GetData( [FromQuery]int? locationId,
             [FromQuery]string fromDate,
@@ -1453,9 +1456,14 @@ namespace Host.Controllers
                  isValidEndDate ? endDate : (DateTime?)null,
                  branchId));
         }
+
+        [AllowAnonymous]
+        [EnableCors("eco-report-grid")]
         [HttpPost("Company/UpdateData")]
-        public IActionResult UpdateData(GetDailyReportDto requestDto)
+        public IActionResult UpdateData([FromBody]List<GetDailyReportDto> requestDto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest((ModelState));
             _activityPerformService.UpdateDailyReport(requestDto);
             return Ok();
         }
