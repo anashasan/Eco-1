@@ -663,7 +663,7 @@ namespace Host.Business.DbServices
 
 
 
-        public List<GetDailyReportDto> GetDailyReportByBranchId(int? locationId, DateTime? fromDate, DateTime? toDate, int? branchId)
+        public List<GetDailyReportDto> GetDailyReportByBranchId(int? locationId, DateTime? fromDate, DateTime? toDate, int? branchId,int SNo)
         {
             try
             {
@@ -686,14 +686,15 @@ namespace Host.Business.DbServices
 			                          SELECT FkLocationId
 			                          FROM [dbo].BranchLocation
 			                          WHERE FkBranchId = @branchId
-		                          ) AND FkLocationId = @locationId
+		                          ) AND FkLocationId = @locationId AND SNo=@SNo
 	                          )
-                          ) AND Perform != ''
+                          )
                           ORDER BY Activity.Name",
                     new
                     {
                         locationId,
-                        branchId
+                        branchId,
+                        SNo
                     })
                    ).ToList();
                 return models;
@@ -707,14 +708,15 @@ namespace Host.Business.DbServices
         }
 
 
-        public void UpdateDailyReport(IEnumerable<GetDailyReportDto> dailyReports)
+        public void UpdateDailyReport(GetDailyReportDto dailyReport)
         {
-            foreach (var dailyReport in dailyReports)
+           
             {
-                var model = new ActivityPerformDetail { PkActivityPerformDetailId = dailyReport.PkActivityPerformDetailId };
+                var model = _context.ActivityPerformDetail.Find(dailyReport.PkActivityPerformDetailId);
                 _context.ActivityPerformDetail.Attach(model);
                 model.Perform = dailyReport.Perform;
                 model.IsPerform = dailyReport.IsPerform;
+                _context.ActivityPerformDetail.Update(model);
             }
            
             _context.SaveChanges();

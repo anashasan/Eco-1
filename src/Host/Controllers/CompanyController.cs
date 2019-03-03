@@ -1442,7 +1442,9 @@ namespace Host.Controllers
         public IActionResult GetData( [FromQuery]int? locationId,
             [FromQuery]string fromDate,
             [FromQuery]string toDate,
-            [FromQuery]int branchId)
+            [FromQuery]int branchId,
+            [FromQuery] int SNo
+            )
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             var cultureInfo = new CultureInfo("ur-PK");
@@ -1454,13 +1456,13 @@ namespace Host.Controllers
             return Json(_activityPerformService.GetDailyReportByBranchId(locationId,
                  isValidStartDate ? startDate : (DateTime?)null,
                  isValidEndDate ? endDate : (DateTime?)null,
-                 branchId));
+                 branchId, SNo));
         }
 
         [AllowAnonymous]
         [EnableCors("eco-report-grid")]
         [HttpPost("Company/UpdateData")]
-        public IActionResult UpdateData([FromBody]List<GetDailyReportDto> requestDto)
+        public IActionResult UpdateData([FromBody]GetDailyReportDto requestDto)
         {
             if (!ModelState.IsValid)
                 return BadRequest((ModelState));
