@@ -371,7 +371,7 @@ namespace Host.Business.DbServices
                                 {
                                     StationName = stationName,
                                     LocationName = locationName,
-                                    LocationId=stationlocationId,
+                                    LocationId = stationlocationId,
                                     StationNo = stationNo,
                                     ActivityPerform = stationNoActivities
                                 });
@@ -391,7 +391,7 @@ namespace Host.Business.DbServices
 
                             stationNo = dailyActivityPerform.StationNo;
                             locationName = dailyActivityPerform.LocationName;
-                            locationId = dailyActivityPerform.LocationId;
+                            stationlocationId = dailyActivityPerform.LocationId;
                             perform = dailyActivityPerform.Perform + perform;
                             activityName = dailyActivityPerform.ActivityName;
                         }
@@ -662,33 +662,34 @@ namespace Host.Business.DbServices
 
 
 
-       
+
         public List<GetDailyReportDto> GetDailyReportByBranchId(int? locationId, DateTime? fromDate, DateTime? toDate, int? branchId)
         {
             try
             {
-                
+
                 var connection = _context.Database.GetDbConnection();
                 var models = (connection.Query<GetDailyReportDto>(
                     @"SELECT apd.*,
-	   Activity.Name
-FROM dbo.ActivityPerformDetail AS apd
-INNER JOIN Activity ON FkActivityId = PkActivityId
-WHERE FkActivityPerformId IN (
-	SELECT PkActivityPerformId
-	FROM [dbo].[ActivityPerform]
-	WHERE FkStationLocationId IN
-	(
-		SELECT PkStationLocationId
-		FROM dbo.StationLocation
-		WHERE FkLocationId in
-		(
-			SELECT FkLocationId
-			FROM [dbo].BranchLocation
-			WHERE FkBranchId = @branchId
-		) AND PkStationLocationId = @locationId
-	)
-) AND Perform != ''",
+	                             Activity.Name
+                          FROM dbo.ActivityPerformDetail AS apd
+                          INNER JOIN Activity ON FkActivityId = PkActivityId
+                          WHERE FkActivityPerformId IN (
+	                          SELECT PkActivityPerformId
+	                          FROM [dbo].[ActivityPerform]
+	                          WHERE FkStationLocationId IN
+	                          (
+		                          SELECT PkStationLocationId
+		                          FROM dbo.StationLocation
+		                          WHERE FkLocationId in
+		                          (
+			                          SELECT FkLocationId
+			                          FROM [dbo].BranchLocation
+			                          WHERE FkBranchId = @branchId
+		                          ) AND FkLocationId = @locationId
+	                          )
+                          ) AND Perform != ''
+                          ORDER BY Activity.Name",
                     new
                     {
                         locationId,
@@ -696,7 +697,7 @@ WHERE FkActivityPerformId IN (
                     })
                    ).ToList();
                 return models;
-                
+
             }
             catch (Exception e)
             {
@@ -706,17 +707,17 @@ WHERE FkActivityPerformId IN (
         }
 
 
-
-
-        public void UpdateDailyReport(GetDailyReportDto requestDto)
+        public void UpdateDailyReport(IEnumerable<GetDailyReportDto> dailyReports)
         {
-            var model = new ActivityPerformDetail { PkActivityPerformDetailId = requestDto.PkActitvityPerformDetailId };
-            _context.ActivityPerformDetail.Attach(model);
-            model.Perform = requestDto.Perform;
-            model.IsPerform = requestDto.IsPerform;
+            foreach (var dailyReport in dailyReports)
+            {
+                var model = new ActivityPerformDetail { PkActivityPerformDetailId = dailyReport.PkActivityPerformDetailId };
+                _context.ActivityPerformDetail.Attach(model);
+                model.Perform = dailyReport.Perform;
+                model.IsPerform = dailyReport.IsPerform;
+            }
+           
             _context.SaveChanges();
-
-
         }
     }
 }
