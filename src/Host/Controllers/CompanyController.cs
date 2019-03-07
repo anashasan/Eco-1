@@ -363,15 +363,17 @@ namespace Host.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
-        public async Task<IActionResult> CompanyCreation()
+        /// 
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> CompanyCreation(int? companyId)
         {
-            var allCompany = await _companyService.GetAllCompany();
+            var allCompany = await _companyService.GetAllCompany(companyId);
             if (allCompany == null)
             {
                 var model = new CompanyDto();
                 return View("CompanyCreation", model);
             }
-
+            ViewBag.Role = Getuserrole();
             return View("CompanyCreation", allCompany);
         }
 
@@ -480,8 +482,10 @@ namespace Host.Controllers
         [HttpGet]
         public IActionResult GetBranchByCompanyId(int companyId)
         {
-            //var branch = _branchService.GetBranchByCompanyId(companyId);
+            var branch = _branchService.GetBranchByCompanyId(companyId);
+           
             ViewBag.CompanyId = companyId;
+            ViewBag.Role = Getuserrole();
             return View("BranchCreation");
 
         }
@@ -1066,9 +1070,9 @@ namespace Host.Controllers
         }
 
         [HttpGet("company/company/data")]
-        public async Task<IActionResult> GetallCompanyAsync()
+        public async Task<IActionResult> GetallCompanyAsync(int? companyId)
         {
-            var company = await _companyService.GetAllCompany();
+            var company = await _companyService.GetAllCompany(companyId);
             return Json(new { data = company });
         }
       

@@ -11,7 +11,7 @@ namespace Host.Business.IDbServices
         Task<int> AddCompany(CompanyDto requestDto);
         Task<int> UpdateCompany(CompanyDto requestDto);
         CompanyDto GetCompanyById(int id);
-        Task<List<CompanyDto>> GetAllCompany();
+        Task<List<CompanyDto>> GetAllCompany(int? companyId = null);
         List<GetCompanyViewDto> GetCompanyList();
         void DeleteCompany(int companyId);
 

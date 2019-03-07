@@ -1,8 +1,17 @@
 ﻿@model List<Host.DataModel.ObservationReportDto>
+
 @{
-    ViewData["Title"] = "ObservationReport";
-    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+    if (ViewBag.Role == "Admin")
+    {
+        Layout = "_AdminLayout";
+    }
+    else
+    {
+        Layout = "_ClientDashboard";
+
+    }
 }
+
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
@@ -34,20 +43,20 @@
         </div>
     </div>
     @*<form class="form-inline">
-        <div class="mb-2 mr-sm-2 mb-sm-0 position-relative form-group">
-            <label for="fromDate" class="mr-sm-2">Starting Date</label>
-            <input id="fromDate" name="fromDate" type="date" class="form-control" value="">'
-        </div><div class="mb-2 mr-sm-2 mb-sm-0 position-relative form-group">
-            <label for="toDate" class="mr-sm-2">Ending Date</label>
-            <input id="toDate" name="toDate" type="date" class="form-control" value="">
-        </div>'
-        <div class="mb-2 mr-sm-2 mb-sm-0 position-relative form-group">
-            <label for="locationDropDown" class="mr-sm-2">Location</label>
-            <select id="locationDropDown" name="locationId" class="form-control"></select>
-        </div>
-        <input type="button" value="Search" onclick='@($"window.location.href='/Company/ObservationReportForm?branchId={@ViewBag.BranchId}&branchname={@ViewBag.BranchName}&companyname={@ViewBag.CompanyName}'")' class="btn-submit btn-primary top-right">
-        <a class="fa fa-download  " onClick='@($"window.location.href='/Company/DownloadObservationReport?branchId={@ViewBag.BranchId}&locationId={ViewBag.locationId}&fromDate={ViewBag.FromDate}&toDate={ViewBag.ToDate}'")'>Download</a>
-    </form>*@
+            <div class="mb-2 mr-sm-2 mb-sm-0 position-relative form-group">
+                <label for="fromDate" class="mr-sm-2">Starting Date</label>
+                <input id="fromDate" name="fromDate" type="date" class="form-control" value="">'
+            </div><div class="mb-2 mr-sm-2 mb-sm-0 position-relative form-group">
+                <label for="toDate" class="mr-sm-2">Ending Date</label>
+                <input id="toDate" name="toDate" type="date" class="form-control" value="">
+            </div>'
+            <div class="mb-2 mr-sm-2 mb-sm-0 position-relative form-group">
+                <label for="locationDropDown" class="mr-sm-2">Location</label>
+                <select id="locationDropDown" name="locationId" class="form-control"></select>
+            </div>
+            <input type="button" value="Search" onclick='@($"window.location.href='/Company/ObservationReportForm?branchId={@ViewBag.BranchId}&branchname={@ViewBag.BranchName}&companyname={@ViewBag.CompanyName}'")' class="btn-submit btn-primary top-right">
+            <a class="fa fa-download  " onClick='@($"window.location.href='/Company/DownloadObservationReport?branchId={@ViewBag.BranchId}&locationId={ViewBag.locationId}&fromDate={ViewBag.FromDate}&toDate={ViewBag.ToDate}'")'>Download</a>
+        </form>*@
     <form class="form-inline">
         <div class="mb-2 mr-sm-2 mb-sm-0 position-relative form-group">
             @*<h1>Daily Graph</h1>*@
@@ -111,7 +120,7 @@
                                 <select class="form-control" asp-for="@s.Status" placeholder="Select Business Name...">
                                     <option selected="selected">Select</option>
                                     <option>WorkDone</option>
-                                    <option>WorkInProgress</option>
+                                    <option>Pending</option>
                                     <option>Rejected</option>
                                 </select>
                             </td>
@@ -138,7 +147,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
 
-   
+
 
     <script>
 
@@ -191,7 +200,7 @@
             const id = $("#locationDropDown").locationId.val();
             const FromDate = $("#fromDate").FromDate.val();
             const ToDate = $("#toDate").ToDate.val();
-           
+
         });
 
         $.getJSON('/Company/locations/branchId/' + branchId)

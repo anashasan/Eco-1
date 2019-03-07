@@ -27,7 +27,16 @@ namespace Host.Quickstart.Client
 
         public IActionResult Index()
         {
-            return View("ClientView");
+
+            var companyId = _context.ClientCompany.Where(i => i.FkEmployeeId == GetUserid().ToString()).Select(i => i.FkCompanyId).Single();
+            var companyDto = _companyService.GetCompanyById(companyId);
+
+            if (companyDto == null)
+            {
+                var model = new CompanyDto();
+                return RedirectToAction("ClientCompanyList", "Company", companyDto);
+            }
+            return RedirectToAction("ClientCompanyList", "Company", companyDto);
         }
         public IActionResult Employee()
         {

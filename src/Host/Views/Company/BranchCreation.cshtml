@@ -1,8 +1,19 @@
 ﻿@model List<Host.DataModel.BranchDto>
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+
 
 
 @{
-    Layout = "_AdminLayout";
+    if (ViewBag.Role == "Admin")
+    {
+        Layout = "_AdminLayout";
+    }
+    else
+    {
+        Layout = "_ClientDashboard";
+
+    }
 }
 
 <style>
@@ -90,7 +101,7 @@
             </br>
             <!-- Trigger the modal with a button -->
 
-            <a class="btn btn-default btn-md  " id="th" onclick='@($"window.location.href='/Company/AddBranch?companyId={@ViewBag.CompanyId}'")'>Add Branch</a>
+            <a class="btn btn-default btn-md @(ViewBag.Role != "Admin" ? "disabled" : "") " id="th" onclick='@($"window.location.href='/Company/AddBranch?companyId={@ViewBag.CompanyId}'")'>Add Branch</a>
         </div>
 
         <!-- /.box-header -->
@@ -184,10 +195,11 @@
     <script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 
     <script>
+        @*var model =@Html*@
         var datatable;
         var companyid = @ViewBag.CompanyId;
         var isAdminRole = "@User.IsInRole("Admin")" === "True" ;
-        
+
         $(document).ready(function () {
             datatable = $('#example2').DataTable({
                 ajax: {
@@ -210,9 +222,9 @@
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 
-                     ${isAdminRole ?` 
+                     ${isAdminRole ?`
                             <a class="dropdown-item fa fa-edit" href="#" onClick="ConfirmDelete(${row.branchId})">Delete</a>
-                                <div class="dropdown-divider"></div>` : ""}
+                                <div class="dropdown-divider"></div>
 
 
                                 <a class="dropdown-item fa fa-edit" href="#" onClick="window.location.href='/Company/AddBranch?companyId=${companyid}&branchId=${row.branchid}'">Edit</a>
@@ -221,7 +233,7 @@
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item fa fa-user-o" href='#' onclick="window.location.href='/Company/GetBranchEmployeeByBranchId?branchId=${row.branchId}&companyId=${companyid}'")'>BranchEmployee</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item fa fa-user-o" href='#' onclick="window.location.href='/Company/GetStationByBranchId?branchId=${row.branchId}&companyId=${companyid}'")'>BranchStation</a>
+                                <a class="dropdown-item fa fa-user-o" href='#' onclick="window.location.href='/Company/GetStationByBranchId?branchId=${row.branchId}&companyId=${companyid}'")'>BranchStation</a>` : ""}
 
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item fa fa-user-o" onclick="window.location.href='/Company/ActivityPerfromReport?branchId=${row.branchId}'">Daily Report</a>
@@ -270,7 +282,7 @@
         }
 
 
-      
+
 
     </script>
 }

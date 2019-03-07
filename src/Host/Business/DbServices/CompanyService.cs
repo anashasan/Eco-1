@@ -17,7 +17,7 @@ namespace Host.Business.DbServices
         /// 
         /// </summary>
         private readonly EcoDbContext _context;
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -38,7 +38,7 @@ namespace Host.Business.DbServices
             {
                 var company = new Company
                 {
-                    Name= requestDto.Name,
+                    Name = requestDto.Name,
                     Type = requestDto.Type,
                     Url = requestDto.Url,
                     CreatedOn = DateTime.Now,
@@ -64,9 +64,9 @@ namespace Host.Business.DbServices
                 var connection = _context.Database.GetDbConnection();
                 connection.Execute(
                     "[dbo].[usp_DeleteCompany]"
-                    , new { @paramCompanyId  = companyId},
+                    , new { @paramCompanyId = companyId },
                     commandType: CommandType.StoredProcedure);
-               
+
             }
             catch (Exception e)
             {
@@ -79,12 +79,13 @@ namespace Host.Business.DbServices
         /// 
         /// </summary>
         /// <returns></returns>
-        public async Task<List<CompanyDto>> GetAllCompany()
+        public async Task<List<CompanyDto>> GetAllCompany(int? companyId)
         {
             try
             {
                 return await Task.FromResult(_context.Company
                        .AsNoTracking()
+                       .Where(i => !companyId.HasValue || i.PkCompanyId == companyId)
                        .Select(p => new CompanyDto
                        {
                            CompanyId = p.PkCompanyId,
@@ -144,7 +145,7 @@ namespace Host.Business.DbServices
                                     BranchId = i.CompanyBranch.Select(p => p.FkBranchId).SingleOrDefault(),
                                     BranchName = i.CompanyBranch.Select(p => p.FkBranch.Name).SingleOrDefault(),
                                     EmployeeName = i.CompanyBranch.Select(p => p.FkBranch.BranchEmployee.Select(x => x.EmployeeName).SingleOrDefault()).SingleOrDefault(),
-                                    
+
                                 }).ToList();
                 return companies;
             }

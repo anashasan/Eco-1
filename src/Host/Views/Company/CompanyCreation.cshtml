@@ -38,7 +38,9 @@
 
 
             <!-- Trigger the modal with a button -->
-            <a class=" btn  btn-primary" id="th" href="@Url.Action("AddCompany", "Company")">Add Company</a>
+
+
+            <a class=" btn btn-primary @(ViewBag.Role != "Admin" ? "disabled" : "")" id="th" href="@Url.Action("AddCompany", "Company")">Add Company</a>
         </div>
 
         <!-- /.box-header -->
@@ -52,55 +54,56 @@
                         <th>Options</th>
                     </tr>
                 </thead>
-                <tbody>
-                    @foreach (var s in Model)
-                {
+                @*<tbody>
+                        @foreach (var s in Model)
+                        {
 
-                    <tr>
-                        <td style="text-align: center">
-                            @s.Name
-                            <a class="text-primary"></a>
-                        </td>
-                        <td style="text-align: center">
-                            @s.Type
-                            <span>
-                                <i class='zmdi large-size'></i>
-                            </span>
-                        </td>
+                            <tr>
+                                <td style="text-align: center">
+                                    @s.Name
+                                    <a class="text-primary"></a>
+                                </td>
+                                <td style="text-align: center">
+                                    @s.Type
+                                    <span>
+                                        <i class='zmdi large-size'></i>
+                                    </span>
+                                </td>
 
-                        <td style="text-align: center">
-                            @s.Url
-                            <span>
-                                <i class='zmdi large-size'></i>
-                            </span>
-                        </td>
-                        <td>
-                            <div class="dropdown">
-                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                    Options
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    @if (User.IsInRole("Admin"))
-                                {
+                                <td style="text-align: center">
+                                    @s.Url
+                                    <span>
+                                        <i class='zmdi large-size'></i>
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            Options
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            @if (User.IsInRole("Admin"))
+                                            {
 
-                                    <a class="dropdown-item fa fa-edit" href="#" onClick='@($"window.location.href='/Company/DeleteCompany?companyId={s.CompanyId}'")'>Delete</a>
-                                    <div class="dropdown-divider"></div>
-                            }
-
-                                    <a class="dropdown-item fa fa-edit" href="#" onClick='@($"window.location.href='/Company/GetCompanyById?id={s.CompanyId}'")'>Edit</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item fa fa-delicious" href='#' onclick='@($"window.location.href='/Company/GetBranchByCompanyId?companyId={s.CompanyId}'")'>Branches</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item fa fa-comment-o" href='#' onclick='@($"window.location.href='/Company/GetBranchEmployeeByCompanyId?companyId={s.CompanyId}'")'>Correspondants</a>
-
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
+                                                <a class="dropdown-item fa fa-edit" href="#" onClick='@($"window.location.href='/Company/DeleteCompany?companyId={s.CompanyId}'")'>Delete</a>
+                                                <div class="dropdown-divider"></div>
 
 
-            }
-                </tbody>
+                                            <a class="dropdown-item fa fa-edit" href="#" onClick='@($"window.location.href='/Company/GetCompanyById?id={s.CompanyId}'")'>Edit</a>
+                                            }
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item fa fa-delicious" href='#' onclick='@($"window.location.href='/Company/GetBranchByCompanyId?companyId={s.CompanyId}'")'>Branches</a>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item fa fa-comment-o" href='#' onclick='@($"window.location.href='/Company/GetBranchEmployeeByCompanyId?companyId={s.CompanyId}'")'>Correspondants</a>
+
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+
+                        }
+                    </tbody>*@
             </table>
             <div class="modal fade" id="myModal">
                 <div class="modal-dialog">
@@ -132,6 +135,7 @@
         <!-- /.box-body -->
     </div>
 </div>
+<input type="hidden" asp-for="@Model[0].CompanyId" id="companyId" />
 
 @section Scripts{
     <link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
@@ -139,13 +143,13 @@
     <script>
 
         @*debugger
-        var model = @Html.Raw(Model);
+        var model = @Html.Raw(Model);*@
         var datatable;
         var isAdminRole = "@User.IsInRole("Admin")" === "True" ;
         $(document).ready(function () {
             datatable = $('#example2').DataTable({
                 ajax: {
-                    url: "/company/company/data",
+                    url: "/company/company/data?companyId=" + (!isAdminRole ? $("#companyId").val() : "" ),
                     type: "GET",
                     dataType: "json"
                 },
@@ -161,18 +165,21 @@
                                     Options
                                 </button>
                                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                   
+
                                    ${isAdminRole ? `
-                                  
-                                    
+
+
                                     <a class="dropdown-item fa fa-edit" href="#" onclick="ConfirmDelete(${row.companyId})">Delete</a>
-                                    <div class="dropdown-divider" ></div > ` : ""}
+                                    <div class="dropdown-divider" ></div > 
                                   <a class="dropdown-item fa fa-edit" href="#" onClick="window.location.href='/Company/GetCompanyById?id=${row.companyId}'">Edit</a>
+     <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item fa fa-comment-o" href='#' onclick="window.location.href='/Company/GetBranchEmployeeByCompanyId?companyId=${row.companyId}'")'>Correspondants</a>
+
+    ` : ""}
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item fa fa-delicious" href='#' onclick="window.location.href='/Company/GetBranchByCompanyId?companyId=${row.companyId}'">Branches</a>
 
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item fa fa-comment-o" href='#' onclick="window.location.href='/Company/GetBranchEmployeeByCompanyId?companyId=${row.companyId}'")'>Correspondants</a>
+                                   
 
                                 </div>
                             </div>`;
@@ -182,7 +189,7 @@
             });
         });
 
-      
+
 
         var ConfirmDelete = function (CompanyId) {
 
@@ -210,9 +217,9 @@
 
             })
 
-        }*@
+        }
 
-        
+
     </script>
 }
 
