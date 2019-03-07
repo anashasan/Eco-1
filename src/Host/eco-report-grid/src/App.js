@@ -17,7 +17,8 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  Spinner
+  Spinner,
+  CustomInput
 } from "reactstrap";
 import moment from "moment";
 import { ApiClient } from "./ApiClient";
@@ -73,6 +74,7 @@ import qs from "qs";
   @property {DailyReport[]} formData
   @property {Boolean} modal
   @property {number} selectedLocationId
+  @property {string} selectedSno
   @property {Boolean} isLoading
  */
 
@@ -138,7 +140,9 @@ function createTable(report, index, toggle) {
           <Button
             type="Button"
             onClick={toggle}
-            value={dailyActivityPerform.locationId}
+            value={`${dailyActivityPerform.locationId},${
+              dailyActivityPerform.stationNo
+            }`}
           >
             Edit
           </Button>
@@ -199,6 +203,7 @@ class App extends Component {
       modal: false,
       formData: [],
       selectedLocationId: 0,
+      selectedSno: "",
       isLoading: true
     };
 
@@ -239,7 +244,9 @@ class App extends Component {
       modal: !this.state.modal
     };
     if (!this.state.modal) {
-      newState.selectedLocationId = e.target.value;
+      var value = e.target.value.split(",");
+      newState.selectedLocationId = value[0];
+      newState.selectedSno = value[1];
     }
     this.setState(
       {
@@ -247,7 +254,11 @@ class App extends Component {
       },
       () => {
         if (this.state.modal) {
-          this.loadEditForm(this.state.selectedLocationId, this.state.branchId);
+          this.loadEditForm(
+            this.state.selectedLocationId,
+            this.state.branchId,
+            this.state.selectedSno
+          );
         } else {
           this.setState({
             isLoading: true
@@ -270,17 +281,18 @@ class App extends Component {
    * @param {Event} event
    */
   handleFormChange(event) {
+    debugger;
     var name = event.target.name;
     var formData = [...this.state.formData];
     var index = formData.findIndex(function(el) {
-      return (el.pkActivityPerformDetailId = name.match(/\d+/)[0]);
+      return el.pkActivityPerformDetailId == name.match(/\d+/)[0];
     });
     if (name.replace(/[0-9]/g, "") === "performText") {
       formData[index].perform = event.target.value;
     } else if (name.replace(/[0-9]/g, "") === "isPerform") {
       formData[index].isPerform = event.target.checked;
     }
-    this.setState({ formData });
+    this.setState({ formData: formData });
     event.preventDefault();
   }
 
@@ -302,22 +314,38 @@ class App extends Component {
     event.preventDefault();
   }
 
-  loadEditForm(locationId, branchId) {
+  /**
+   * @param {number} locationId
+   * @param {number} branchId
+   * @param {string} Sno
+   */
+  loadEditForm(locationId, branchId, Sno) {
     ApiClient.get(
       "/Company/GetData?" +
         qs.stringify({
           locationId,
-          branchId
+          branchId,
+          Sno
         })
     ).then(json => {
       this.setState({
-        formData: [...json.data]
+        formData: [...json.data].map(i => {
+          if (!i.perform) i.perform = "";
+          return i;
+        })
       });
     });
   }
 
-  submitForm() {
-    ApiClient.post("/Company/UpdateData", [...this.state.formData]).then(() => {
+  /**
+   * @param {Event} event
+   */
+  submitForm(event) {
+    ApiClient.post("/Company/UpdateData", {
+      ...this.state.formData.find(function(el) {
+        return el.pkActivityPerformDetailId === event.target.value;
+      })
+    }).then(() => {
       this.setState(prevState => ({
         modal: !prevState.modal
       }));
@@ -388,9 +416,7 @@ class App extends Component {
         <Row>
           {this.state.isLoading ? (
             <div className="d-flex justify-content-center">
-              <Spinner color="dark">
-                <span class="sr-only">Loading...</span>
-              </Spinner>
+              <Spinner color="dark" />
             </div>
           ) : (
             <div>{tables}</div>
@@ -411,6 +437,7 @@ class App extends Component {
                     <th>Date</th>
                     <th>Is Performed</th>
                     <th>Perform</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -424,12 +451,31 @@ class App extends Component {
                           {date.getUTCFullYear()}
                         </td>
                         <td className="text-center">
-                          <Input
-                            type="checkbox"
-                            checked={data.isPerform}
-                            name={"isPerform" + data.pkActivityPerformDetailId}
-                            onChange={this.handleFormChange}
-                          />
+                          <div className="custom-control custom-checkbox mr-sm-2">
+                            {data.isPerform}
+                            <input
+                              type="checkbox"
+                              className="custom-control-input"
+                              checked={data.isPerform}
+                              name={
+                                "isPerform" + data.pkActivityPerformDetailId
+                              }
+                              id={
+                                "performText" +
+                                data.pkActivityPerformDetailId +
+                                "id"
+                              }
+                              onChange={this.handleFormChange}
+                            />
+                            <label
+                              className="custom-control-label"
+                              htmlFor={
+                                "performText" +
+                                data.pkActivityPerformDetailId +
+                                "id"
+                              }
+                            />
+                          </div>
                         </td>
                         <td>
                           <Input
@@ -441,6 +487,15 @@ class App extends Component {
                             onChange={this.handleFormChange}
                           />
                         </td>
+                        <td>
+                          <Button
+                            color="primary"
+                            onClick={this.submitForm}
+                            value={data.pkActivityPerformDetailId}
+                          >
+                            Edit
+                          </Button>
+                        </td>
                       </tr>
                     );
                   })}
@@ -448,11 +503,8 @@ class App extends Component {
               </Table>
             </ModalBody>
             <ModalFooter>
-              <Button color="primary" onClick={this.submitForm}>
-                Save
-              </Button>{" "}
               <Button color="secondary" onClick={this.toggle}>
-                Cancel
+                Close
               </Button>
             </ModalFooter>
           </Modal>
