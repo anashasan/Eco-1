@@ -28,8 +28,4 @@
     <PackageReference Include="SourceLink.Embed.AllSourceFiles" Version="2.7.4" PrivateAssets="all" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Report\Report.csproj" />
-  </ItemGroup>
-
 </Project>
