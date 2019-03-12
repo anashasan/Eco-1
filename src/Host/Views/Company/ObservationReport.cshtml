@@ -1,4 +1,6 @@
 ﻿@model List<Host.DataModel.ObservationReportDto>
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
 
 @{
     if (ViewBag.Role == "Admin")
@@ -86,7 +88,7 @@
             <table id="example2" class="table table-bordered table-hover" style="width:100%">
                 <thead id="th">
                     <tr>
-                        <th>Observation Number</th>
+
                         <th>Obervation Date</th>
                         <th>Station Name</th>
                         <th>Station No</th>
@@ -101,10 +103,12 @@
                     </tr>
                 </thead>
                 <tbody>
+
                     @foreach (var s in Model)
                     {
                         <tr>
-                            <td style="text-align: center">@s.ObervationNumber</td>
+
+
                             <td style="text-align: center">@s.ObservationDate</td>
                             <td style="text-align: center">@s.StationName</td>
                             <td style="text-align: center">@s.StationNumber</td>
@@ -114,7 +118,7 @@
 
                                 <img style="width:80%; height: 80%" ; src="data:image/png;base64, @s.Images" />
                             </td>
-                            <td style="text-align: center">@s.ClientReview<input type="text" asp-for="@s.ClientReview" /></td>
+                            <td style="text-align: center">@s.ClientReview@*<input type="text" asp-for="@s.ClientReview" />*@</td>
                             <td style="text-align: center">@s.ClientReviewDate</td>
                             <td>
                                 <select class="form-control" asp-for="@s.Status" placeholder="Select Business Name...">
@@ -124,8 +128,13 @@
                                     <option>Rejected</option>
                                 </select>
                             </td>
+
                             <td>
-                                <input type="button" value="submit" class="btn-submit btn-primary top-right" data-value="@s.ActivityObservationId">
+                                @*<input type="button" asp-action="GetBranchObservationById" value="edit" class="btn-submit btn-primary top-right" data-value="@s.ActivityObservationId">*@
+                                <a class="fa fa-edit " href="#" onClick='@($"window.location.href='/Company/GetBranchObservationById?id={s.ActivityObservationId}&branchId={s.BranchId}'")'>Edit</a>
+                                @if (User.IsInRole("Admin"))
+                                {<a class="fa fa-remove " href="#" onClick='@($"window.location.href='/Company/DeleteObservationReport?id={s.ActivityObservationId}&branchId={s.BranchId}'")'>Delete</a>}
+
 
                             </td>
 
@@ -143,6 +152,7 @@
     <link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.2/css/buttons.dataTables.min.css" />
     <script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
@@ -163,48 +173,45 @@
 
         const branchId = getParameterByName('branchId');
 
-        var companyname = '@ViewBag.CompanyName';
-        var branchname = '@ViewBag.BranchName';
-        const urlParams = new URLSearchParams(window.location.search);
-        const branchid = urlParams.get('branchId');
-        $(document).ready(function () {
-            $('#example2').DataTable();
-        });
-        $(".btn-submit").click(function (event) {
-            var id = event.target.dataset.value;
-            var parent = event.target.parentElement.parentElement;
-            var clientReview = parent.children[6].children[0].value;
-            var clientReviewDate = parent.children[7].textContent;
-            var status = parent.children[8].children[0].value;
-            $.ajax({
-                type: "POST",
-                url: "/Company/UpdateObservation",
-                data: JSON.stringify({
-                    "ClientReview": clientReview,
-                    "clientReviewDate": clientReviewDate,
-                    "status": status,
-                    "activityObservationId": id,
-                }),
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                dataType: 'json'
+            var companyname = '@ViewBag.CompanyName';
+            var branchname = '@ViewBag.BranchName';
+            const urlParams = new URLSearchParams(window.location.search);
+            const branchid = urlParams.get('branchId');
+            $(document).ready(function () {
+                $('#example2').DataTable();
+            });
+            $(".btn-submit").click(function (event) {
+                var id = event.target.dataset.value;
+                var parent = event.target.parentElement.parentElement;
+                var clientReview = parent.children[6].children[0].value;
+                var clientReviewDate = parent.children[7].textContent;
+                var status = parent.children[8].children[0].value;
+                $.ajax({
+                    type: "POST",
+                    url: "/Company/UpdateObservation",
+                    data: JSON.stringify({
+                        "ClientReview": clientReview,
+                        "clientReviewDate": clientReviewDate,
+                        "status": status,
+                        "activityObservationId": id,
+                    }),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    dataType: 'json'
+                })
+                    .done(function () {
+                        window.location = '/company/ObservationReportForm?branchid=' + branchid + "&companyname" + companyname + "&branchname" + branchname;
+                    });
             })
-                .done(function () {
-                    window.location = '/company/ObservationReportForm?branchid=' + branchid + "&companyname" + companyname + "&branchname" + branchname;
-                });
-        })
 
-        $("#btn").click(function () {
-            const id = $("#locationDropDown").locationId.val();
-            const FromDate = $("#fromDate").FromDate.val();
-            const ToDate = $("#toDate").ToDate.val();
 
-        });
+
 
         $.getJSON('/Company/locations/branchId/' + branchId)
             .done(function (data) {
+                $('#locationDropDown').append(`<option value="">Select All</option>`);
                 $.each(data, function () {
                     //$('#locationDropDown').append(`<option value="${this.locationId}">Select All</option>`);
                     $('#locationDropDown').append(`<option value="${this.locationId}">${this.locationName}</option>`);
@@ -216,7 +223,16 @@
                 console.error(err);
             });
 
-
+        $("#btn").click(function () {
+            const id = $("#locationDropDown").val();
+            const FromDate = $("#fromDate").val();
+            const ToDate = $("#toDate").val();
+            {
+                locationId= id,
+                fromDate= FromDate,
+                toDate= ToDate
+            }
+        });
         //$("#fromDate").datepicker()
         //    .on('changeDate', function (e) {
         //        // `e` here contains the extra attributes

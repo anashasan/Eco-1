@@ -143,7 +143,7 @@ namespace Host.Helper
 
 
 
-                PdfPTable table = new PdfPTable(7);
+                PdfPTable table = new PdfPTable(9);
                 PdfPCell cell = new PdfPCell();
 
                
@@ -161,8 +161,8 @@ namespace Host.Helper
                 cell.Phrase = new Phrase("StationName", boldFont);
                 table.AddCell(cell);
 
-                //cell.Phrase = new Phrase("StationNo", boldFont);
-                //table.AddCell(cell);
+                cell.Phrase = new Phrase("StationNo", boldFont);
+                table.AddCell(cell);
 
                 cell.Phrase = new Phrase("Location", boldFont);
                 table.AddCell(cell);
@@ -170,10 +170,10 @@ namespace Host.Helper
                 cell.Phrase = new Phrase("Observation Description", boldFont);
                 table.AddCell(cell);
 
-                //cell.Phrase = new Phrase("Action On Client End", boldFont);
-                //table.AddCell(cell);
-
                 cell.Phrase = new Phrase("Images", boldFont);
+                table.AddCell(cell);
+
+                cell.Phrase = new Phrase("Action On Client End", boldFont);
                 table.AddCell(cell);
 
 
@@ -193,8 +193,8 @@ namespace Host.Helper
                     cell.Phrase = new Phrase(observation.StationName);
                     table.AddCell(cell);
 
-                    //cell.Phrase = new Phrase(observation.StationId);
-                    //table.AddCell(cell);
+                    cell.Phrase= new Phrase(observation.StationNumber.ToString());
+                    table.AddCell(cell);
 
                     cell.Phrase = new Phrase(observation.LocationName);
                     table.AddCell(cell);
@@ -202,11 +202,20 @@ namespace Host.Helper
                     cell.Phrase = new Phrase(observation.Description);
                     table.AddCell(cell);
 
-                    cell.Phrase = new Phrase(observation.Images);
+
+                    string base64 = observation.Images;
+                    byte[] imageBytes = Convert.FromBase64String(base64);
+                    iTextSharp.text.Image img = iTextSharp.text.Image.GetInstance(imageBytes);
+
+
+
+                    
+                    //string imageSrc = string.Format("data:image/png;base64,{0}", (observation.Images));
+                    cell.AddElement(img);
                     table.AddCell(cell);
 
-                    //cell.Phrase = new Phrase(observation.ClientReview);
-                    //table.AddCell(cell);
+                    cell.Phrase = new Phrase(observation.ClientReview);
+                    table.AddCell(cell);
 
                     cell.Phrase = new Phrase(observation.ClientReviewDate.ToString());
                     table.AddCell(cell);

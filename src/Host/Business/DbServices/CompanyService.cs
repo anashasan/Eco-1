@@ -123,7 +123,7 @@ namespace Host.Business.DbServices
                            Name = p.Name,
                            Type = p.Type,
                            Url = p.Url
-                       }).Single();
+                       }).SingleOrDefault();
             }
             catch (Exception e)
             {

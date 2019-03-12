@@ -4,7 +4,7 @@
 
 
 @{
-    if (ViewBag.Role == "Admin")
+    if (ViewBag.Roles == "Admin")
     {
         Layout = "_AdminLayout";
     }
@@ -40,7 +40,7 @@
             <!-- Trigger the modal with a button -->
 
 
-            <a class=" btn btn-primary @(ViewBag.Role != "Admin" ? "disabled" : "")" id="th" href="@Url.Action("AddCompany", "Company")">Add Company</a>
+            <a class=" btn btn-primary @(ViewBag.Roles != "Admin" ? "disabled" : "")" id="th" href="@Url.Action("AddCompany", "Company")">Add Company</a>
         </div>
 
         <!-- /.box-header -->

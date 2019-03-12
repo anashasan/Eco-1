@@ -18,10 +18,10 @@ namespace Host.Helper
             //For testing purpose only .. later replace with MMC ones
             Smtpoptions.Server = "smtp.gmail.com";
             Smtpoptions.Port = 25;
-            Smtpoptions.User = "programmerarsalan@gmail.com";
-            Smtpoptions.Password = "@Admin123";
+            Smtpoptions.User = "anashasan09@gmail.com";
+            Smtpoptions.Password = "anashasan90";
             Smtpoptions.UseSsl = false;
-            Smtpoptions.DefaultEmailFromAddress = "programmerarsalan@gmail.com";
+            Smtpoptions.DefaultEmailFromAddress = "anashasan09@gmail.com";
             Smtpoptions.DefaultEmailFromAlias = "Eco Service";
         }
 
@@ -39,7 +39,7 @@ namespace Host.Helper
                 //Smtp Server  
                 var SmtpServer = "smtp.gmail.com";
                 //Smtp Port Number  
-                var SmtpPortNumber = 587;
+                var SmtpPortNumber = 465;
 
                 var mimeMessage = new MimeMessage();
 

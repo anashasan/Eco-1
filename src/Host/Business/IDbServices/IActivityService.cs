@@ -11,14 +11,17 @@ namespace Host.Business.IDbServices
 
         // Task<int> AddActivity(StationActivityDto requestDto);
         // Task<int> UpdateActivity(StationActivityDto requestDto);
-        void UpdateActivityObservation(ObservationReportDto dto);
+        void UpdateActivityObservation(EditObseravationDto dto);
         Task<int> AddActivity(ActivityDto requestDto);
         Task<int> UpdateActivity(ActivityDto requestDto);
         ActivityDto GetActivityById(int id);
         List<ActivityDto> GetAllActivity();
        // GetStationActivityDto GetActivityByStationId(int id);
         List<ActivityDto> GetActivityByStationId(int id);
-        int DeleteActivityById(int id);
+        void DeleteActivityById(int id);
         List<ObservationReportDto> GetObservationReport(int branchId, int? locationId,DateTime? fromDate, DateTime? toDate );
+        EditObseravationDto GetActivityObservationById(int Observationid);
+        int DeleteObservationById(int id);
+        
     }
 }

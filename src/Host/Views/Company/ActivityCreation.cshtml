@@ -40,7 +40,7 @@
                             <td style="text-align:center">@a.Type</td>
                             <td style="text-align:center">
                                 <a class="fa fa-edit " href='#' onClick='@($"window.location.href='/Company/AddActivity?stationId={ViewBag.StationId}&activityId={a.ActivityId}'")'>Edit</a>
-                                <a class="fa fa-remove " href='#' onClick='@($"window.location.href='/Company/DeleteStationActivity?activityId={a.ActivityId}'")'>Delete</a>
+                                <a class="fa fa-remove " href='#' onClick='@($"window.location.href='/Company/DeleteStationActivity?activityId={a.ActivityId}&stationId={ViewBag.StationId}'")'>Delete</a>
                             </td>
                         </tr>
 

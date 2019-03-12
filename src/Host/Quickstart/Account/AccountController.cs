@@ -105,10 +105,22 @@ namespace IdentityServer4.Quickstart.UI
                     userEmail.UserName = user.UserName;
                     userEmail.Email = user.Email;
                     userEmail.Status = true;
-                    userEmail.PasswordHash = user.Password;
+                   
+                   // userEmail.PasswordHash = user.Password;
                     userEmail.NormalizedUserName = user.NormalizeUserName;
-                            
 
+                    //var applicationUser = new ApplicationUser
+                    //{
+                    //    Email = user.Email,
+                    //    Id = user.Id,
+                    //    NormalizedEmail = user.NormalizeEmail,
+                    //    AccessFailedCount = user.AccessFailedCount,
+                    //    EmailConfirmed = user.EmailConfirmed,
+                    //    PhoneNumber = user.PhoneNumber,
+                    //    UserName = user.UserName,
+                    //};
+
+                    //await _userManager.ChangePasswordAsync(applicationUser, user.ConfrimedPassword, user.Password);
                         var result = userMgr.UpdateAsync(userEmail).Result;
                         if (!result.Succeeded)
                         {

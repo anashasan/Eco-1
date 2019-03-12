@@ -126,6 +126,7 @@ namespace Host.Controllers
         [HttpGet]
         public IActionResult ActivityPerfromReport(int branchId)
         {
+            ViewBag.Role = Getuserrole();
             return View("ActivityPerformReport");
         }
 
@@ -373,7 +374,7 @@ namespace Host.Controllers
                 var model = new CompanyDto();
                 return View("CompanyCreation", model);
             }
-            ViewBag.Role = Getuserrole();
+            ViewBag.Roles = Getuserrole();
             return View("CompanyCreation", allCompany);
         }
 
@@ -388,7 +389,7 @@ namespace Host.Controllers
                 var model = new CompanyDto();
                 return View("CompanyCreation", model);
             }
-            ViewBag.Role = Getuserrole();
+            ViewBag.Roles = Getuserrole();
             return View("CompanyCreation", allCompany);
         }
 
@@ -448,6 +449,8 @@ namespace Host.Controllers
             }
         }
 
+
+
         /// <summary>
         /// 
         /// </summary>
@@ -478,6 +481,8 @@ namespace Host.Controllers
 
 
         }
+
+        
 
         [HttpGet]
         public IActionResult GetBranchByCompanyId(int companyId)
@@ -1277,12 +1282,12 @@ namespace Host.Controllers
             }
         }
 
-        public IActionResult DeleteStationActivity(int activityId)
+        public IActionResult DeleteStationActivity(int activityId,int stationid)
         {
             try
             {
                 _activityService.DeleteActivityById(activityId);
-                return RedirectToAction("GetActivityById");
+                return RedirectToAction("GetActivityById", new { stationId = stationid });
             }
             catch (Exception e)
             {
@@ -1380,7 +1385,7 @@ namespace Host.Controllers
         }
 
 
-        [HttpGet]
+        [HttpGet("Company/ObservationReportForm")]
         public IActionResult ObservationReportForm(int branchId, string branchname, string companyname, DateTime? fromdate, DateTime? todate)
         {
             try
@@ -1391,7 +1396,7 @@ namespace Host.Controllers
                 int? locationId = null;
                 DateTime?  fromDate = fromdate;
                 DateTime? toDate = todate;
-
+                ViewBag.Role = Getuserrole();
                 var observationReport = _activityService.GetObservationReport(branchId, locationId, fromDate, toDate);
                 return View("ObservationReport", observationReport);
             }
@@ -1402,25 +1407,25 @@ namespace Host.Controllers
             }
         }
 
-        [HttpPost("Company/UpdateObservation")]
-        public IActionResult UpdateObservationForm([FromBody]ObservationReportDto dto)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return View(dto);
-                }
+        //[HttpPost("Company/UpdateObservation")]
+        //public IActionResult UpdateObservationForm([FromBody]EditObseravationDto dto)
+        //{
+        //    try
+        //    {
+        //        if (!ModelState.IsValid)
+        //        {
+        //            return View(dto);
+        //        }
 
-                _activityService.UpdateActivityObservation(dto);
-                return Ok();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-        }
+        //        _activityService.UpdateActivityObservation(dto);
+        //        return Ok();
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Console.WriteLine(e);
+        //        throw;
+        //    }
+        //}
 
 
         [AllowAnonymous]
@@ -1452,6 +1457,7 @@ namespace Host.Controllers
        
         public IActionResult DailyGraph(int branchid)
         {
+            ViewBag.Role = Getuserrole();
             return View("ReportGraph");
         }
 
@@ -1487,6 +1493,47 @@ namespace Host.Controllers
                 return BadRequest((ModelState));
             _activityPerformService.UpdateDailyReport(requestDto);
             return Ok();
+        }
+
+        [HttpGet]
+        public IActionResult GetBranchObservationById(int id, int branchId)
+        {
+
+            var observation = _activityService.GetActivityObservationById(id);
+            observation.BranchId = branchId;
+            return View("EditObservationReport",observation);
+                
+
+        }
+
+       // [HttpPut("Company/UpdateActiviyObservation")]
+        public IActionResult UpdateActiviyObservation(EditObseravationDto editObseravationDto)
+        {
+            try
+            {
+               _activityService.UpdateActivityObservation(editObseravationDto);
+
+                return RedirectToAction("ObservationReportForm",new {branchId = editObseravationDto.BranchId} );
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+        public IActionResult DeleteObservationReport(int id, int branchid)
+        {
+            try
+            {
+                 _activityService.DeleteObservationById(id);
+                return RedirectToAction("ObservationReportForm" , new { branchId = branchid });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
     }
 }
