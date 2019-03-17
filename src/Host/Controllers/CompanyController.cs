@@ -1286,7 +1286,7 @@ namespace Host.Controllers
         {
             try
             {
-                _activityService.DeleteActivityById(activityId);
+                _activityService.DeleteActivityById(activityId,stationid);
                 return RedirectToAction("GetActivityById", new { stationId = stationid });
             }
             catch (Exception e)

@@ -152,14 +152,13 @@
     <link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.2/css/buttons.dataTables.min.css" />
     <script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
     <script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
 
 
 
-    <script>
+    <script type="text/javascript">
 
         const getParameterByName = function (name, url) {
             if (!url) url = window.location.href;
@@ -171,8 +170,8 @@
             return decodeURIComponent(results[2].replace(/\+/g, " "));
         };
 
-        const branchId = getParameterByName('branchId');
-
+        
+       
             var companyname = '@ViewBag.CompanyName';
             var branchname = '@ViewBag.BranchName';
             const urlParams = new URLSearchParams(window.location.search);
@@ -205,9 +204,9 @@
                         window.location = '/company/ObservationReportForm?branchid=' + branchid + "&companyname" + companyname + "&branchname" + branchname;
                     });
             })
-
-
-
+        
+        
+        
 
         $.getJSON('/Company/locations/branchId/' + branchId)
             .done(function (data) {
@@ -227,11 +226,11 @@
             const id = $("#locationDropDown").val();
             const FromDate = $("#fromDate").val();
             const ToDate = $("#toDate").val();
-            {
-                locationId= id,
-                fromDate= FromDate,
-                toDate= ToDate
-            }
+            makeGraph({
+                locationId: id,
+                fromDate: FromDate,
+                toDate: ToDate
+            });
         });
         //$("#fromDate").datepicker()
         //    .on('changeDate', function (e) {
