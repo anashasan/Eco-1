@@ -307,7 +307,7 @@ class App extends Component {
       toDate: moment(this.state.toDate).format("DD/MM/YYYY")
     });
     ApiClient.get(`/Company/data?${data}`).then(json => {
-      this.setState({
+        this.setState({
         reports: [...json.data]
       });
     });
@@ -353,12 +353,16 @@ class App extends Component {
   }
 
   render() {
-    const tables = this.state.reports.map((report, index) =>
+      console.log(this.state);
+      alert("Rendering");
+
+      const tables = this.state.reports.map((report, index) =>
       createTable(report, index, this.toggle)
     );
     return (
       <Container>
-        <br />
+            <br />
+            <h1>Chalgyaaa {this.state.reports}</h1>
         <Row>
           <Card>
             <CardHeader>Search Box</CardHeader>

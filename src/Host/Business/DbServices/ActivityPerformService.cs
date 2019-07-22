@@ -357,12 +357,13 @@ namespace Host.Business.DbServices
                                         ActivityName = dailyActivityPerform.ActivityName,
                                         Perform = dailyActivityPerform.Perform
                                     });
-
-                                activityPerformance.Push(new ActivityPerformance
-                                {
-                                    ActivityName = activityName,
-                                    Perform = perform
-                                });
+                               
+                                    activityPerformance.Push(new ActivityPerformance
+                                    {
+                                        ActivityName = activityName,
+                                        Perform = perform
+                                    });
+                               
                                 var stationNoActivities = new List<ActivityPerformance>(activityPerformance.Count);
                                 while (activityPerformance.Count != 0)
                                     stationNoActivities.Add(activityPerformance.Pop());
@@ -370,9 +371,9 @@ namespace Host.Business.DbServices
                                 dailyReportActivities.Add(new DailyActivityPerformReportDto
                                 {
                                     StationName = stationName,
-                                    LocationName = locationName,
+                                    LocationName = string.IsNullOrEmpty(locationName) ? dailyActivityPerform.LocationName : locationName,
                                     LocationId = stationlocationId,
-                                    StationNo = stationNo,
+                                    StationNo = stationNo == 0 ? dailyActivityPerform.StationNo : stationNo,
                                     ActivityPerform = stationNoActivities
                                 });
                                 perform = 0;
@@ -663,38 +664,67 @@ namespace Host.Business.DbServices
 
 
 
-        public List<GetDailyReportDto> GetDailyReportByBranchId(int? locationId, DateTime? fromDate, DateTime? toDate, int? branchId,int SNo)
+        public List<GetDailyReportDto> GetDailyReportByBranchId(int? branchId)
         {
             try
             {
 
                 var connection = _context.Database.GetDbConnection();
                 var models = (connection.Query<GetDailyReportDto>(
-                    @"SELECT apd.*,
-	                             Activity.Name
-                          FROM dbo.ActivityPerformDetail AS apd
-                          INNER JOIN Activity ON FkActivityId = PkActivityId
-                          WHERE FkActivityPerformId IN (
-	                          SELECT PkActivityPerformId
-	                          FROM [dbo].[ActivityPerform]
-	                          WHERE FkStationLocationId IN
-	                          (
-		                          SELECT PkStationLocationId
-		                          FROM dbo.StationLocation
-		                          WHERE FkLocationId in
-		                          (
-			                          SELECT FkLocationId
-			                          FROM [dbo].BranchLocation
-			                          WHERE FkBranchId = @branchId
-		                          ) AND FkLocationId = @locationId AND SNo=@SNo
-	                          )
-                          )
-                          ORDER BY Activity.Name",
+                    //@"SELECT apd.*,
+                    //          Activity.Name
+                    //      FROM dbo.ActivityPerformDetail AS apd
+                    //      INNER JOIN Activity ON FkActivityId = PkActivityId
+                    //      WHERE FkActivityPerformId IN (
+                    //       SELECT PkActivityPerformId
+                    //       FROM [dbo].[ActivityPerform]
+                    //       WHERE FkStationLocationId IN
+                    //       (
+                    //        SELECT PkStationLocationId
+                    //        FROM dbo.StationLocation
+                    //        WHERE FkLocationId in
+                    //        (
+                    //         SELECT FkLocationId
+                    //         FROM [dbo].BranchLocation
+                    //         WHERE FkBranchId = @branchId
+                    //        ) 
+                    //       )
+                    //      )
+                    //      ORDER BY Activity.Name",
+                    @"select 
+			sl.SNo as StationNo,
+            s.Name as StationName,
+			a.Name AS ActivityName,
+            apd.Perform AS Perform, 
+		    apd.IsPerform as Isperform,
+            apd.CreatedOn As Date,
+            apd.PkActivityPerformDetailId,
+			l.Name AS LocationName
+            
+			 
+FROM ActivityPerformDetail as apd
+INNER JOIN ActivityPerform  AS ap on ap.PkActivityPerformId = apd.fkactivityPerformId
+INNER JOIN Activity as a on a.PkActivityId = apd.FkActivityId
+INNER JOIN ActivityType as at on at.PkActivityTypeId = a.FkActivityTypeId
+INNER JOIN StationLocation as sl on sl.PkStationLocationId = ap.FkStationLocationId
+INNER JOIN Station as s on s.PkStationId = sl.FkStationId
+INNER JOIN BranchLocation as bl on bl.FkLocationId = sl.FkLocationId
+INNER JOIN Location as l ON l.PkLocationId = bl.FkLocationId
+where FkBranchId =@branchid
+GROUP BY sl.SNo,a.Name,s.Name,l.Name,apd.Perform,apd.IsPerform,apd.CreatedOn,apd.PkActivityPerformDetailId
+
+ORDER BY
+		     l.Name,
+			s.name,
+			  a.Name
+			
+			",
                     new
                     {
-                        locationId,
+
                         branchId,
-                        SNo
+                       
+
                     })
                    ).ToList();
                 return models;
@@ -708,19 +738,47 @@ namespace Host.Business.DbServices
         }
 
 
-        public void UpdateDailyReport(GetDailyReportDto dailyReport)
+        public void UpdateDailyReport(EditDailyReportDto dailyReport)
         {
            
             {
-                var model = _context.ActivityPerformDetail.Find(dailyReport.PkActivityPerformDetailId);
+                var model= new ActivityPerformDetail { PkActivityPerformDetailId=dailyReport.PkActivityPerformDetailId};
                 _context.ActivityPerformDetail.Attach(model);
                 model.Perform = dailyReport.Perform;
                 model.IsPerform = dailyReport.IsPerform;
-                _context.ActivityPerformDetail.Update(model);
+                _context.SaveChanges();
             }
            
             _context.SaveChanges();
         }
+
+        public EditDailyReportDto GetEditActivityReportById(int activityperformdetailId)
+        {
+            try
+            {
+                return _context.ActivityPerformDetail
+                    .AsNoTracking()
+                    .Where(i => i.PkActivityPerformDetailId == activityperformdetailId)
+                    .Select(a => new EditDailyReportDto
+                    {
+                        PkActivityPerformDetailId=a.PkActivityPerformDetailId,
+                        Perform = a.Perform,
+                        IsPerform = a.IsPerform
+                    }).Single();
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            throw new NotImplementedException();
+        }
+
+        //public List<GetDailyReportDto> GetDailyReportByBranchId(int? locationId, DateTime? fromDate, DateTime? toDate, int? branchId, int SNo)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }
 

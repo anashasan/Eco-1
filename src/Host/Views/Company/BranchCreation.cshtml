@@ -233,14 +233,17 @@
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item fa fa-user-o" href='#' onclick="window.location.href='/Company/GetBranchEmployeeByBranchId?branchId=${row.branchId}&companyId=${companyid}'")'>BranchEmployee</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item fa fa-user-o" href='#' onclick="window.location.href='/Company/GetStationByBranchId?branchId=${row.branchId}&companyId=${companyid}'")'>BranchStation</a>` : ""}
+                                <a class="dropdown-item fa fa-user-o" href='#' onclick="window.location.href='/Company/GetStationByBranchId?branchId=${row.branchId}&companyId=${companyid}'")'>BranchStation</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item fa fa-user-o" onclick="window.location.href='/Company/GetEditDailyReportByBranchId?branchid=${row.branchId}&companyid=${companyid}'")'>Edit Daily Report</a>` : ""}
 
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item fa fa-user-o" onclick="window.location.href='/Company/ActivityPerfromReport?branchId=${row.branchId}'">Daily Report</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item fa fa-user-o" onclick="window.location.href='/Company/ObservationReportForm?branchId=${row.branchId}&branchname=${row.name}&companyname=${row.companyname}'")'>Observation Report</a>
-     <div class="dropdown-divider"></div>
+                                <a class="dropdown-item fa fa-user-o" onclick="window.location.href='/Company/ObservationReportForm?branchId=${row.branchId}&companyname=${row.companyName}&branchname=${row.name}'")'>Observation Report</a>
+                                <div class="dropdown-divider"></div>
                                 <a class="dropdown-item fa fa-user-o" onclick="window.location.href='/Company/DailyGraph?branchId=${row.branchId}'")'>Daily Graph</a>
+                                
                             </div>
                         </div>`;
                         }

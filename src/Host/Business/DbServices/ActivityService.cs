@@ -65,7 +65,7 @@ namespace Host.Business.DbServices
             }
         }
 
-        public void DeleteActivityById(int id,int stationid)
+        public int DeleteActivityById(int? id)
         //{
         //    var listOfActivityIds = _context.StationActivity.Find(id);
         //    _context.StationActivity.Remove(listOfActivityIds);
@@ -74,14 +74,15 @@ namespace Host.Business.DbServices
         //}
             {
             var connection = _context.Database.GetDbConnection();
-        connection.Execute(
+      var a=  connection.Execute(
                        "[dbo].[usp_DeleteActivty]"
-                       , new { @paramActivityId = id,
-                               @paramStationId= stationid
+                       , new { @paramActivityId = id
+                          
+
                        }
                        , commandType: CommandType.StoredProcedure);
 
-            
+           return a;
         }
 
 /// <summary>

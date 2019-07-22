@@ -276,7 +276,7 @@ namespace Host.Business.DbServices
                     .Any(i => i.FkLocation.BranchLocation.Any(j => j.FkBranchId == branchId) && i.Sno == sno);
         }
 
-        public async Task<List<StationLocationDropDownDto>> GetLocationByBranchIdAsync(int branchId)
+        public async Task <List<StationLocationDropDownDto>> GetLocationByBranchIdAsync(int branchId)
         {
             try
             {

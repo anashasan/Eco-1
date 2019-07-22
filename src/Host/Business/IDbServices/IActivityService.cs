@@ -18,7 +18,7 @@ namespace Host.Business.IDbServices
         List<ActivityDto> GetAllActivity();
        // GetStationActivityDto GetActivityByStationId(int id);
         List<ActivityDto> GetActivityByStationId(int id);
-        void DeleteActivityById(int id,int stationid);
+        int DeleteActivityById(int? id);
         List<ObservationReportDto> GetObservationReport(int branchId, int? locationId,DateTime? fromDate, DateTime? toDate );
         EditObseravationDto GetActivityObservationById(int Observationid);
         int DeleteObservationById(int id);

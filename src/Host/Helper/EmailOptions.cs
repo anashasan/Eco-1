@@ -17,11 +17,12 @@ namespace Host.Helper
             Smtpoptions = new SmtpOptions();
             //For testing purpose only .. later replace with MMC ones
             Smtpoptions.Server = "smtp.gmail.com";
-            Smtpoptions.Port = 25;
-            Smtpoptions.User = "anashasan09@gmail.com";
-            Smtpoptions.Password = "anashasan90";
+            //Smtpoptions.Port = 25;
+            Smtpoptions.Port = 465;
+            Smtpoptions.User = "admin@ecoservices.com.pk";
+            Smtpoptions.Password = "admin@ecoservices.com.pk";
             Smtpoptions.UseSsl = false;
-            Smtpoptions.DefaultEmailFromAddress = "anashasan09@gmail.com";
+            Smtpoptions.DefaultEmailFromAddress = "admin@ecoservices.com.pk";
             Smtpoptions.DefaultEmailFromAlias = "Eco Service";
         }
 

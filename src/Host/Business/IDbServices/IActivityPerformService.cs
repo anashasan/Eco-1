@@ -15,8 +15,9 @@ namespace Host.Business.IDbServices
         // Task<List<ReportDto>> ActivityReport(int? locationId, DateTime? createdOn);
         Task<List<ReportDto>> ActivityReport(int? locationId, DateTime? fromDate, DateTime? toDate, int? branchId);
         List<Graph> StationReport(int? locationId, DateTime? fromDate, DateTime? toDate, int? branchId);
-        List<GetDailyReportDto> GetDailyReportByBranchId(int? locationId, DateTime? fromDate, DateTime? toDate, int? branchId,int SNo);
-        void UpdateDailyReport(GetDailyReportDto dailyReport);
+        List<GetDailyReportDto> GetDailyReportByBranchId(int? branchId);
+        void UpdateDailyReport(EditDailyReportDto dailyReport);
+        EditDailyReportDto GetEditActivityReportById(int activityperformdetailId);
         //List<StationReportDto> StationReport();
     }
 }

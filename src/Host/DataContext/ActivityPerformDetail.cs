@@ -19,7 +19,7 @@ namespace Host.DataContext
         public bool? IsPerform { get; set; }
         [StringLength(250)]
         public string Perform { get; set; }
-        [Column(TypeName = "date")]
+        [Column(TypeName = "datetime2")]
         public DateTime CreatedOn { get; set; }
 
         [ForeignKey("FkActivityId")]

@@ -1,0 +1,105 @@
+﻿@model List<Host.DataModel.GetDailyReportDto>
+@{
+
+    Layout = "_AdminLayout";
+}
+<style>
+    #th {
+        background-color: #323232;
+        color: white;
+        font-size: small;
+    }
+
+    table {
+        text-align: left !important;
+        font-size: small;
+    }
+</style>
+<div class="col-xs-12">
+    <ol class="breadcrumb">
+        <li><a href="@Url.Action("CompanyCreation","Company")">Company</a></li>
+        <li><a href="#" onclick='@($"window.location.href='/Company/GetBranchByCompanyId?companyId={@ViewBag.CompanyId}'")'>Branch</a></li>
+        <li class="active"><i class="fa fa-suitcase "></i>Edit Daily Report</li>
+
+    </ol>
+</div>
+<div class="box col-md-10">
+    <div class="col-xs-12">
+        <div>
+            <div class="header">
+                <a href="#default" class="logo"></a>
+                <div class="header-right">
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="box">
+        @Html.Hidden("companyid", (int)ViewBag.CompanyId)
+        @Html.Hidden("branchid", (int)ViewBag.BranchId)
+
+        <div class="box-header">
+
+            <h3 class="box-title" style="font-family:'Times New Roman'">Edit Activity Report</h3>
+        </div>
+
+        <!-- /.box-header -->
+        <div class="box-body" style="width: 100%; overflow:auto ">
+
+
+            <table id="example2" class="table table-bordered table-hover" style="width:100%">
+                <thead id="th">
+                    <tr>
+
+                        <th>Station No </th>
+                        <th>Station Name</th>
+                        <th>Activity Name</th>
+                        <th>Input</th>
+                        <th>CheckBox</th>
+                        <th>Date</th>
+                        <th>Location Name</th>
+                        <th>Edit</th>
+
+
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var s in Model)
+                    {
+                        <tr>
+
+                            <td style="text-align: center">@s.StationNo</td>
+                            <td style="text-align: center">@s.StationName</td>
+                            <td style="text-align: center">@s.ActivityName</td>
+                            <td style="text-align: center">@s.Perform</td>
+                            <td style="text-align: center">@s.IsPerform</td>
+                            <td style="text-align: center">@s.Date</td>
+                            <td style="text-align: center">@s.LocationName</td>
+                            <td style="text-align: center"> <a class="fa fa-edit " href="#" onClick='@($"window.location.href='/Company/GetDailyEditDailyReportById?id={s.PkActivityPerformDetailId}&branchId={@ViewBag.BranchId}'")'>Edit</a></td>
+
+                        </tr>
+
+
+
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+
+    @section Scripts{
+        <link rel="stylesheet" href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+        <script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('#example2').DataTable();
+            });
+
+        </script>
+    }
